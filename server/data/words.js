@@ -4227,7 +4227,6 @@ const easyRaw = `
 десн
 `;
 
-
 const mediumRaw = `
 Бежать
 Читать
@@ -10949,10 +10948,15 @@ const hardRaw = `
 арабеска
 `;
 
-const parse = (text) => text.trim().split('\n').map(w => w.trim()).filter(w => w.length > 0);
+const parse = (text) =>
+  text
+    .trim()
+    .split("\n")
+    .map((w) => w.trim())
+    .filter((w) => w.length > 0);
 
 export const words = {
-    easy: parse(easyRaw),
-    medium: parse(mediumRaw),
-    hard: parse(hardRaw)
+  easy: parse(easyRaw),
+  medium: parse(mediumRaw),
+  hard: parse(hardRaw),
 };

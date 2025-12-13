@@ -1,10 +1,10 @@
-export type Difficulty = 'easy' | 'medium' | 'hard'
+export type Difficulty = "easy" | "medium" | "hard";
 
 export const parseWords = (text: string): string[] =>
   text
-    .split('\n')
+    .split("\n")
     .map((w) => w.trim())
-    .filter((w) => w.length > 0)
+    .filter((w) => w.length > 0);
 
 const easyRaw = `
 Дом
@@ -4233,7 +4233,7 @@ const easyRaw = `
 жало
 дозировка
 десна
-`
+`;
 
 const mediumRaw = `
 Бежать
@@ -8938,7 +8938,7 @@ const mediumRaw = `
 ящерёнок
 ёмкость
 ёрш
-`
+`;
 
 const hardRaw = `
 Абстракция
@@ -10954,10 +10954,10 @@ const hardRaw = `
 акциденция
 апрош
 арабеска
-`
+`;
 
 export const words: Record<Difficulty, string[]> = {
   easy: parseWords(easyRaw),
   medium: parseWords(mediumRaw),
   hard: parseWords(hardRaw),
-}
+};

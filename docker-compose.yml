@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # --- FRONTEND ---
@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile.client
       args:
-        # ⚠️ ВАЖНО: При деплое на реальный сервер заменить localhost 
+        # ⚠️ ВАЖНО: При деплое на реальный сервер заменить localhost
         # на IP  сервера
         - VITE_SERVER_URL=http://localhost:3000
         - VITE_PB_URL=http://localhost:8090

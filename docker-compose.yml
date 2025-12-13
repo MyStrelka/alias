@@ -4,8 +4,8 @@ services:
   # --- FRONTEND ---
   client:
     build:
-      context: .
-      dockerfile: Dockerfile.client
+      context: client
+      dockerfile: ./Dockerfile
       args:
         # ⚠️ ВАЖНО: При деплое на реальный сервер заменить localhost
         # на IP  сервера
@@ -19,8 +19,8 @@ services:
   # --- BACKEND ---
   server:
     build:
-      context: .
-      dockerfile: Dockerfile.server
+      context: server
+      dockerfile: ./Dockerfile
     ports:
       - "3000:3000"
     environment:
@@ -32,10 +32,12 @@ services:
 
   # --- DATABASE ---
   pocketbase:
-    image: ghcr.io/pocketbase/pocketbase:latest
+    build:
+      context: pocketbase
+      dockerfile: ./Dockerfile
     ports:
       - "8090:8090"
     volumes:
       # Сохраняем базу данных в папку pb_data на сервере
       - ./pb_data:/pb/pb_data
-    command: --http=0.0.0.0:8090
+    # command: --http=0.0.0.0:8090

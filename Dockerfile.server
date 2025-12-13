@@ -1,0 +1,14 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Копируем package.json из папки server
+COPY server/package*.json ./
+
+RUN npm install
+
+# Копируем весь код сервера
+COPY server/ ./
+
+EXPOSE 3000
+CMD ["node", "index.js"]

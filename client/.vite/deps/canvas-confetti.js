@@ -3,9 +3,20 @@ import "./chunk-G3PMV62Z.js";
 // node_modules/canvas-confetti/dist/confetti.module.mjs
 var module = {};
 (function main(global, module2, isWorker, workerSize) {
-  var canUseWorker = !!(global.Worker && global.Blob && global.Promise && global.OffscreenCanvas && global.OffscreenCanvasRenderingContext2D && global.HTMLCanvasElement && global.HTMLCanvasElement.prototype.transferControlToOffscreen && global.URL && global.URL.createObjectURL);
-  var canUsePaths = typeof Path2D === "function" && typeof DOMMatrix === "function";
-  var canDrawBitmap = (function() {
+  var canUseWorker = !!(
+    global.Worker &&
+    global.Blob &&
+    global.Promise &&
+    global.OffscreenCanvas &&
+    global.OffscreenCanvasRenderingContext2D &&
+    global.HTMLCanvasElement &&
+    global.HTMLCanvasElement.prototype.transferControlToOffscreen &&
+    global.URL &&
+    global.URL.createObjectURL
+  );
+  var canUsePaths =
+    typeof Path2D === "function" && typeof DOMMatrix === "function";
+  var canDrawBitmap = (function () {
     if (!global.OffscreenCanvas) {
       return false;
     }
@@ -20,8 +31,7 @@ var module = {};
     }
     return true;
   })();
-  function noop() {
-  }
+  function noop() {}
   function promise(func) {
     var ModulePromise = module2.exports.Promise;
     var Prom = ModulePromise !== void 0 ? ModulePromise : global.Promise;
@@ -31,9 +41,9 @@ var module = {};
     func(noop, noop);
     return null;
   }
-  var bitmapMapper = /* @__PURE__ */ (function(skipTransform, map) {
+  var bitmapMapper = /* @__PURE__ */ (function (skipTransform, map) {
     return {
-      transform: function(bitmap) {
+      transform: function (bitmap) {
         if (skipTransform) {
           return bitmap;
         }
@@ -46,18 +56,21 @@ var module = {};
         map.set(bitmap, canvas);
         return canvas;
       },
-      clear: function() {
+      clear: function () {
         map.clear();
-      }
+      },
     };
   })(canDrawBitmap, /* @__PURE__ */ new Map());
-  var raf = (function() {
+  var raf = (function () {
     var TIME = Math.floor(1e3 / 60);
     var frame, cancel;
     var frames = {};
     var lastFrameTime = 0;
-    if (typeof requestAnimationFrame === "function" && typeof cancelAnimationFrame === "function") {
-      frame = function(cb) {
+    if (
+      typeof requestAnimationFrame === "function" &&
+      typeof cancelAnimationFrame === "function"
+    ) {
+      frame = function (cb) {
         var id = Math.random();
         frames[id] = requestAnimationFrame(function onFrame(time) {
           if (lastFrameTime === time || lastFrameTime + TIME - 1 < time) {
@@ -70,22 +83,22 @@ var module = {};
         });
         return id;
       };
-      cancel = function(id) {
+      cancel = function (id) {
         if (frames[id]) {
           cancelAnimationFrame(frames[id]);
         }
       };
     } else {
-      frame = function(cb) {
+      frame = function (cb) {
         return setTimeout(cb, TIME);
       };
-      cancel = function(timer) {
+      cancel = function (timer) {
         return clearTimeout(timer);
       };
     }
     return { frame, cancel };
   })();
-  var getWorker = /* @__PURE__ */ (function() {
+  var getWorker = /* @__PURE__ */ (function () {
     var worker;
     var prom;
     var resolves = {};
@@ -103,7 +116,7 @@ var module = {};
           return prom;
         }
         var id = Math.random().toString(36).slice(2);
-        prom = promise(function(resolve) {
+        prom = promise(function (resolve) {
           function workerDone(msg) {
             if (msg.data.callback !== id) {
               return;
@@ -129,7 +142,7 @@ var module = {};
         }
       };
     }
-    return function() {
+    return function () {
       if (worker) {
         return worker;
       }
@@ -154,12 +167,14 @@ var module = {};
           "    SIZE.height = msg.data.canvas.height;",
           "    CONFETTI = module.exports.create(msg.data.canvas);",
           "  }",
-          "}"
+          "}",
         ].join("\n");
         try {
           worker = new Worker(URL.createObjectURL(new Blob([code])));
         } catch (e) {
-          typeof console !== "undefined" && typeof console.warn === "function" ? console.warn("🎊 Could not load worker", e) : null;
+          typeof console !== "undefined" && typeof console.warn === "function"
+            ? console.warn("🎊 Could not load worker", e)
+            : null;
           return null;
         }
         decorate(worker);
@@ -187,11 +202,11 @@ var module = {};
       "#88ff5a",
       "#fcff42",
       "#ffa62d",
-      "#ff36ff"
+      "#ff36ff",
     ],
     // probably should be true, but back-compat
     disableForReducedMotion: false,
-    scalar: 1
+    scalar: 1,
   };
   function convert(val, transform) {
     return transform ? transform(val) : val;
@@ -202,7 +217,7 @@ var module = {};
   function prop(options, name, transform) {
     return convert(
       options && isOk(options[name]) ? options[name] : defaults[name],
-      transform
+      transform,
     );
   }
   function onlyPositiveInt(number) {
@@ -225,7 +240,7 @@ var module = {};
     return {
       r: toDecimal(val.substring(0, 2)),
       g: toDecimal(val.substring(2, 4)),
-      b: toDecimal(val.substring(4, 6))
+      b: toDecimal(val.substring(4, 6)),
     };
   }
   function getOrigin(options) {
@@ -252,7 +267,17 @@ var module = {};
     canvas.style.zIndex = zIndex;
     return canvas;
   }
-  function ellipse(context, x, y, radiusX, radiusY, rotation, startAngle, endAngle, antiClockwise) {
+  function ellipse(
+    context,
+    x,
+    y,
+    radiusX,
+    radiusY,
+    rotation,
+    startAngle,
+    endAngle,
+    antiClockwise,
+  ) {
     context.save();
     context.translate(x, y);
     context.rotate(rotation);
@@ -285,7 +310,7 @@ var module = {};
       gravity: opts.gravity * 3,
       ovalScalar: 0.6,
       scalar: opts.scalar,
-      flat: opts.flat
+      flat: opts.flat,
     };
   }
   function updateFetti(context, fetti) {
@@ -313,20 +338,36 @@ var module = {};
     var y1 = fetti.y + fetti.random * fetti.tiltSin;
     var x2 = fetti.wobbleX + fetti.random * fetti.tiltCos;
     var y2 = fetti.wobbleY + fetti.random * fetti.tiltSin;
-    context.fillStyle = "rgba(" + fetti.color.r + ", " + fetti.color.g + ", " + fetti.color.b + ", " + (1 - progress) + ")";
+    context.fillStyle =
+      "rgba(" +
+      fetti.color.r +
+      ", " +
+      fetti.color.g +
+      ", " +
+      fetti.color.b +
+      ", " +
+      (1 - progress) +
+      ")";
     context.beginPath();
-    if (canUsePaths && fetti.shape.type === "path" && typeof fetti.shape.path === "string" && Array.isArray(fetti.shape.matrix)) {
-      context.fill(transformPath2D(
-        fetti.shape.path,
-        fetti.shape.matrix,
-        fetti.x,
-        fetti.y,
-        Math.abs(x2 - x1) * 0.1,
-        Math.abs(y2 - y1) * 0.1,
-        Math.PI / 10 * fetti.wobble
-      ));
+    if (
+      canUsePaths &&
+      fetti.shape.type === "path" &&
+      typeof fetti.shape.path === "string" &&
+      Array.isArray(fetti.shape.matrix)
+    ) {
+      context.fill(
+        transformPath2D(
+          fetti.shape.path,
+          fetti.shape.matrix,
+          fetti.x,
+          fetti.y,
+          Math.abs(x2 - x1) * 0.1,
+          Math.abs(y2 - y1) * 0.1,
+          (Math.PI / 10) * fetti.wobble,
+        ),
+      );
     } else if (fetti.shape.type === "bitmap") {
-      var rotation = Math.PI / 10 * fetti.wobble;
+      var rotation = (Math.PI / 10) * fetti.wobble;
       var scaleX = Math.abs(x2 - x1) * 0.1;
       var scaleY = Math.abs(y2 - y1) * 0.1;
       var width = fetti.shape.bitmap.width * fetti.scalar;
@@ -337,10 +378,13 @@ var module = {};
         -Math.sin(rotation) * scaleY,
         Math.cos(rotation) * scaleY,
         fetti.x,
-        fetti.y
+        fetti.y,
       ]);
       matrix.multiplySelf(new DOMMatrix(fetti.shape.matrix));
-      var pattern = context.createPattern(bitmapMapper.transform(fetti.shape.bitmap), "no-repeat");
+      var pattern = context.createPattern(
+        bitmapMapper.transform(fetti.shape.bitmap),
+        "no-repeat",
+      );
       pattern.setTransform(matrix);
       context.globalAlpha = 1 - progress;
       context.fillStyle = pattern;
@@ -348,13 +392,32 @@ var module = {};
         fetti.x - width / 2,
         fetti.y - height / 2,
         width,
-        height
+        height,
       );
       context.globalAlpha = 1;
     } else if (fetti.shape === "circle") {
-      context.ellipse ? context.ellipse(fetti.x, fetti.y, Math.abs(x2 - x1) * fetti.ovalScalar, Math.abs(y2 - y1) * fetti.ovalScalar, Math.PI / 10 * fetti.wobble, 0, 2 * Math.PI) : ellipse(context, fetti.x, fetti.y, Math.abs(x2 - x1) * fetti.ovalScalar, Math.abs(y2 - y1) * fetti.ovalScalar, Math.PI / 10 * fetti.wobble, 0, 2 * Math.PI);
+      context.ellipse
+        ? context.ellipse(
+            fetti.x,
+            fetti.y,
+            Math.abs(x2 - x1) * fetti.ovalScalar,
+            Math.abs(y2 - y1) * fetti.ovalScalar,
+            (Math.PI / 10) * fetti.wobble,
+            0,
+            2 * Math.PI,
+          )
+        : ellipse(
+            context,
+            fetti.x,
+            fetti.y,
+            Math.abs(x2 - x1) * fetti.ovalScalar,
+            Math.abs(y2 - y1) * fetti.ovalScalar,
+            (Math.PI / 10) * fetti.wobble,
+            0,
+            2 * Math.PI,
+          );
     } else if (fetti.shape === "star") {
-      var rot = Math.PI / 2 * 3;
+      var rot = (Math.PI / 2) * 3;
       var innerRadius = 4 * fetti.scalar;
       var outerRadius = 8 * fetti.scalar;
       var x = fetti.x;
@@ -386,7 +449,7 @@ var module = {};
     var context = canvas.getContext("2d");
     var animationFrame;
     var destroy;
-    var prom = promise(function(resolve) {
+    var prom = promise(function (resolve) {
       function onDone() {
         animationFrame = destroy = null;
         context.clearRect(0, 0, size.width, size.height);
@@ -395,7 +458,12 @@ var module = {};
         resolve();
       }
       function update() {
-        if (isWorker && !(size.width === workerSize.width && size.height === workerSize.height)) {
+        if (
+          isWorker &&
+          !(
+            size.width === workerSize.width && size.height === workerSize.height
+          )
+        ) {
           size.width = canvas.width = workerSize.width;
           size.height = canvas.height = workerSize.height;
         }
@@ -405,7 +473,7 @@ var module = {};
           size.height = canvas.height;
         }
         context.clearRect(0, 0, size.width, size.height);
-        animatingFettis = animatingFettis.filter(function(fetti) {
+        animatingFettis = animatingFettis.filter(function (fetti) {
           return updateFetti(context, fetti);
         });
         if (animatingFettis.length) {
@@ -418,32 +486,39 @@ var module = {};
       destroy = onDone;
     });
     return {
-      addFettis: function(fettis2) {
+      addFettis: function (fettis2) {
         animatingFettis = animatingFettis.concat(fettis2);
         return prom;
       },
       canvas,
       promise: prom,
-      reset: function() {
+      reset: function () {
         if (animationFrame) {
           raf.cancel(animationFrame);
         }
         if (destroy) {
           destroy();
         }
-      }
+      },
     };
   }
   function confettiCannon(canvas, globalOpts) {
     var isLibCanvas = !canvas;
     var allowResize = !!prop(globalOpts || {}, "resize");
     var hasResizeEventRegistered = false;
-    var globalDisableForReducedMotion = prop(globalOpts, "disableForReducedMotion", Boolean);
+    var globalDisableForReducedMotion = prop(
+      globalOpts,
+      "disableForReducedMotion",
+      Boolean,
+    );
     var shouldUseWorker = canUseWorker && !!prop(globalOpts || {}, "useWorker");
     var worker = shouldUseWorker ? getWorker() : null;
     var resizer = isLibCanvas ? setCanvasWindowSize : setCanvasRectSize;
-    var initialized = canvas && worker ? !!canvas.__confetti_initialized : false;
-    var preferLessMotion = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion)").matches;
+    var initialized =
+      canvas && worker ? !!canvas.__confetti_initialized : false;
+    var preferLessMotion =
+      typeof matchMedia === "function" &&
+      matchMedia("(prefers-reduced-motion)").matches;
     var animationObj;
     function fireLocal(options, size, done) {
       var particleCount = prop(options, "particleCount", onlyPositiveInt);
@@ -478,8 +553,8 @@ var module = {};
             gravity,
             drift,
             scalar,
-            flat
-          })
+            flat,
+          }),
         );
       }
       if (animationObj) {
@@ -489,10 +564,12 @@ var module = {};
       return animationObj.promise;
     }
     function fire(options) {
-      var disableForReducedMotion = globalDisableForReducedMotion || prop(options, "disableForReducedMotion", Boolean);
+      var disableForReducedMotion =
+        globalDisableForReducedMotion ||
+        prop(options, "disableForReducedMotion", Boolean);
       var zIndex = prop(options, "zIndex", Number);
       if (disableForReducedMotion && preferLessMotion) {
-        return promise(function(resolve) {
+        return promise(function (resolve) {
           resolve();
         });
       }
@@ -507,7 +584,7 @@ var module = {};
       }
       var size = {
         width: canvas.width,
-        height: canvas.height
+        height: canvas.height,
       };
       if (worker && !initialized) {
         worker.init(canvas);
@@ -519,18 +596,18 @@ var module = {};
       function onResize() {
         if (worker) {
           var obj = {
-            getBoundingClientRect: function() {
+            getBoundingClientRect: function () {
               if (!isLibCanvas) {
                 return canvas.getBoundingClientRect();
               }
-            }
+            },
           };
           resizer(obj);
           worker.postMessage({
             resize: {
               width: obj.width,
-              height: obj.height
-            }
+              height: obj.height,
+            },
           });
           return;
         }
@@ -559,7 +636,7 @@ var module = {};
       }
       return fireLocal(options, size, done);
     }
-    fire.reset = function() {
+    fire.reset = function () {
       if (worker) {
         worker.reset();
       }
@@ -576,19 +653,30 @@ var module = {};
     }
     return defaultFire;
   }
-  function transformPath2D(pathString, pathMatrix, x, y, scaleX, scaleY, rotation) {
+  function transformPath2D(
+    pathString,
+    pathMatrix,
+    x,
+    y,
+    scaleX,
+    scaleY,
+    rotation,
+  ) {
     var path2d = new Path2D(pathString);
     var t1 = new Path2D();
     t1.addPath(path2d, new DOMMatrix(pathMatrix));
     var t2 = new Path2D();
-    t2.addPath(t1, new DOMMatrix([
-      Math.cos(rotation) * scaleX,
-      Math.sin(rotation) * scaleX,
-      -Math.sin(rotation) * scaleY,
-      Math.cos(rotation) * scaleY,
-      x,
-      y
-    ]));
+    t2.addPath(
+      t1,
+      new DOMMatrix([
+        Math.cos(rotation) * scaleX,
+        Math.sin(rotation) * scaleX,
+        -Math.sin(rotation) * scaleY,
+        Math.cos(rotation) * scaleY,
+        x,
+        y,
+      ]),
+    );
     return t2;
   }
   function shapeFromPath(pathData) {
@@ -632,17 +720,21 @@ var module = {};
         0,
         scale,
         -Math.round(width / 2 + minX) * scale,
-        -Math.round(height / 2 + minY) * scale
+        -Math.round(height / 2 + minY) * scale,
       ];
     }
     return {
       type: "path",
       path,
-      matrix
+      matrix,
     };
   }
   function shapeFromText(textData) {
-    var text, scalar = 1, color = "#000000", fontFamily = '"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "EmojiOne Color", "Android Emoji", "Twemoji Mozilla", "system emoji", sans-serif';
+    var text,
+      scalar = 1,
+      color = "#000000",
+      fontFamily =
+        '"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "EmojiOne Color", "Android Emoji", "Twemoji Mozilla", "system emoji", sans-serif';
     if (typeof textData === "string") {
       text = textData;
     } else {
@@ -657,8 +749,12 @@ var module = {};
     var ctx = canvas.getContext("2d");
     ctx.font = font;
     var size = ctx.measureText(text);
-    var width = Math.ceil(size.actualBoundingBoxRight + size.actualBoundingBoxLeft);
-    var height = Math.ceil(size.actualBoundingBoxAscent + size.actualBoundingBoxDescent);
+    var width = Math.ceil(
+      size.actualBoundingBoxRight + size.actualBoundingBoxLeft,
+    );
+    var height = Math.ceil(
+      size.actualBoundingBoxAscent + size.actualBoundingBoxDescent,
+    );
     var padding = 2;
     var x = size.actualBoundingBoxLeft + padding;
     var y = size.actualBoundingBoxAscent + padding;
@@ -674,31 +770,32 @@ var module = {};
       type: "bitmap",
       // TODO these probably need to be transfered for workers
       bitmap: canvas.transferToImageBitmap(),
-      matrix: [scale, 0, 0, scale, -width * scale / 2, -height * scale / 2]
+      matrix: [scale, 0, 0, scale, (-width * scale) / 2, (-height * scale) / 2],
     };
   }
-  module2.exports = function() {
+  module2.exports = function () {
     return getDefaultFire().apply(this, arguments);
   };
-  module2.exports.reset = function() {
+  module2.exports.reset = function () {
     getDefaultFire().reset();
   };
   module2.exports.create = confettiCannon;
   module2.exports.shapeFromPath = shapeFromPath;
   module2.exports.shapeFromText = shapeFromText;
-})((function() {
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  return this || {};
-})(), module, false);
+})(
+  (function () {
+    if (typeof window !== "undefined") {
+      return window;
+    }
+    if (typeof self !== "undefined") {
+      return self;
+    }
+    return this || {};
+  })(),
+  module,
+  false,
+);
 var confetti_module_default = module.exports;
 var create = module.exports.create;
-export {
-  create,
-  confetti_module_default as default
-};
+export { create, confetti_module_default as default };
 //# sourceMappingURL=canvas-confetti.js.map

@@ -1,7 +1,14 @@
 import { create } from "zustand";
 import { socketService } from "../services/socketService";
-import { pb, type UserData } from "../services/pb";
+import { type UserData } from "../types";
 import toast from "react-hot-toast";
+
+import { auth, googleProvider, db } from "../services/firebase"; // <-- Новый импорт
+import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth"; // <-- Firebase методы
+import { doc, addDoc, setDoc, collection } from "firebase/firestore";
+
+// ... типы (UserData можно упростить)
+// interface UserData { uid: string; displayName: string | null; photoURL: string | null; }
 
 // --- ТИПЫ ---
 type GameStage = "login" | "lobby" | "preround" | "play" | "victory";
@@ -106,7 +113,7 @@ export interface GameState {
 
   actions: {
     loginWithProvider: (provider: "google" | "discord") => Promise<void>;
-    logout: () => void;
+    logout: (e: MouseEvent, user: UserData) => void;
     checkAuth: () => void;
     createRoom: (name: string) => Promise<void>;
     joinRoom: (name: string, roomId: string) => Promise<void>;
@@ -207,24 +214,57 @@ export const useGameStore = create<GameState>((set, get) => {
     actions: {
       loginWithProvider: async (provider) => {
         try {
-          const authData = await pb
-            .collection("users")
-            .authWithOAuth2({ provider });
-          set({ user: authData.record as unknown as UserData });
-          toast.success(`Добро пожаловать!`);
+          // Firebase Google Login
+          if (provider === "google") {
+            try {
+              const result = await signInWithPopup(auth, googleProvider);
+              // UserData берем из result.user
+              const user = {
+                id: result.user.uid,
+                name: result.user.displayName,
+                avatar: result.user.photoURL,
+                // Остальное нам не важно
+              };
+              set({ user: user as any });
+              toast.success(`Привет, ${user.name}!`);
+              const restaurantRef = await addDoc(collection(db, "users"), {
+                user: { id: user.id, name: user.name },
+              });
+              console.log("insert id", restaurantRef.id);
+            } catch (e) {
+              console.error("signInWithPopup", e);
+            }
+          } else {
+            toast.error("Discord пока не настроен в Firebase");
+          }
         } catch (e) {
           console.error(e);
-          toast.error("Ошибка входа.");
+          toast.error("Ошибка входа");
         }
       },
-      logout: () => {
-        pb.authStore.clear();
+      logout: async (e: MouseEvent, user: UserData) => {
+        signOut(auth);
+        const docRef = doc(db, "users", `user ${Object.keys(user)}`);
+        await setDoc(docRef, { capital: true }, { merge: true });
+        console.log("insert id", docRef.id);
         set({ user: null });
+        toast.success("Вышли");
       },
       checkAuth: () => {
-        if (pb.authStore.isValid && pb.authStore.model) {
-          set({ user: pb.authStore.model as unknown as UserData });
-        }
+        // Firebase вешает слушатель сам
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            set({
+              user: {
+                id: user.uid,
+                name: user.displayName,
+                avatar: user.photoURL,
+              } as any,
+            });
+          } else {
+            set({ user: null });
+          }
+        });
       },
       saveSession: () => {
         const { roomId, selfName, isHost } = get();

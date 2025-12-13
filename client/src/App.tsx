@@ -270,7 +270,7 @@ const LoginScreen = () => {
                 <div className="flex items-center gap-3">
                   {user.avatar ? (
                     <img
-                      src={`http://127.0.0.1:8090/api/files/${user.collectionId}/${user.id}/${user.avatar}`}
+                      src={`${user.avatar}`}
                       className="h-10 w-10 rounded-full border border-white/20"
                     />
                   ) : (
@@ -1106,7 +1106,7 @@ const VictoryScreen = ({ winner, players, onRestart }: any) => {
 
 function App() {
   const game = useGameStore();
-  const { actions, isMuted/*, roomId*/ } = game;
+  const { actions, isMuted /*, roomId*/ } = game;
 
   useEffect(() => {
     actions.checkAuth();

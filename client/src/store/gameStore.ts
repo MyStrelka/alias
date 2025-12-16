@@ -1,18 +1,18 @@
-import { create } from "zustand";
-import { socketService } from "../services/socketService";
-import { type UserData } from "../types";
-import toast from "react-hot-toast";
+import { create } from 'zustand';
+import { socketService } from '../services/socketService';
+import { type UserData } from '../types';
+import toast from 'react-hot-toast';
 
-import { auth, googleProvider, db } from "../services/firebase"; // <-- Новый импорт
-import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth"; // <-- Firebase методы
-import { doc, addDoc, setDoc, collection } from "firebase/firestore";
+import { auth, googleProvider } from '../services/firebase'; // <-- Новый импорт
+import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'; // <-- Firebase методы
+import { addDocument, incrementValue } from './db';
 
 // ... типы (UserData можно упростить)
 // interface UserData { uid: string; displayName: string | null; photoURL: string | null; }
 
 // --- ТИПЫ ---
-type GameStage = "login" | "lobby" | "preround" | "play" | "victory";
-type Mode = "team" | "solo_standard" | "solo_all_vs_all";
+type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
+type Mode = 'team' | 'solo_standard' | 'solo_all_vs_all';
 
 export interface TeamTheme {
   border: string;
@@ -22,34 +22,34 @@ export interface TeamTheme {
 }
 export const TEAM_THEMES: TeamTheme[] = [
   {
-    border: "border-rose-500/30",
-    bg: "bg-rose-500/5",
-    text: "text-rose-200",
-    name: "Rose",
+    border: 'border-rose-500/30',
+    bg: 'bg-rose-500/5',
+    text: 'text-rose-200',
+    name: 'Rose',
   },
   {
-    border: "border-blue-500/30",
-    bg: "bg-blue-500/5",
-    text: "text-blue-200",
-    name: "Blue",
+    border: 'border-blue-500/30',
+    bg: 'bg-blue-500/5',
+    text: 'text-blue-200',
+    name: 'Blue',
   },
   {
-    border: "border-emerald-500/30",
-    bg: "bg-emerald-500/5",
-    text: "text-emerald-200",
-    name: "Emerald",
+    border: 'border-emerald-500/30',
+    bg: 'bg-emerald-500/5',
+    text: 'text-emerald-200',
+    name: 'Emerald',
   },
   {
-    border: "border-amber-500/30",
-    bg: "bg-amber-500/5",
-    text: "text-amber-200",
-    name: "Amber",
+    border: 'border-amber-500/30',
+    bg: 'bg-amber-500/5',
+    text: 'text-amber-200',
+    name: 'Amber',
   },
   {
-    border: "border-violet-500/30",
-    bg: "bg-violet-500/5",
-    text: "text-violet-200",
-    name: "Violet",
+    border: 'border-violet-500/30',
+    bg: 'bg-violet-500/5',
+    text: 'text-violet-200',
+    name: 'Violet',
   },
 ];
 
@@ -75,7 +75,7 @@ export interface Player {
   userId?: string;
 }
 export interface Settings {
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: 'easy' | 'medium' | 'hard';
   roundTime: number;
   winScore: number;
   mode: Mode;
@@ -112,8 +112,8 @@ export interface GameState {
   user: UserData | null;
 
   actions: {
-    loginWithProvider: (provider: "google" | "discord") => Promise<void>;
-    logout: (e: MouseEvent, user: UserData) => void;
+    loginWithProvider: (provider: 'google' | 'discord') => Promise<void>;
+    logout: () => void;
     checkAuth: () => void;
     createRoom: (name: string) => Promise<void>;
     joinRoom: (name: string, roomId: string) => Promise<void>;
@@ -144,15 +144,15 @@ export interface GameState {
 }
 
 const initialSettings: Settings = {
-  difficulty: "medium",
+  difficulty: 'medium',
   roundTime: 60,
   winScore: 30,
-  mode: "team",
+  mode: 'team',
   enableChallenges: true,
 };
 
-const initialState: Omit<GameState, "actions"> = {
-  stage: "login",
+const initialState: Omit<GameState, 'actions'> = {
+  stage: 'login',
   isHost: false,
   players: [],
   teams: [],
@@ -163,7 +163,7 @@ const initialState: Omit<GameState, "actions"> = {
     roundNumber: 0,
     timeLeft: 60,
     running: false,
-    currentWord: "...",
+    currentWord: '...',
     readyMap: {},
     teamSpeakerIndex: {},
     activeChallenge: null,
@@ -175,22 +175,22 @@ const initialState: Omit<GameState, "actions"> = {
 };
 
 const getDeviceId = () => {
-  let id = localStorage.getItem("alias_device_id");
+  let id = localStorage.getItem('alias_device_id');
   if (!id) {
     id = Math.random().toString(36).substring(2) + Date.now().toString(36);
-    localStorage.setItem("alias_device_id", id);
+    localStorage.setItem('alias_device_id', id);
   }
   return id;
 };
 
 export const useGameStore = create<GameState>((set, get) => {
   socketService.setHandler((type, payload) => {
-    if (type === "state") {
+    if (type === 'state') {
       const currentSocketId = socketService.socket?.id;
       const me = payload.players?.find((p: Player) => p.id === currentSocketId);
       // Если нас удалили из списка игроков (кикнули)
-      if (payload.players && !me && get().stage !== "login") {
-        toast.error("Вы были исключены из игры");
+      if (payload.players && !me && get().stage !== 'login') {
+        toast.error('Вы были исключены из игры');
         get().actions.leaveGame();
         return;
       }
@@ -215,40 +215,43 @@ export const useGameStore = create<GameState>((set, get) => {
       loginWithProvider: async (provider) => {
         try {
           // Firebase Google Login
-          if (provider === "google") {
+          if (provider === 'google') {
             try {
               const result = await signInWithPopup(auth, googleProvider);
+              console.log(JSON.stringify(result, null, 2));
               // UserData берем из result.user
               const user = {
                 id: result.user.uid,
                 name: result.user.displayName,
                 avatar: result.user.photoURL,
+                email: result.user.email,
+                providerId: result.user.providerData[0].providerId,
                 // Остальное нам не важно
               };
               set({ user: user as any });
               toast.success(`Привет, ${user.name}!`);
-              const restaurantRef = await addDoc(collection(db, "users"), {
-                user: { id: user.id, name: user.name },
+              const docRef = await addDocument('users', user.id, {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                providerId: user.providerId,
               });
-              console.log("insert id", restaurantRef.id);
+              await incrementValue(docRef, 'loginCount');
             } catch (e) {
-              console.error("signInWithPopup", e);
+              console.error('signInWithPopup', e);
             }
           } else {
-            toast.error("Discord пока не настроен в Firebase");
+            toast.error('Discord пока не настроен в Firebase');
           }
         } catch (e) {
           console.error(e);
-          toast.error("Ошибка входа");
+          toast.error('Ошибка входа');
         }
       },
-      logout: async (e: MouseEvent, user: UserData) => {
+      logout: async () => {
         signOut(auth);
-        const docRef = doc(db, "users", `user /${user.id}`);
-        await setDoc(docRef, { capital: true }, { merge: true });
-        console.log("insert id", docRef.id);
         set({ user: null });
-        toast.success("Вышли");
+        toast.success('Вышли');
       },
       checkAuth: () => {
         // Firebase вешает слушатель сам
@@ -270,15 +273,15 @@ export const useGameStore = create<GameState>((set, get) => {
         const { roomId, selfName, isHost } = get();
         if (roomId) {
           localStorage.setItem(
-            "alias_session",
+            'alias_session',
             JSON.stringify({ roomId, selfName, isHost }),
           );
         } else {
-          localStorage.removeItem("alias_session");
+          localStorage.removeItem('alias_session');
         }
       },
       restoreSession: () => {
-        const session = localStorage.getItem("alias_session");
+        const session = localStorage.getItem('alias_session');
         if (session) {
           const data = JSON.parse(session);
           set({
@@ -301,7 +304,7 @@ export const useGameStore = create<GameState>((set, get) => {
             userId,
           });
           set({
-            stage: "lobby",
+            stage: 'lobby',
             selfId: socketService.socket?.id,
             selfName: name,
             roomId,
@@ -324,7 +327,7 @@ export const useGameStore = create<GameState>((set, get) => {
             userId,
           });
           set({
-            stage: "lobby",
+            stage: 'lobby',
             selfId: socketService.socket?.id,
             selfName: name,
             roomId,
@@ -336,30 +339,30 @@ export const useGameStore = create<GameState>((set, get) => {
       },
       leaveGame: () => {
         socketService.close();
-        localStorage.removeItem("alias_session");
+        localStorage.removeItem('alias_session');
         const { isMuted, user } = get();
         set({ ...initialState, isMuted, user, actions: get().actions });
       },
 
       // 🔥 Kick
       kickPlayer: (playerId) =>
-        socketService.reliableEmit("kick_player", playerId),
+        socketService.reliableEmit('kick_player', playerId),
 
       createTeam: () => socketService.createTeam(),
       joinTeam: (teamId) => socketService.joinTeam(teamId),
-      toggleReady: () => socketService.reliableEmit("toggle_ready"),
+      toggleReady: () => socketService.reliableEmit('toggle_ready'),
       updateSettings: (part) =>
-        socketService.reliableEmit("update_settings", part),
-      shuffleTeams: () => socketService.reliableEmit("shuffle_teams"),
-      startGame: () => socketService.reliableEmit("start_game"),
+        socketService.reliableEmit('update_settings', part),
+      shuffleTeams: () => socketService.reliableEmit('shuffle_teams'),
+      startGame: () => socketService.reliableEmit('start_game'),
       markRoundReady: (playerId, status) =>
-        socketService.reliableEmit("round_ready", { playerId, status }),
-      startRound: () => socketService.reliableEmit("start_round"),
-      startGameRound: () => socketService.reliableEmit("start_round"),
-      togglePause: () => socketService.reliableEmit("toggle_pause"),
-      handleCorrect: () => socketService.reliableEmit("game_action", "correct"),
-      handleSkip: () => socketService.reliableEmit("game_action", "skip"),
-      restart: () => socketService.reliableEmit("restart"),
+        socketService.reliableEmit('round_ready', { playerId, status }),
+      startRound: () => socketService.reliableEmit('start_round'),
+      startGameRound: () => socketService.reliableEmit('start_round'),
+      togglePause: () => socketService.reliableEmit('toggle_pause'),
+      handleCorrect: () => socketService.reliableEmit('game_action', 'correct'),
+      handleSkip: () => socketService.reliableEmit('game_action', 'skip'),
+      restart: () => socketService.reliableEmit('restart'),
 
       tick: () => {},
       broadcastState: () => {},

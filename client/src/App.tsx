@@ -284,9 +284,9 @@ const LoginScreen = () => {
                     </div>
                     <div className="text-xs text-green-400">Онлайн</div>
                   </div>
-                </div>
+                </div> 
                 <button
-                  onClick={actions.logout}
+                  onClick={(e) => actions.logout(e, user)}
                   className="text-xs text-gray-400 hover:text-white underline"
                 >
                   Выйти

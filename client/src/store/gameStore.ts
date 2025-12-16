@@ -244,7 +244,7 @@ export const useGameStore = create<GameState>((set, get) => {
       },
       logout: async (e: MouseEvent, user: UserData) => {
         signOut(auth);
-        const docRef = doc(db, "users", `user ${Object.keys(user)}`);
+        const docRef = doc(db, "users", `user /${user.id}`);
         await setDoc(docRef, { capital: true }, { merge: true });
         console.log("insert id", docRef.id);
         set({ user: null });

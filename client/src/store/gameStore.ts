@@ -3,9 +3,10 @@ import { socketService } from '../services/socketService';
 import { type UserData } from '../types';
 import toast from 'react-hot-toast';
 
-import { auth, googleProvider } from '../services/firebase'; // <-- Новый импорт
-import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'; // <-- Firebase методы
+import { auth, googleProvider, signInAsAnonym } from '../services/firebase';
+import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { addDocument, incrementValue } from './db';
+import { AUTH_PROVIDER, DB_FIELDS } from '../constants';
 
 // ... типы (UserData можно упростить)
 // interface UserData { uid: string; displayName: string | null; photoURL: string | null; }
@@ -218,7 +219,6 @@ export const useGameStore = create<GameState>((set, get) => {
           if (provider === 'google') {
             try {
               const result = await signInWithPopup(auth, googleProvider);
-              console.log(JSON.stringify(result, null, 2));
               // UserData берем из result.user
               const user = {
                 id: result.user.uid,
@@ -297,6 +297,20 @@ export const useGameStore = create<GameState>((set, get) => {
         try {
           const { user } = get();
           const userId = getDeviceId();
+
+          if (!user?.id) {
+            const anonim = await signInAsAnonym(auth);
+            const { uid } = anonim.user;
+
+            const docRef = await addDocument('users', uid, {
+              id: uid,
+              name,
+              email: '',
+              providerId: AUTH_PROVIDER.INCOGNITO,
+            });
+            await incrementValue(docRef, DB_FIELDS.USERS.LOGIN_COUNT);
+          }
+
           const roomId = await socketService.createRoom({
             playerName: name,
             dbId: user?.id || null,

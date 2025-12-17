@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
 import {
   Rocket,
   Settings,
@@ -22,23 +22,23 @@ import {
   Share2,
   Sparkles,
   Trash2,
-} from "lucide-react";
-import confetti from "canvas-confetti";
-import { Toaster, toast } from "react-hot-toast";
+} from 'lucide-react';
+import confetti from 'canvas-confetti';
+import { Toaster, toast } from 'react-hot-toast';
 import {
   useGameStore,
   type Player,
   type Team,
   TEAM_THEMES,
-} from "./store/gameStore";
-import { soundManager } from "./utils/soundManager";
-import "./index.css";
+} from './store/gameStore';
+import { soundManager } from './utils/soundManager';
+import './index.css';
 
 // --- Types & Constants ---
 // type Screen = "login" | "lobby" | "preround" | "play" | "victory";
 
 // --- Helper Components ---
-const AccentButton = ({ onClick, children, disabled, className = "" }: any) => (
+const AccentButton = ({ onClick, children, disabled, className = '' }: any) => (
   <button
     disabled={disabled}
     onClick={onClick}
@@ -97,22 +97,22 @@ const PlayerTable = ({
             </td>
             <td className="px-4 py-3 font-mono">{p.score}</td>
             <td className="px-4 py-3">
-              {gameStage === "lobby" ? (
+              {gameStage === 'lobby' ? (
                 <button
                   onClick={() => onToggleReady?.(p.id)}
                   disabled={p.id !== selfId}
                   className={`inline-flex items-center gap-2 rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
                     p.ready
-                      ? "bg-green-500/20 text-green-300 border border-green-500/30"
-                      : "bg-white/10 text-gray-400 border border-white/10"
-                  } ${p.id !== selfId ? "cursor-default opacity-80" : "hover:bg-opacity-80"}`}
+                      ? 'bg-green-500/20 text-green-300 border border-green-500/30'
+                      : 'bg-white/10 text-gray-400 border border-white/10'
+                  } ${p.id !== selfId ? 'cursor-default opacity-80' : 'hover:bg-opacity-80'}`}
                 >
                   {p.ready ? (
                     <CheckCircle2 className="h-3 w-3" />
                   ) : (
                     <XCircle className="h-3 w-3" />
                   )}
-                  {p.ready ? "Готов" : "Не готов"}
+                  {p.ready ? 'Готов' : 'Не готов'}
                 </button>
               ) : (
                 <span className="text-xs text-gray-400">В игре</span>
@@ -188,10 +188,10 @@ const TeamsSection = ({
                 className={`rounded-lg px-3 py-1 text-xs font-semibold transition btn-glass ${
                   isCurrentTeam
                     ? `${theme.bg} border ${theme.border} ${theme.text} opacity-100`
-                    : "opacity-70 hover:opacity-100"
+                    : 'opacity-70 hover:opacity-100'
                 }`}
               >
-                {isCurrentTeam ? "Ваша команда" : "Вступить"}
+                {isCurrentTeam ? 'Ваша команда' : 'Вступить'}
               </button>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -225,22 +225,22 @@ const TeamsSection = ({
 // --- Screen Components ---
 
 const LoginScreen = () => {
-  const [name, setName] = useState("");
-  const [roomId, setRoomId] = useState("");
+  const [name, setName] = useState('');
+  const [roomId, setRoomId] = useState('');
   const { actions, user } = useGameStore();
 
   useEffect(() => {
     if (user?.username || user?.name) {
-      setName(user.username || user.name || "");
+      setName(user.username || user.name || '');
     }
   }, [user]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const roomFromUrl = params.get("room");
+    const roomFromUrl = params.get('room');
     if (roomFromUrl) {
       setRoomId(roomFromUrl);
-      toast.success("Код комнаты введен!");
+      toast.success('Код комнаты введен!');
     }
   }, []);
 
@@ -275,7 +275,7 @@ const LoginScreen = () => {
                     />
                   ) : (
                     <div className="h-10 w-10 rounded-full bg-accent-main flex items-center justify-center font-bold">
-                      {user.username?.[0] || "U"}
+                      {user.username?.[0] || 'U'}
                     </div>
                   )}
                   <div className="text-left">
@@ -284,9 +284,9 @@ const LoginScreen = () => {
                     </div>
                     <div className="text-xs text-green-400">Онлайн</div>
                   </div>
-                </div> 
+                </div>
                 <button
-                  onClick={(e) => actions.logout(e, user)}
+                  onClick={() => actions.logout()}
                   className="text-xs text-gray-400 hover:text-white underline"
                 >
                   Выйти
@@ -299,13 +299,13 @@ const LoginScreen = () => {
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   <button
-                    onClick={() => actions.loginWithProvider("google")}
+                    onClick={() => actions.loginWithProvider('google')}
                     className="flex items-center justify-center gap-2 p-2 rounded-lg bg-white text-black font-bold text-sm hover:bg-gray-100 transition"
                   >
                     Google
                   </button>
                   <button
-                    onClick={() => actions.loginWithProvider("discord")}
+                    onClick={() => actions.loginWithProvider('discord')}
                     className="flex items-center justify-center gap-2 p-2 rounded-lg bg-[#5865F2] text-white font-bold text-sm hover:bg-[#4752C4] transition"
                   >
                     Discord
@@ -385,8 +385,8 @@ const LobbyScreen = ({
   customWords,
   customTopic,
 }: any) => {
-  const [topic, setTopic] = useState("");
-  const isTeamMode = settings.mode === "team";
+  const [topic, setTopic] = useState('');
+  const isTeamMode = settings.mode === 'team';
   const canStartGame =
     players.length >= 2 &&
     (!isTeamMode ||
@@ -394,7 +394,7 @@ const LobbyScreen = ({
   const teamValidationError =
     isTeamMode &&
     teams.some((t: Team) => t.playerIds.length > 0 && t.playerIds.length < 2);
-  const displayRoomId = roomId?.replace("alias-", "") || "...";
+  const displayRoomId = roomId?.replace('alias-', '') || '...';
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[360px,1fr] gap-6 animate-fade-in">
@@ -413,7 +413,7 @@ const LobbyScreen = ({
                   onClick={() => {
                     const url = `${window.location.origin}/?room=${displayRoomId}`;
                     navigator.clipboard.writeText(url);
-                    toast.success("Ссылка скопирована!");
+                    toast.success('Ссылка скопирована!');
                   }}
                   className="p-2 mt-1 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors border border-white/10"
                 >
@@ -457,7 +457,7 @@ const LobbyScreen = ({
                 {/* 🔥 AI пока заглушка - не скрываю, но будет работать потом */}
                 <button
                   onClick={() => {
-                    if (!topic) return toast.error("Введите тему");
+                    if (!topic) return toast.error('Введите тему');
                     actions.generateWordsAI(topic);
                   }}
                   className="btn-glass bg-accent-main/20 hover:bg-accent-main/40 border-accent-main/50"
@@ -477,9 +477,9 @@ const LobbyScreen = ({
             </label>
             <div className="mt-2 grid grid-cols-3 gap-2">
               {[
-                { value: "team", label: "Команды" },
-                { value: "solo_standard", label: "Соло (Std)" },
-                { value: "solo_all_vs_all", label: "Соло (All)" },
+                { value: 'team', label: 'Команды' },
+                { value: 'solo_standard', label: 'Соло (Std)' },
+                { value: 'solo_all_vs_all', label: 'Соло (All)' },
               ].map((mode) => (
                 <button
                   key={mode.value}
@@ -487,7 +487,7 @@ const LobbyScreen = ({
                   onClick={() =>
                     actions.updateSettings({ mode: mode.value as any })
                   }
-                  className={`rounded-lg border px-3 py-2 text-xs font-semibold transition ${settings.mode === mode.value ? "border-accent-main bg-accent-main/20 text-white" : "border-white/10 bg-white/5 text-gray-400"} ${!isHost && "opacity-70 cursor-not-allowed"}`}
+                  className={`rounded-lg border px-3 py-2 text-xs font-semibold transition ${settings.mode === mode.value ? 'border-accent-main bg-accent-main/20 text-white' : 'border-white/10 bg-white/5 text-gray-400'} ${!isHost && 'opacity-70 cursor-not-allowed'}`}
                 >
                   {mode.label}
                 </button>
@@ -566,9 +566,9 @@ const LobbyScreen = ({
                     enableChallenges: !settings.enableChallenges,
                   })
                 }
-                className={`rounded-lg border px-3 py-2 text-sm font-semibold transition w-full ${settings.enableChallenges ? "border-rose-500 bg-rose-500/20 text-white" : "border-white/10 bg-white/5 text-gray-400"} ${!isHost && "opacity-70 cursor-not-allowed"}`}
+                className={`rounded-lg border px-3 py-2 text-sm font-semibold transition w-full ${settings.enableChallenges ? 'border-rose-500 bg-rose-500/20 text-white' : 'border-white/10 bg-white/5 text-gray-400'} ${!isHost && 'opacity-70 cursor-not-allowed'}`}
               >
-                {settings.enableChallenges ? "Включены" : "Выключены"}
+                {settings.enableChallenges ? 'Включены' : 'Выключены'}
               </button>
             </div>
           </div>
@@ -587,7 +587,7 @@ const LobbyScreen = ({
       </div>
 
       <div className="space-y-4">
-        {settings.mode === "team" && (
+        {settings.mode === 'team' && (
           <Tile title="Команды">
             <TeamsSection
               teams={teams}
@@ -634,24 +634,24 @@ const LobbyScreen = ({
                   </p>
                   <p className="text-sm text-gray-400">
                     {players.length < 2
-                      ? "Нужно минимум 2 игрока"
+                      ? 'Нужно минимум 2 игрока'
                       : isTeamMode
-                        ? "Минимум две команды должны иметь по ≥ 2 игрока"
-                        : "Готово к старту!"}
+                        ? 'Минимум две команды должны иметь по ≥ 2 игрока'
+                        : 'Готово к старту!'}
                   </p>
                 </div>
               )}
               <AccentButton
                 onClick={() => {
                   if (!canStartGame) {
-                    toast.error("Соберите команды!");
+                    toast.error('Соберите команды!');
                     return;
                   }
-                  soundManager.play("start");
+                  soundManager.play('start');
                   actions.startGame();
                 }}
                 disabled={!canStartGame}
-                className={`px-8 py-3 text-lg ${!canStartGame ? "opacity-50 cursor-not-allowed grayscale" : ""}`}
+                className={`px-8 py-3 text-lg ${!canStartGame ? 'opacity-50 cursor-not-allowed grayscale' : ''}`}
               >
                 <Play className="h-6 w-6 fill-current" /> Начать игру
               </AccentButton>
@@ -687,8 +687,8 @@ const PreRoundScreen = ({
   const isSpeaker = selfId === speaker?.id;
   const isListener = selfId === listener?.id;
   const amIInvolved = isSpeaker || isListener;
-  const isSpeakerReady = !!readyMap[speaker?.id || ""];
-  const isListenerReady = !!readyMap[listener?.id || ""];
+  const isSpeakerReady = !!readyMap[speaker?.id || ''];
+  const isListenerReady = !!readyMap[listener?.id || ''];
   const requiredReady = isSpeakerReady && isListenerReady;
   const showStartButton = isSpeaker && requiredReady;
 
@@ -704,7 +704,7 @@ const PreRoundScreen = ({
               Раунд #{useGameStore.getState().round.roundNumber}
             </div>
             <h2 className="text-3xl font-bold text-white">Приготовьтесь!</h2>
-            {settings.mode === "team" && currentTeam && (
+            {settings.mode === 'team' && currentTeam && (
               <p className={`text-xl font-bold mt-2 ${teamTheme?.text}`}>
                 Ход команды: {currentTeam.name}
               </p>
@@ -763,18 +763,18 @@ const PreRoundScreen = ({
               !requiredReady ? (
                 <button
                   onClick={() => {
-                    soundManager.play("click");
+                    soundManager.play('click');
                     actions.markRoundReady(selfId!, !readyMap[selfId!]);
                   }}
-                  className={`w-full py-4 rounded-xl text-xl font-bold transition-all transform active:scale-95 ${readyMap[selfId!] ? "bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-900/20" : "bg-white/10 hover:bg-white/20 text-white border border-white/20"}`}
+                  className={`w-full py-4 rounded-xl text-xl font-bold transition-all transform active:scale-95 ${readyMap[selfId!] ? 'bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-900/20' : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'}`}
                 >
-                  {readyMap[selfId!] ? "ОЖИДАНИЕ ПАРТНЕРА" : "Я ГОТОВ!"}
+                  {readyMap[selfId!] ? 'ОЖИДАНИЕ ПАРТНЕРА' : 'Я ГОТОВ!'}
                 </button>
               ) : // 🔥 ПРАВКА: Убран network.sendToHost, теперь actions.startGameRound/emit
               showStartButton ? (
                 <button
                   onClick={() => {
-                    soundManager.play("start");
+                    soundManager.play('start');
                     actions.startGameRound();
                   }}
                   className="w-full py-4 rounded-xl text-xl font-bold bg-accent-main hover:bg-accent-main/80 text-white shadow-[0_0_20px_rgba(var(--accent-main),0.4)] animate-pulse"
@@ -798,7 +798,7 @@ const PreRoundScreen = ({
       <div className="space-y-4">
         <Tile title="Счет">
           <div className="space-y-2">
-            {settings.mode === "team"
+            {settings.mode === 'team'
               ? teams.map((t: Team) => {
                   const theme = TEAM_THEMES[t.themeIndex % TEAM_THEMES.length];
                   const playersInTeam = players.filter(
@@ -854,11 +854,11 @@ const GameScreen = ({
 
   // 🔥 ПРАВКА: Все actions идут через стор (P2P удален)
   const handleCorrect = () => {
-    soundManager.play("correct");
+    soundManager.play('correct');
     actions.handleCorrect();
   };
   const handleSkip = () => {
-    soundManager.play("skip");
+    soundManager.play('skip');
     actions.handleSkip();
   };
   const handlePause = () => {
@@ -905,11 +905,11 @@ const GameScreen = ({
           ) : (
             <>
               <div className="text-sm text-gray-400 uppercase tracking-[0.2em] mb-4">
-                {isListener ? "Вы отгадываете" : "Наблюдатель"}
+                {isListener ? 'Вы отгадываете' : 'Наблюдатель'}
               </div>
               <div className="text-3xl font-bold text-gray-300 text-center opacity-50">
                 {isListener
-                  ? "Слушайте внимательно!"
+                  ? 'Слушайте внимательно!'
                   : `${speaker?.name} объясняет...`}
               </div>
             </>
@@ -951,7 +951,7 @@ const GameScreen = ({
             <Trophy className="h-4 w-4 text-amber-400" /> Лидерборд
           </h3>
           <div className="space-y-3">
-            {settings.mode === "team"
+            {settings.mode === 'team'
               ? teams
                   .sort((a: Team, b: Team) => b.score - a.score)
                   .map((t: Team) => {
@@ -968,7 +968,7 @@ const GameScreen = ({
                     return (
                       <div
                         key={t.id}
-                        className={`p-3 rounded-lg border ${theme.border} ${theme.bg} ${isActive ? "ring-2 ring-white" : ""} flex flex-col`}
+                        className={`p-3 rounded-lg border ${theme.border} ${theme.bg} ${isActive ? 'ring-2 ring-white' : ''} flex flex-col`}
                       >
                         <div className="flex justify-between items-center mb-1">
                           <span className={theme.text}>{t.name}</span>
@@ -982,10 +982,10 @@ const GameScreen = ({
                               key={p.id}
                               className="text-[10px] bg-black/20 px-1.5 py-0.5 rounded text-gray-300 flex gap-1"
                             >
-                              {p.name}:{" "}
+                              {p.name}:{' '}
                               <span
                                 className={
-                                  p.score < 0 ? "text-red-400" : "text-gray-300"
+                                  p.score < 0 ? 'text-red-400' : 'text-gray-300'
                                 }
                               >
                                 {p.score}
@@ -1002,15 +1002,15 @@ const GameScreen = ({
                   .map((p: Player) => (
                     <div
                       key={p.id}
-                      className={`flex justify-between items-center p-2 border-b border-white/5 last:border-0 ${p.id === speaker?.id ? "bg-white/5 rounded" : ""}`}
+                      className={`flex justify-between items-center p-2 border-b border-white/5 last:border-0 ${p.id === speaker?.id ? 'bg-white/5 rounded' : ''}`}
                     >
                       <span
-                        className={`text-sm ${p.id === speaker?.id ? "text-accent-main font-bold" : "text-gray-300"}`}
+                        className={`text-sm ${p.id === speaker?.id ? 'text-accent-main font-bold' : 'text-gray-300'}`}
                       >
-                        {p.name} {p.id === selfId && "(Вы)"}
+                        {p.name} {p.id === selfId && '(Вы)'}
                       </span>
                       <span
-                        className={`font-mono font-bold ${p.score < 0 ? "text-red-400" : "text-white"}`}
+                        className={`font-mono font-bold ${p.score < 0 ? 'text-red-400' : 'text-white'}`}
                       >
                         {p.score}
                       </span>
@@ -1025,7 +1025,7 @@ const GameScreen = ({
 
 const VictoryScreen = ({ winner, players, onRestart }: any) => {
   useEffect(() => {
-    soundManager.play("win");
+    soundManager.play('win');
     const duration = 3 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
@@ -1067,7 +1067,7 @@ const VictoryScreen = ({ winner, players, onRestart }: any) => {
           Победа!
         </h2>
         <p className="text-2xl text-amber-200 mb-10 font-bold">
-          {(winner as any)?.name || "Неизвестный"} забирает кубок!
+          {(winner as any)?.name || 'Неизвестный'} забирает кубок!
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           <div className="bg-white/5 rounded-xl p-6 border border-white/10">
@@ -1125,7 +1125,7 @@ function App() {
     [game.players, game.round.listenerId],
   );
   const winner = useMemo(() => {
-    if (game.settings.mode === "team")
+    if (game.settings.mode === 'team')
       return game.teams.find((t) => t.id === game.victory.winnerId);
     return game.players.find((p) => p.id === game.victory.winnerId);
   }, [game.victory.winnerId, game.settings.mode, game.teams, game.players]);
@@ -1136,9 +1136,9 @@ function App() {
         position="top-center"
         toastOptions={{
           style: {
-            background: "#1e293b",
-            color: "#fff",
-            border: "1px solid rgba(255,255,255,0.1)",
+            background: '#1e293b',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.1)',
           },
         }}
       />
@@ -1147,7 +1147,7 @@ function App() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-accent-main/20 rounded-full blur-[100px] animate-blob animation-delay-2000" />
       </div>
 
-      {game.stage !== "login" && (
+      {game.stage !== 'login' && (
         <header className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
@@ -1164,7 +1164,7 @@ function App() {
               <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-400">
                 <span>ID:</span>
                 <span className="text-white select-all">
-                  {game.roomId.replace("alias-", "")}
+                  {game.roomId.replace('alias-', '')}
                 </span>
               </div>
             )}
@@ -1181,7 +1181,7 @@ function App() {
             </button>
             <button
               onClick={() => {
-                if (confirm("Вы уверены, что хотите покинуть игру?")) {
+                if (confirm('Вы уверены, что хотите покинуть игру?')) {
                   actions.leaveGame();
                 }
               }}
@@ -1195,8 +1195,8 @@ function App() {
       )}
 
       <main className="max-w-7xl mx-auto px-4 py-4 md:py-8 pb-20">
-        {game.stage === "login" && <LoginScreen />}
-        {game.stage === "lobby" && (
+        {game.stage === 'login' && <LoginScreen />}
+        {game.stage === 'lobby' && (
           <LobbyScreen
             roomId={game.roomId}
             settings={game.settings}
@@ -1209,7 +1209,7 @@ function App() {
             customTopic={game.customTopic}
           />
         )}
-        {game.stage === "preround" && (
+        {game.stage === 'preround' && (
           <PreRoundScreen
             speaker={speaker}
             listener={listener}
@@ -1224,7 +1224,7 @@ function App() {
             activeChallenge={game.round.activeChallenge}
           />
         )}
-        {game.stage === "play" && (
+        {game.stage === 'play' && (
           <GameScreen
             speaker={speaker}
             listener={listener}
@@ -1237,7 +1237,7 @@ function App() {
             actions={actions}
           />
         )}
-        {game.stage === "victory" && (
+        {game.stage === 'victory' && (
           <VictoryScreen
             winner={winner}
             players={game.players}

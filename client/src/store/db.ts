@@ -6,7 +6,8 @@ import {
   DocumentReference,
 } from 'firebase/firestore';
 
-import { db } from '../services/firebase';
+import { db, auth, signInAsAnonym } from '../services/firebase';
+import { AUTH_PROVIDER, DB_FIELDS } from '../constants';
 
 type getDocument = {
   collection: string;
@@ -39,4 +40,17 @@ export const incrementValue = async (
   await updateDoc(docRef, {
     [field]: increment(1),
   });
+};
+
+export const createIncognitoUser = async (name: string) => {
+  const anonim = await signInAsAnonym(auth);
+  const { uid } = anonim.user;
+
+  const docRef = await addDocument('users', uid, {
+    id: uid,
+    name,
+    email: '',
+    providerId: AUTH_PROVIDER.INCOGNITO,
+  });
+  await incrementValue(docRef, DB_FIELDS.USERS.LOGIN_COUNT);
 };

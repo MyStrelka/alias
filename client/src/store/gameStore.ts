@@ -3,10 +3,9 @@ import { socketService } from '../services/socketService';
 import { type UserData } from '../types';
 import toast from 'react-hot-toast';
 
-import { auth, googleProvider, signInAsAnonym } from '../services/firebase';
+import { auth, googleProvider } from '../services/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
-import { addDocument, incrementValue } from './db';
-import { AUTH_PROVIDER, DB_FIELDS } from '../constants';
+import { addDocument, createIncognitoUser, incrementValue } from './db';
 
 // ... типы (UserData можно упростить)
 // interface UserData { uid: string; displayName: string | null; photoURL: string | null; }
@@ -296,19 +295,11 @@ export const useGameStore = create<GameState>((set, get) => {
       createRoom: async (name) => {
         try {
           const { user } = get();
+          // TODO: убрать userId
           const userId = getDeviceId();
 
           if (!user?.id) {
-            const anonim = await signInAsAnonym(auth);
-            const { uid } = anonim.user;
-
-            const docRef = await addDocument('users', uid, {
-              id: uid,
-              name,
-              email: '',
-              providerId: AUTH_PROVIDER.INCOGNITO,
-            });
-            await incrementValue(docRef, DB_FIELDS.USERS.LOGIN_COUNT);
+            await createIncognitoUser(name);
           }
 
           const roomId = await socketService.createRoom({
@@ -333,6 +324,9 @@ export const useGameStore = create<GameState>((set, get) => {
         try {
           const { user } = get();
           const userId = getDeviceId();
+          if (!user?.id) {
+            await createIncognitoUser(name);
+          }
           await socketService.joinRoom({
             roomId,
             playerName: name,

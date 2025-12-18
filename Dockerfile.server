@@ -1,0 +1,23 @@
+FROM node:24-alpine as build
+
+WORKDIR /app
+
+# Копируем package.json из папки server
+COPY ./package.json .
+
+RUN npm install -g corepack
+RUN yarn set version stable
+
+COPY ./packages/shared/. ./packages/shared
+COPY ./apps/server/. ./apps/server/
+RUN yarn workspace @alias/shared install
+RUN yarn workspace @alias/shared build
+
+RUN yarn install
+RUN yarn server:build
+
+# Копируем весь код сервера
+COPY . .
+
+EXPOSE 3000
+CMD ["yarn", "server:start"]

@@ -1,43 +1,23 @@
-version: "3.8"
-
 services:
   # --- FRONTEND ---
   client:
     build:
-      context: client
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.client
       args:
         # ⚠️ ВАЖНО: При деплое на реальный сервер заменить localhost
         # на IP  сервера
         - VITE_SERVER_URL=http://localhost:3000
         - VITE_PB_URL=http://localhost:8090
     ports:
-      - "80:80"
+      - '80:80'
     depends_on:
       - server
 
   # --- BACKEND ---
   server:
     build:
-      context: server
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.server
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - PORT=3000
-      # Бэкенд общается с базой внутри сети Докера
-      - PB_URL=http://pocketbase:8090
-    depends_on:
-      - pocketbase
-
-  # --- DATABASE ---
-  pocketbase:
-    build:
-      context: pocketbase
-      dockerfile: ./Dockerfile
-    ports:
-      - "8090:8090"
-    volumes:
-      # Сохраняем базу данных в папку pb_data на сервере
-      - ./pb_data:/pb/pb_data
-    # command: --http=0.0.0.0:8090

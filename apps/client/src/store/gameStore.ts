@@ -6,13 +6,19 @@ import toast from 'react-hot-toast';
 import { auth, googleProvider } from '../services/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { addDocument, createIncognitoUser, incrementValue } from './db';
-import type { Settings } from '../../../shared/types';
+import type {
+  Settings,
+  GameState,
+  // GameStage,
+  // Team,
+  Player,
+} from '@alias/shared';
 
 // ... типы (UserData можно упростить)
 // interface UserData { uid: string; displayName: string | null; photoURL: string | null; }
 
 // --- ТИПЫ ---
-type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
+// type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
 
 export interface TeamTheme {
   border: string;
@@ -53,58 +59,42 @@ export const TEAM_THEMES: TeamTheme[] = [
   },
 ];
 
-export interface Team {
-  id: string;
-  name: string;
-  playerIds: string[];
-  score: number;
-  themeIndex: number;
-}
-export interface Player {
-  id: string;
-  name: string;
-  score: number;
-  explained: number;
-  guessed: number;
-  ready: boolean;
-  isHost?: boolean;
-  teamId?: string;
-  dbId?: string | null;
-  avatar?: string | null;
-  online?: boolean;
-  userId?: string;
-}
+// export interface Team {
+//   id: string;
+//   name: string;
+//   playerIds: string[];
+//   score: number;
+//   themeIndex: number;
+// }
+// export interface Player {
+//   id: string;
+//   name: string;
+//   score: number;
+//   explained: number;
+//   guessed: number;
+//   ready: boolean;
+//   isHost?: boolean;
+//   teamId?: string;
+//   dbId?: string | null;
+//   avatar?: string | null;
+//   online?: boolean;
+//   userId?: string;
+// }
 
-interface RoundState {
-  speakerId?: string;
-  listenerId?: string;
-  roundNumber: number;
-  timeLeft: number;
-  running: boolean;
-  currentWord: string;
-  readyMap: Record<string, boolean>;
-  currentTeamId?: string;
-  teamSpeakerIndex: Record<string, number>;
-  activeChallenge: string | null;
-}
+// interface RoundState {
+//   speakerId?: string;
+//   listenerId?: string;
+//   roundNumber: number;
+//   timeLeft: number;
+//   running: boolean;
+//   currentWord: string;
+//   readyMap: Record<string, boolean>;
+//   currentTeamId?: string;
+//   teamSpeakerIndex: Record<string, number>;
+//   activeChallenge: string | null;
+// }
 
-export interface GameState {
-  stage: GameStage;
-  selfId?: string;
-  selfName?: string;
-  roomId?: string;
-  isHost: boolean;
-  players: Player[];
-  teams: Team[];
-  settings: Settings;
-  round: RoundState;
-  victory: { winnerId?: string };
-  isMuted: boolean;
-  networkReady: boolean;
-  customWords: string[] | null;
-  customTopic: string | null;
-  user: UserData | null;
-
+export type GameStateActions = {
   actions: {
     loginWithProvider: (provider: 'google' | 'discord') => Promise<void>;
     logout: () => void;
@@ -135,7 +125,7 @@ export interface GameState {
     saveSession: () => void;
     restoreSession: () => { roomId: string; selfName: string } | null;
   };
-}
+};
 
 const initialSettings: Settings = {
   difficulty: 'medium',
@@ -145,7 +135,19 @@ const initialSettings: Settings = {
   enableChallenges: true,
 };
 
-const initialState: Omit<GameState, 'actions'> = {
+export type GameStateClient = {
+  selfId?: string;
+  selfName?: string;
+  roomId?: string;
+  isHost: boolean;
+  customWords: string[] | null;
+  customTopic: string | null;
+  isMuted: boolean;
+  networkReady: boolean;
+  user: UserData | null;
+};
+
+const initialState: GameState & GameStateClient = {
   stage: 'login',
   isHost: false,
   players: [],
@@ -161,8 +163,12 @@ const initialState: Omit<GameState, 'actions'> = {
     readyMap: {},
     teamSpeakerIndex: {},
     activeChallenge: null,
+
+    currentTeamId: null,
+    speakerId: null,
+    listenerId: null,
   },
-  victory: {},
+  // victory: null,
   isMuted: false,
   networkReady: false,
   user: null,
@@ -177,7 +183,9 @@ const getDeviceId = () => {
   return id;
 };
 
-export const useGameStore = create<GameState>((set, get) => {
+export const useGameStore = create<
+  GameState & GameStateClient & GameStateActions
+>((set, get) => {
   socketService.setHandler((type, payload) => {
     if (type === 'state') {
       const currentSocketId = socketService.socket?.id;

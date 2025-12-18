@@ -2,7 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import PocketBase from 'pocketbase';
+// import PocketBase from 'pocketbase';
 import { words } from './data/words';
 import { CHALLENGES } from './data/challenges';
 import type {
@@ -13,12 +13,12 @@ import type {
   Room,
   Settings,
   Team,
-} from '../../shared/types';
-import { EVENTS } from '../../shared/constants';
+} from '@alias/shared';
+import { EVENTS } from '@alias/shared';
 
 // Используем env для URL и порта
 const PB_URL = process.env.PB_URL || 'http://127.0.0.1:8090';
-const pb = new PocketBase(PB_URL);
+// const pb = new PocketBase(PB_URL);
 
 const app = express();
 app.use(cors());

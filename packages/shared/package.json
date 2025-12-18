@@ -1,0 +1,16 @@
+{
+  "name": "@alias/shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build"
+  },
+  "keywords": [],
+  "author": "",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "alias",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "server:build": "yarn workspace @alias/server run build",
+    "server:dev": "yarn workspace @alias/server run dev",
+    "client:build": "yarn workspace @alias/client run build",
+    "client:dev": "yarn workspace @alias/client run dev",
+    "packages:build": "yarn workspace @alias/shared run build"
+  },
+  "packageManager": "yarn@4.12.0"
+}

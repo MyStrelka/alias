@@ -1,13 +1,6 @@
 export type Mode = 'team' | 'solo_standard' | 'solo_all_vs_all';
 export type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
 export type Difficulty = 'easy' | 'medium' | 'hard';
-// export interface Settings {
-//   difficulty: 'easy' | 'medium' | 'hard';
-//   roundTime: number;
-//   winScore: number;
-//   mode: Mode;
-//   enableChallenges: boolean;
-// }
 
 export interface Settings {
   difficulty: Difficulty;

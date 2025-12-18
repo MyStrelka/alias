@@ -6,13 +6,13 @@ import toast from 'react-hot-toast';
 import { auth, googleProvider } from '../services/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { addDocument, createIncognitoUser, incrementValue } from './db';
+import type { Settings } from '../../../shared/types';
 
 // ... типы (UserData можно упростить)
 // interface UserData { uid: string; displayName: string | null; photoURL: string | null; }
 
 // --- ТИПЫ ---
 type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
-type Mode = 'team' | 'solo_standard' | 'solo_all_vs_all';
 
 export interface TeamTheme {
   border: string;
@@ -74,13 +74,7 @@ export interface Player {
   online?: boolean;
   userId?: string;
 }
-export interface Settings {
-  difficulty: 'easy' | 'medium' | 'hard';
-  roundTime: number;
-  winScore: number;
-  mode: Mode;
-  enableChallenges: boolean;
-}
+
 interface RoundState {
   speakerId?: string;
   listenerId?: string;

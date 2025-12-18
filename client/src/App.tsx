@@ -31,6 +31,7 @@ import {
   type Team,
   TEAM_THEMES,
 } from './store/gameStore';
+import { GAME_MODE } from '../../shared/constants';
 import { soundManager } from './utils/soundManager';
 import './index.css';
 
@@ -386,7 +387,7 @@ const LobbyScreen = ({
   customTopic,
 }: any) => {
   const [topic, setTopic] = useState('');
-  const isTeamMode = settings.mode === 'team';
+  const isTeamMode = settings.mode === GAME_MODE.TEAM;
   const canStartGame =
     players.length >= 2 &&
     (!isTeamMode ||
@@ -477,9 +478,9 @@ const LobbyScreen = ({
             </label>
             <div className="mt-2 grid grid-cols-3 gap-2">
               {[
-                { value: 'team', label: 'Команды' },
-                { value: 'solo_standard', label: 'Соло (Std)' },
-                { value: 'solo_all_vs_all', label: 'Соло (All)' },
+                { value: GAME_MODE.TEAM, label: 'Команды' },
+                { value: GAME_MODE.SOLO_STANDART, label: 'Соло (Std)' },
+                { value: GAME_MODE.SOLO_ALL_VS_ALL, label: 'Соло (All)' },
               ].map((mode) => (
                 <button
                   key={mode.value}
@@ -587,7 +588,7 @@ const LobbyScreen = ({
       </div>
 
       <div className="space-y-4">
-        {settings.mode === 'team' && (
+        {settings.mode === GAME_MODE.TEAM && (
           <Tile title="Команды">
             <TeamsSection
               teams={teams}
@@ -704,7 +705,7 @@ const PreRoundScreen = ({
               Раунд #{useGameStore.getState().round.roundNumber}
             </div>
             <h2 className="text-3xl font-bold text-white">Приготовьтесь!</h2>
-            {settings.mode === 'team' && currentTeam && (
+            {settings.mode === GAME_MODE.TEAM && currentTeam && (
               <p className={`text-xl font-bold mt-2 ${teamTheme?.text}`}>
                 Ход команды: {currentTeam.name}
               </p>
@@ -798,7 +799,7 @@ const PreRoundScreen = ({
       <div className="space-y-4">
         <Tile title="Счет">
           <div className="space-y-2">
-            {settings.mode === 'team'
+            {settings.mode === GAME_MODE.TEAM
               ? teams.map((t: Team) => {
                   const theme = TEAM_THEMES[t.themeIndex % TEAM_THEMES.length];
                   const playersInTeam = players.filter(
@@ -951,7 +952,7 @@ const GameScreen = ({
             <Trophy className="h-4 w-4 text-amber-400" /> Лидерборд
           </h3>
           <div className="space-y-3">
-            {settings.mode === 'team'
+            {settings.mode === GAME_MODE.TEAM
               ? teams
                   .sort((a: Team, b: Team) => b.score - a.score)
                   .map((t: Team) => {
@@ -1125,7 +1126,7 @@ function App() {
     [game.players, game.round.listenerId],
   );
   const winner = useMemo(() => {
-    if (game.settings.mode === 'team')
+    if (game.settings.mode === GAME_MODE.TEAM)
       return game.teams.find((t) => t.id === game.victory.winnerId);
     return game.players.find((p) => p.id === game.victory.winnerId);
   }, [game.victory.winnerId, game.settings.mode, game.teams, game.players]);

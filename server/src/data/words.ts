@@ -10948,10 +10948,10 @@ const hardRaw = `
 арабеска
 `;
 
-const parse = (text) =>
+const parse = (text: string) =>
   text
     .trim()
-    .split("\n")
+    .split('\n')
     .map((w) => w.trim())
     .filter((w) => w.length > 0);
 

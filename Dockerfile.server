@@ -16,8 +16,11 @@ RUN yarn workspace @alias/shared build
 RUN yarn install
 RUN yarn server:build
 
+########
+FROM node:24-alpine
+WORKDIR /app
 # Копируем весь код сервера
-COPY . .
+COPY --from=build /app/apps/server/dist .
 
 EXPOSE 3000
-CMD ["yarn", "server:start"]
+CMD ["node", "index.js"]

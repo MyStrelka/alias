@@ -7,7 +7,6 @@ services:
         # ⚠️ ВАЖНО: При деплое на реальный сервер заменить localhost
         # на IP  сервера
         - VITE_SERVER_URL=http://localhost:3000
-        - VITE_PB_URL=http://localhost:8090
     ports:
       - '80:80'
     depends_on:

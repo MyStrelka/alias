@@ -17,9 +17,7 @@ RUN yarn install
 
 # Принимаем переменные для сборки (адреса сервера)
 ARG VITE_SERVER_URL
-# ARG VITE_PB_URL
 ENV VITE_SERVER_URL=$VITE_SERVER_URL
-# ENV VITE_PB_URL=$VITE_PB_URL
 
 RUN yarn client:build
 

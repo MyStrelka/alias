@@ -33,12 +33,20 @@ body {
   .btn-glass {
     @apply px-4 py-2 rounded-xl font-semibold transition-all duration-200 active:scale-95
     border border-white/10 bg-white/5 hover:bg-white/10 text-white shadow-lg;
+
+    &:disabled {
+      @apply bg-gray-600 hover:bg-gray-600 shadow-none cursor-not-allowed;
+    }
   }
 
   /* Акцентная кнопка (яркая) */
   .btn-accent {
     @apply bg-accent-main hover:bg-violet-500 border-transparent text-white 
     shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)];
+
+    &:disabled {
+      @apply bg-gray-600 hover:bg-gray-600 shadow-none cursor-not-allowed;
+    }
   }
 
   /* Бэдж (маленькая плашка) */

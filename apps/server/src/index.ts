@@ -21,7 +21,10 @@ const PB_URL = process.env.PB_URL || 'http://127.0.0.1:8090';
 // const pb = new PocketBase(PB_URL);
 
 const app = express();
-app.use(cors());
+// app.use(cors());
+app.get('/test', (req, res) => {
+  res.send('Hello World!');
+});
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

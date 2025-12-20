@@ -36,7 +36,16 @@ jobs:
         IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-client:latest
       run: |
         gcloud auth configure-docker $GOOGLE_REGION-docker.pkg.dev
-        docker build -f ./Dockerfile.client -t $IMAGE_TAG .
+        docker build \
+        --build-arg VITE_FIREBASE_apiKey=${{ secrets.VITE_FIREBASE_apiKey }} \
+        --build-arg VITE_FIREBASE_authDomain=${{ secrets.VITE_FIREBASE_authDomain }} \
+        --build-arg VITE_FIREBASE_projectId=${{ secrets.VITE_FIREBASE_projectId }} \
+        --build-arg VITE_FIREBASE_storageBucket=${{ secrets.VITE_FIREBASE_storageBucket }} \
+        --build-arg VITE_FIREBASE_messagingSenderId=${{ secrets.VITE_FIREBASE_messagingSenderId }} \
+        --build-arg VITE_FIREBASE_appId=${{ secrets.VITE_FIREBASE_appId }} \
+        --build-arg VITE_FIREBASE_measurementId=${{ secrets.VITE_FIREBASE_measurementId }} \
+        --build-arg SERVER_URL=${{ secrets.SERVER_URL }} \
+        -f ./Dockerfile.client -t $IMAGE_TAG .
         docker push $IMAGE_TAG
 
     - name: deploy to Cloud Run

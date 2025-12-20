@@ -1,7 +1,35 @@
 # Этап 1: Сборка React
 FROM node:24-alpine as build
 WORKDIR /app
+
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+
+# pass vite env
+ARG VITE_FIREBASE_apiKey
+ENV VITE_FIREBASE_apiKey=$VITE_FIREBASE_apiKey
+
+ARG VITE_FIREBASE_authDomain
+ENV VITE_FIREBASE_authDomain=$VITE_FIREBASE_authDomain
+
+ARG VITE_FIREBASE_projectId
+ENV VITE_FIREBASE_projectId=$VITE_FIREBASE_projectId
+
+ARG VITE_FIREBASE_storageBucket
+ENV VITE_FIREBASE_storageBucket=$VITE_FIREBASE_storageBucket
+
+ARG VITE_FIREBASE_messagingSenderId
+ENV VITE_FIREBASE_messagingSenderId=$VITE_FIREBASE_messagingSenderId
+
+ARG VITE_FIREBASE_appId
+ENV VITE_FIREBASE_appId=$VITE_FIREBASE_appId
+
+ARG VITE_FIREBASE_measurementId
+ENV VITE_FIREBASE_measurementId=$VITE_FIREBASE_measurementId
+
+ARG SERVER_URL
+ENV VITE_ENTRYPOINT_URL=$SERVER_URL
+
+##
 
 COPY ./package*.json ./
 RUN npm install -g corepack

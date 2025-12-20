@@ -4,10 +4,10 @@ on:
   push:
     branches:
     - 'firebase'
-path:
-  - apps/server
-  - packages
-  - Dockerfile.server
+    path:
+      - 'apps/server/**/*'
+      - 'packages/**/*'
+      - 'Dockerfile.server'
 
 jobs:
   deploy:

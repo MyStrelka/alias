@@ -2,6 +2,16 @@ export type Mode = 'team' | 'solo_standard' | 'solo_all_vs_all';
 export type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
+export interface UserData {
+  id: string;
+  username: string;
+  email: string;
+  avatar: string; // URL картинки
+  collectionId: string;
+  collectionName: string;
+  name?: string; // Поле может быть опциональным (?)
+}
+
 export interface Settings {
   difficulty: Difficulty;
   roundTime: number;
@@ -58,4 +68,49 @@ export type GameState = {
     listenerId: string | null;
   };
   victory?: { winnerId: string };
+};
+
+export type GameStateClient = {
+  selfId?: string;
+  selfName?: string;
+  roomId?: string;
+  isHost: boolean;
+  customWords: string[] | null;
+  customTopic: string | null;
+  isMuted: boolean;
+  networkReady: boolean;
+  user: UserData | null;
+};
+
+export type GameStateActions = {
+  actions: {
+    loginWithProvider: (provider: 'google' | 'discord') => Promise<void>;
+    logout: () => void;
+    checkAuth: () => void;
+    createRoom: (name: string) => Promise<void>;
+    joinRoom: (name: string, roomId: string) => Promise<void>;
+    toggleReady: () => void;
+    updateSettings: (s: Partial<Settings>) => void;
+    shuffleTeams: () => void;
+    createTeam: () => void;
+    joinTeam: (teamId: string) => void;
+    startGame: () => void;
+    markRoundReady: (playerId: string, status: boolean) => void;
+    startRound: () => void;
+    togglePause: () => void;
+    handleCorrect: () => void;
+    handleSkip: () => void;
+    tick: () => void;
+    restart: () => void;
+    toggleMute: () => void;
+    leaveGame: () => void;
+    kickPlayer: (playerId: string) => void;
+    generateWordsAI: (topic: string) => Promise<void>;
+    clearCustomWords: () => void;
+    broadcastState: () => void;
+    injectState: (incoming: Partial<GameState>) => void;
+    startGameRound: () => void;
+    saveSession: () => void;
+    restoreSession: () => { roomId: string; selfName: string } | null;
+  };
 };

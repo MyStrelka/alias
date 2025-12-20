@@ -1,12 +1,18 @@
 import { create } from 'zustand';
 import { socketService } from '../services/socketService';
-import { type UserData } from '../types';
+// import { type UserData } from '../types';
 import toast from 'react-hot-toast';
 
 import { auth, googleProvider } from '../services/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { addDocument, createIncognitoUser, incrementValue } from './db';
-import type { Settings, GameState, Player } from '@alias/shared';
+import type {
+  Settings,
+  GameState,
+  Player,
+  GameStateClient,
+  GameStateActions,
+} from '@alias/shared';
 
 export interface TeamTheme {
   border: string;
@@ -47,57 +53,12 @@ export const TEAM_THEMES: TeamTheme[] = [
   },
 ];
 
-export type GameStateActions = {
-  actions: {
-    loginWithProvider: (provider: 'google' | 'discord') => Promise<void>;
-    logout: () => void;
-    checkAuth: () => void;
-    createRoom: (name: string) => Promise<void>;
-    joinRoom: (name: string, roomId: string) => Promise<void>;
-    toggleReady: () => void;
-    updateSettings: (s: Partial<Settings>) => void;
-    shuffleTeams: () => void;
-    createTeam: () => void;
-    joinTeam: (teamId: string) => void;
-    startGame: () => void;
-    markRoundReady: (playerId: string, status: boolean) => void;
-    startRound: () => void;
-    togglePause: () => void;
-    handleCorrect: () => void;
-    handleSkip: () => void;
-    tick: () => void;
-    restart: () => void;
-    toggleMute: () => void;
-    leaveGame: () => void;
-    kickPlayer: (playerId: string) => void;
-    generateWordsAI: (topic: string) => Promise<void>;
-    clearCustomWords: () => void;
-    broadcastState: () => void;
-    injectState: (incoming: Partial<GameState>) => void;
-    startGameRound: () => void;
-    saveSession: () => void;
-    restoreSession: () => { roomId: string; selfName: string } | null;
-  };
-};
-
 const initialSettings: Settings = {
   difficulty: 'medium',
   roundTime: 60,
   winScore: 30,
   mode: 'team',
   enableChallenges: true,
-};
-
-export type GameStateClient = {
-  selfId?: string;
-  selfName?: string;
-  roomId?: string;
-  isHost: boolean;
-  customWords: string[] | null;
-  customTopic: string | null;
-  isMuted: boolean;
-  networkReady: boolean;
-  user: UserData | null;
 };
 
 const initialState: GameState & GameStateClient = {

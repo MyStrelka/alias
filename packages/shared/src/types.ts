@@ -103,6 +103,7 @@ export type GameStateActions = {
     tick: () => void;
     restart: () => void;
     toggleMute: () => void;
+    backToLobby: () => void;
     leaveGame: () => void;
     kickPlayer: (playerId: string) => void;
     generateWordsAI: (topic: string) => Promise<void>;

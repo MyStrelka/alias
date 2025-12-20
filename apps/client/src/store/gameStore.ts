@@ -261,6 +261,15 @@ export const useGameStore = create<
           console.error(error);
         }
       },
+      backToLobby: () => {
+        const { isHost } = get();
+        if (isHost) {
+          get().actions.restart();
+        } else {
+          set({ stage: 'lobby' });
+          get().actions.saveSession();
+        }
+      },
       leaveGame: () => {
         socketService.close();
         localStorage.removeItem('alias_session');

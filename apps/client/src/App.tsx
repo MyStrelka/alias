@@ -107,7 +107,7 @@ function App() {
           <Victory
             winner={winner}
             players={game.players}
-            onRestart={actions.restart}
+            backToLobby={actions.backToLobby}
           />
         )}
       </main>

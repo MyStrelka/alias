@@ -5,7 +5,7 @@ import type { Player } from '@alias/shared';
 import { soundManager } from '../utils/soundManager';
 import AccentButton from '../components/AccentButton';
 
-const Victory = ({ winner, players, onRestart }: any) => {
+const Victory = ({ winner, players, backToLobby }: any) => {
   useEffect(() => {
     soundManager.play('win');
     const duration = 3 * 1000;
@@ -76,7 +76,7 @@ const Victory = ({ winner, players, onRestart }: any) => {
           </div>
         </div>
         <AccentButton
-          onClick={onRestart}
+          onClick={backToLobby}
           className='mx-auto px-10 py-4 text-xl'
         >
           <Rocket className='h-6 w-6' /> Вернуться в лобби

@@ -1,9 +1,13 @@
-name: Deploy Alias
+name: Build and Deploy client
 
 on:
   push:
     branches:
     - 'firebase'
+path:
+  - apps/client
+  - packages
+  - Dockerfile.client
 
 jobs:
   deploy:
@@ -29,14 +33,14 @@ jobs:
     - name: build and push the docker image
       env:
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
-        GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+        IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-client:latest
       run: |
         gcloud auth configure-docker $GOOGLE_REGION-docker.pkg.dev
-        docker build -f ./Dockerfile.server -t $GOOGLE_REGION-docker.pkg.dev/$GOOGLE_PROJECT/alias/game:latest .
-        docker push $GOOGLE_REGION-docker.pkg.dev/$GOOGLE_PROJECT/alias/game:latest
+        docker build -f ./Dockerfile.client -t $IMAGE_TAG .
+        docker push $IMAGE_TAG
 
     - name: deploy to Cloud Run
       env:
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
-        GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
-      run: gcloud run deploy game --region $GOOGLE_REGION --image $GOOGLE_REGION-docker.pkg.dev/$GOOGLE_PROJECT/alias/game:latest
+        IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-client:latest
+      run: gcloud run deploy game-client --region $GOOGLE_REGION --image $IMAGE_TAG

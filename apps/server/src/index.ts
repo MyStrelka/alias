@@ -2,7 +2,6 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-// import PocketBase from 'pocketbase';
 import { words } from './data/words';
 import { CHALLENGES } from './data/challenges';
 import type {
@@ -11,24 +10,12 @@ import type {
   Mode,
   Player,
   Room,
-  Settings,
   Team,
 } from '@alias/shared';
 import { EVENTS } from '@alias/shared';
 
-// Используем env для URL и порта
-const PB_URL = process.env.PB_URL || 'http://127.0.0.1:8090';
-// const pb = new PocketBase(PB_URL);
-
 const app = express();
 app.use(cors());
-
-app.get('/', (req, res) => {
-  res.sendStatus(200);
-});
-app.get('/health', (req, res) => res.sendStatus(200));
-app.get('/live', (req, res) => res.sendStatus(200));
-app.get('/ready', async (req, res) => res.sendStatus(200));
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -36,7 +23,7 @@ const io = new Server(httpServer, {
 });
 
 console.log(
-  `📚 Words loaded: Easy(${words.easy.length}), Medium(${words.medium.length})`,
+  `📚 Words loaded: Easy(${words.easy.length}), Medium(${words.medium.length}) Hard(${words.hard.length})`,
 );
 
 const rooms = new Map<string, Room>();

@@ -43,4 +43,4 @@ jobs:
       env:
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
         IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:latest
-      run: gcloud run deploy game-server --region $GOOGLE_REGION --image $IMAGE_TAG
+      run: gcloud run deploy game-server --allow-unauthenticated --region $GOOGLE_REGION --image $IMAGE_TAG

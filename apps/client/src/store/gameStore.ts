@@ -258,6 +258,7 @@ export const useGameStore = create<
           });
           get().actions.saveSession();
         } catch (error) {
+          toast.error(`${error}`);
           console.error(error);
         }
       },

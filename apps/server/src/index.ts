@@ -28,7 +28,6 @@ console.log(
 
 const rooms = new Map<string, Room>();
 
-// --- ХЕЛПЕРЫ ---
 const generateRoomId = () => Math.floor(1000 + Math.random() * 9000).toString();
 
 const pickWord = (difficulty: Difficulty): string => {

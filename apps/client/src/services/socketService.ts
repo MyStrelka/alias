@@ -1,7 +1,7 @@
-import { io, Socket } from "socket.io-client";
-import toast from "react-hot-toast";
+import { io, Socket } from 'socket.io-client';
+import toast from 'react-hot-toast';
 
-const SERVER_URL = "http://localhost:3000";
+const SERVER_URL = `${import.meta.env.VITE_ENTRYPOINT_URL}:3000`;
 
 // --- ДОБАВИЛИ userId в интерфейсы ---
 interface PlayerData {
@@ -25,30 +25,30 @@ class SocketService {
   connect() {
     if (!this.socket) {
       this.socket = io(SERVER_URL, {
-        transports: ["websocket"],
+        transports: ['websocket'],
         autoConnect: false,
       });
     }
 
     if (this.socket.connected) return;
 
-    this.socket.removeAllListeners("state_update");
-    this.socket.removeAllListeners("connect");
-    this.socket.removeAllListeners("disconnect");
+    this.socket.removeAllListeners('state_update');
+    this.socket.removeAllListeners('connect');
+    this.socket.removeAllListeners('disconnect');
 
-    this.socket.on("connect", () => {
-      console.log("✅ [Socket] Connected:", this.socket?.id);
+    this.socket.on('connect', () => {
+      console.log('✅ [Socket] Connected:', this.socket?.id);
     });
 
-    this.socket.on("disconnect", () => {
-      console.log("❌ [Socket] Disconnected");
-      toast.error("Связь с сервером потеряна");
+    this.socket.on('disconnect', () => {
+      console.log('❌ [Socket] Disconnected');
+      toast.error('Связь с сервером потеряна');
     });
 
-    this.socket.on("state_update", (gameState) => {
-      console.log("📥 [Socket] Received state_update:", gameState);
+    this.socket.on('state_update', (gameState) => {
+      console.log('📥 [Socket] Received state_update:', gameState);
       if (this.messageHandler) {
-        this.messageHandler("state", gameState);
+        this.messageHandler('state', gameState);
       }
     });
 
@@ -58,7 +58,7 @@ class SocketService {
   waitForConnection(): Promise<void> {
     return new Promise((resolve) => {
       if (this.socket?.connected) return resolve();
-      this.socket?.once("connect", resolve);
+      this.socket?.once('connect', resolve);
     });
   }
 
@@ -76,7 +76,7 @@ class SocketService {
     await this.waitForConnection();
 
     return new Promise((resolve, reject) => {
-      this.socket?.emit("create_room", data, (response: any) => {
+      this.socket?.emit('create_room', data, (response: any) => {
         if (response.success) resolve(response.roomId);
         else reject(response.message);
       });
@@ -88,7 +88,7 @@ class SocketService {
     await this.waitForConnection();
 
     return new Promise((resolve, reject) => {
-      this.socket?.emit("join_room", data, (response: any) => {
+      this.socket?.emit('join_room', data, (response: any) => {
         if (response.success) resolve();
         else reject(response.message);
       });
@@ -96,17 +96,17 @@ class SocketService {
   }
 
   createTeam() {
-    this.reliableEmit("create_team");
+    this.reliableEmit('create_team');
   }
   joinTeam(teamId: string) {
-    this.reliableEmit("join_team", teamId);
+    this.reliableEmit('join_team', teamId);
   }
   close() {
     this.socket?.disconnect();
   }
 
   setHandler(fn: (type: string, payload: any) => void) {
-    console.log("🔧 [Socket] Handler attached");
+    console.log('🔧 [Socket] Handler attached');
     this.messageHandler = fn;
   }
 }

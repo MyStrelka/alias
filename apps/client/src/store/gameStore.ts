@@ -6,19 +6,7 @@ import toast from 'react-hot-toast';
 import { auth, googleProvider } from '../services/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { addDocument, createIncognitoUser, incrementValue } from './db';
-import type {
-  Settings,
-  GameState,
-  // GameStage,
-  // Team,
-  Player,
-} from '@alias/shared';
-
-// ... типы (UserData можно упростить)
-// interface UserData { uid: string; displayName: string | null; photoURL: string | null; }
-
-// --- ТИПЫ ---
-// type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
+import type { Settings, GameState, Player } from '@alias/shared';
 
 export interface TeamTheme {
   border: string;
@@ -58,41 +46,6 @@ export const TEAM_THEMES: TeamTheme[] = [
     name: 'Violet',
   },
 ];
-
-// export interface Team {
-//   id: string;
-//   name: string;
-//   playerIds: string[];
-//   score: number;
-//   themeIndex: number;
-// }
-// export interface Player {
-//   id: string;
-//   name: string;
-//   score: number;
-//   explained: number;
-//   guessed: number;
-//   ready: boolean;
-//   isHost?: boolean;
-//   teamId?: string;
-//   dbId?: string | null;
-//   avatar?: string | null;
-//   online?: boolean;
-//   userId?: string;
-// }
-
-// interface RoundState {
-//   speakerId?: string;
-//   listenerId?: string;
-//   roundNumber: number;
-//   timeLeft: number;
-//   running: boolean;
-//   currentWord: string;
-//   readyMap: Record<string, boolean>;
-//   currentTeamId?: string;
-//   teamSpeakerIndex: Record<string, number>;
-//   activeChallenge: string | null;
-// }
 
 export type GameStateActions = {
   actions: {

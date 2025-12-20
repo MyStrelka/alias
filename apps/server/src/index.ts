@@ -22,12 +22,13 @@ const PB_URL = process.env.PB_URL || 'http://127.0.0.1:8090';
 
 const app = express();
 app.use(cors());
+
 app.get('/', (req, res) => {
   res.sendStatus(200);
 });
-app.get('/healthz', (req, res) => {
-  res.sendStatus(200);
-});
+app.get('/health', (req, res) => res.sendStatus(200));
+app.get('/live', (req, res) => res.sendStatus(200));
+app.get('/ready', async (req, res) => res.sendStatus(200));
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

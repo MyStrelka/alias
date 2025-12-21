@@ -1,8 +1,8 @@
-import express from 'express';
 import { createServer } from 'http';
+import cors from 'cors';
+import express from 'express';
 import { Server } from 'socket.io';
 
-import cors from 'cors';
 import { words } from './data/words';
 import { initGameService } from './services/game';
 

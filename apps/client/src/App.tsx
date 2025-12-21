@@ -1,13 +1,16 @@
 import { useEffect, useMemo } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { useGameStore } from './store/gameStore';
+
 import type { Player } from '@alias/shared';
-import Login from './pages/Login';
-import Lobby from './pages/Lobby';
-import PreRound from './pages/PreRound';
-import Game from './pages/Game';
-import Victory from './pages/Victory';
+
 import Header from './components/Header';
+import Game from './pages/Game';
+import Lobby from './pages/Lobby';
+import Login from './pages/Login';
+import PreRound from './pages/PreRound';
+import Victory from './pages/Victory';
+import { useGameStore } from './store/gameStore';
+
 import './index.css';
 
 function App() {

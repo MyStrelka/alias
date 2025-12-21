@@ -1,6 +1,7 @@
-import { words } from '../../data/words';
-import { CHALLENGES } from '../../data/challenges';
 import type { Difficulty, Mode, Player, Room, Team } from '@alias/shared';
+
+import { CHALLENGES } from '../../data/challenges';
+import { words } from '../../data/words';
 
 export const generateRoomId = () =>
   Math.floor(1000 + Math.random() * 9000).toString();

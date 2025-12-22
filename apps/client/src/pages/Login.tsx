@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { PlugZap, LogIn } from 'lucide-react';
+import { LogIn, PlugZap } from 'lucide-react';
+
 import AccentButton from '../components/AccentButton';
 import { useGameStore } from '../store/gameStore';
 
@@ -10,8 +11,8 @@ const Login = () => {
   const { actions, user } = useGameStore();
 
   useEffect(() => {
-    if (user?.username || user?.name) {
-      setName(user.username || user.name || '');
+    if (user?.name) {
+      setName(user.name || '');
     }
   }, [user]);
 
@@ -55,12 +56,12 @@ const Login = () => {
                     />
                   ) : (
                     <div className='h-10 w-10 rounded-full bg-accent-main flex items-center justify-center font-bold'>
-                      {user.username?.[0] || 'U'}
+                      {user.name?.[0] || 'U'}
                     </div>
                   )}
                   <div className='text-left'>
                     <div className='text-sm font-bold text-white'>
-                      {user.username || user.name}
+                      {user.name}
                     </div>
                     <div className='text-xs text-green-400'>Онлайн</div>
                   </div>

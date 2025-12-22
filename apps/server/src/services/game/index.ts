@@ -1,12 +1,14 @@
 import { Server } from 'socket.io';
+
 import type { GameState, Room } from '@alias/shared';
 import { EVENTS } from '@alias/shared';
+
 import {
-  generateRoomId,
   findRoom,
+  generateRoomId,
   nextTeamTurn,
-  selectChallenge,
   pickWord,
+  selectChallenge,
 } from './utils';
 
 const rooms = new Map<string, Room>();

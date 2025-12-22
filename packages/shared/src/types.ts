@@ -2,14 +2,22 @@ export type Mode = 'team' | 'solo_standard' | 'solo_all_vs_all';
 export type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
-export interface UserData {
+// export interface UserData {
+//   id: string;
+//   username: string;
+//   email: string;
+//   avatar: string; // URL картинки
+//   name?: string; // Поле может быть опциональным (?)
+// }
+
+export interface User {
   id: string;
-  username: string;
+  name: string;
   email: string;
-  avatar: string; // URL картинки
-  collectionId: string;
-  collectionName: string;
-  name?: string; // Поле может быть опциональным (?)
+  providerId: string;
+  avatar?: string;
+  token?: string;
+  refreshToken?: string;
 }
 
 export interface Settings {
@@ -79,7 +87,7 @@ export type GameStateClient = {
   customTopic: string | null;
   isMuted: boolean;
   networkReady: boolean;
-  user: UserData | null;
+  user: User | null;
 };
 
 export type GameStateActions = {

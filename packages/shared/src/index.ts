@@ -1,4 +1,5 @@
 export {
+  User,
   Mode,
   GameStage,
   Difficulty,

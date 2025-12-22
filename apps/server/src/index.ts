@@ -1,13 +1,26 @@
 import { createServer } from 'http';
 import cors from 'cors';
 import express from 'express';
+import session from 'express-session';
 import { Server } from 'socket.io';
 
 import { words } from './data/words';
+import appRoutes from './routes/app.routes';
 import { initGameService } from './services/game';
 
 const app = express();
+
 app.use(cors());
+
+app.use(
+  session({
+    secret: 'MY_SECRET_COOKIE_KEY',
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+app.use('/', appRoutes);
 
 const httpServer = createServer(app);
 

@@ -31,7 +31,7 @@ const io = new Server(httpServer, {
 initGameService(io);
 
 console.log(
-  `📚 Words loaded: Easy[${words.easy.length}], Medium[${words.medium.length}], Hard[${words.hard.length}]`,
+  `📚 Words loaded: Easy(${words.easy.length}), Medium(${words.medium.length}), Hard(${words.hard.length})`,
 );
 
 const PORT = process.env.PORT || 3000;

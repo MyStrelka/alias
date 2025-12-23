@@ -51,4 +51,5 @@ jobs:
           --timeout=300 \
           --ingress=all \
           --allow-unauthenticated \
+          --no-invoker-iam-check \
           --quiet

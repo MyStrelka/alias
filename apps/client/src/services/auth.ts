@@ -36,7 +36,7 @@ const popupCenter = (url: string, title: string, w: number, h: number) => {
 
 const discordAuth = async () => {
   const authpopup = popupCenter(
-    `http://${import.meta.env.VITE_ENTRYPOINT_URL}/oauth/discord/login`,
+    `${import.meta.env.VITE_ENTRYPOINT_URL}/oauth/discord/login`,
     'Discord Login',
     500,
     600,

@@ -1,5 +1,18 @@
-# alias
+## requirements:
+
+- node >= 24
+- yarn 4.0
+
+## install:
+
+yarn install
+
+## build localy:
+
+yarn client:build
+yarn server:build
 
 ## run localy:
 
-docker compose up -d --build
+yarn client:dev
+yarn server:dev

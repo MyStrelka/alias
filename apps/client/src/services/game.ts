@@ -1,7 +1,7 @@
 const getUser = async () => {
   try {
     const response = await fetch(
-      `http://${import.meta.env.VITE_SERVER_URL}/api/user`,
+      `${import.meta.env.VITE_SERVER_URL}/api/user`,
       {
         credentials: 'include',
       },

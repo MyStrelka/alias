@@ -1,7 +1,7 @@
-import { io, Socket } from 'socket.io-client';
 import toast from 'react-hot-toast';
+import { io, Socket } from 'socket.io-client';
 
-const SERVER_URL = import.meta.env.VITE_ENTRYPOINT_URL || 'localhost:3000';
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'localhost:3000';
 
 // --- ДОБАВИЛИ userId в интерфейсы ---
 interface PlayerData {

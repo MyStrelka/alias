@@ -27,7 +27,7 @@ ARG VITE_FIREBASE_measurementId
 ENV VITE_FIREBASE_measurementId=$VITE_FIREBASE_measurementId
 
 ARG SERVER_URL
-ENV VITE_ENTRYPOINT_URL=$SERVER_URL
+ENV VITE_SERVER_URL=$SERVER_URL
 
 ##
 
@@ -41,10 +41,6 @@ RUN yarn workspace @alias/shared install
 RUN yarn workspace @alias/shared build
 
 RUN yarn install
-
-# Принимаем переменные для сборки (адреса сервера)
-ARG VITE_SERVER_URL
-ENV VITE_SERVER_URL=$VITE_SERVER_URL
 
 RUN yarn client:build
 

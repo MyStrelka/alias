@@ -46,7 +46,6 @@ const discordAuth = async () => {
     const interval = setInterval(() => {
       if (authpopup?.closed) {
         clearInterval(interval);
-        console.log('Discord authentication popup closed');
         resolve();
       }
     }, 1000);

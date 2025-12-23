@@ -13,6 +13,8 @@ import { useGameStore } from './store/gameStore';
 
 import './index.css';
 
+import MessageListener from './components/MessageListener';
+
 function App() {
   const game = useGameStore();
   const { actions } = game;
@@ -55,7 +57,7 @@ function App() {
         <div className='absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px] animate-blob' />
         <div className='absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-accent-main/20 rounded-full blur-[100px] animate-blob animation-delay-2000' />
       </div>
-
+      <MessageListener />
       <Header
         stage={game.stage}
         roomId={game.roomId}

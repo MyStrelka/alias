@@ -86,6 +86,33 @@ class DisicordApi {
       return data;
     }
   };
+
+  public getAvatarBase64 = async (userId: string, avatarHash: string) => {
+    try {
+      const url = `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.png?size=64`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch: ${response.status} ${response.statusText}`,
+        );
+      }
+      const arrayBuffer = await response.arrayBuffer();
+
+      const buffer = Buffer.from(arrayBuffer);
+
+      const contentType = response.headers.get('content-type');
+
+      const base64String = buffer.toString('base64');
+
+      return `data:${contentType};base64,${base64String}`;
+    } catch (error) {
+      let errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('Error fetching avatar with fetch:', errorMessage);
+      return null;
+    }
+  };
 }
 
 const discord = new DisicordApi();

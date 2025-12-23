@@ -24,7 +24,15 @@ router.get('/callback', async (request, response) => {
         };
         const userId = await fireabsese.insertOrUpdateUser(user);
         console.log('User inserted/updated with ID:', userId);
-        response.status(200).send('Logged In: ' + JSON.stringify(userResponse));
+        const avatarBase64 = await discord.getAvatarBase64(
+          userResponse.id,
+          userResponse.avatar,
+        );
+        response
+          .status(200)
+          .send(
+            getCallbackHtml({ ...user, avatar: avatarBase64 || user.avatar }),
+          );
       } else {
         console.log('No user data received.');
         response.status(500).send('Failed to fetch user data from Discord.');
@@ -42,5 +50,29 @@ router.get('/callback', async (request, response) => {
     response.status(500).send('Failed to authenticate with Discord');
   }
 });
+
+const getCallbackHtml = (user: User) => `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>SeaBornShow</title>
+        <style>
+            body { font-family: sans-serif; background: #0f172a; color: white; padding: 2rem; }
+        </style>
+    </head>
+    <body>
+        <script>
+            const closeWindow = (user) => {
+                window.opener.postMessage({user}, '*');
+                window.close();
+            }
+
+            const user = ${JSON.stringify(user)};
+            closeWindow(user);
+        </script>
+    </body>
+    </html>
+  `;
 
 export default router;

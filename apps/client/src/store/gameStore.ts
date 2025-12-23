@@ -12,7 +12,6 @@ import type {
 
 import authService from '../services/auth';
 import { auth, googleProvider } from '../services/firebase';
-import gameService from '../services/game';
 import { socketService } from '../services/socketService';
 import { addDocument, createIncognitoUser, incrementValue } from './db';
 
@@ -158,12 +157,7 @@ export const useGameStore = create<
               console.error('signInWithPopup google', e);
             }
           } else {
-            toast.error(
-              'Discord пока не настроен в Firebase, уже настроен йопта!',
-            );
-            const result = await authService.discordAuth();
-            const user = await gameService.getUser();
-            console.log('Discord login result:', result, 'user:', user);
+            await authService.discordAuth();
           }
         } catch (e) {
           console.error(e);

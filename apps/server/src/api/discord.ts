@@ -3,7 +3,6 @@ import type { Request, Response } from 'express';
 
 import { DiscordAuthConfig } from '../config';
 
-// console.log('DiscordAuthConfig:', DiscordAuthConfig);
 const BASE_URL = 'https://discord.com/api';
 
 export type OAuthTokenResponse = {
@@ -60,7 +59,6 @@ class DisicordApi {
       });
       data = (await resp.json()) as OAuthTokenResponse;
       this.authorization = `Bearer ${data.access_token}`;
-      console.log('OAuth Token Data:', data);
     } catch (error) {
       console.error('Error during Discord OAuth callback:', error);
       throw error;

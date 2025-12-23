@@ -33,6 +33,7 @@ jobs:
         IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:latest
         FIREBASE_projectId: ${{ secrets.VITE_FIREBASE_PROJECTID }}
         SERVER_URL: ${{ secrets.SERVER_URL }}
+        CLIENT_URL: ${{ vars.CLIENT_URL }}
         OAUTH_DISCORD_CLIENT_SECRET: ${{ secrets.OAUTH_DISCORD_CLIENT_SECRET }}
         OAUTH_DISCORD_CLIENT_ID: ${{ secrets.OAUTH_DISCORD_CLIENT_ID }}
         VITE_FIREBASE_APIKEY: ${{ secrets.VITE_FIREBASE_APIKEY }}
@@ -51,9 +52,7 @@ jobs:
         docker build \
           --build-arg FIREBASE_projectId="$FIREBASE_projectId" \
           --build-arg SERVER_URL="$SERVER_URL" \
-          --build-arg OAUTH_DISCORD_CLIENT_SECRET="$OAUTH_DISCORD_CLIENT_SECRET" \
           --build-arg OAUTH_DISCORD_CLIENT_ID="$OAUTH_DISCORD_CLIENT_ID" \
-          --build-arg FIREBASE_apiKey="$VITE_FIREBASE_APIKEY" \
           --build-arg FIREBASE_authDomain="$VITE_FIREBASE_AUTHDOMAIN" \
           --build-arg FIREBASE_storageBucket="$VITE_FIREBASE_STORAGEBUCKET" \
           --build-arg FIREBASE_messagingSenderId="$VITE_FIREBASE_MESSAGINGSENDERID" \
@@ -85,4 +84,4 @@ jobs:
           --ingress=all \
           --allow-unauthenticated \
           --quiet \
-          --set-secrets="FIREBASE_SERVICE_ACCOUNT_KEY=FIREBASE_SERVICE_ACCOUNT_KEY:latest"
+          --set-secrets="FIREBASE_SERVICE_ACCOUNT_KEY=FIREBASE_SERVICE_ACCOUNT_KEY:latest, FIREBASE_apiKey=FIREBASE_APIKEY:latest, OAUTH_DISCORD_CLIENT_SECRET=OAUTH_DISCORD_CLIENT_SECRET:latest"

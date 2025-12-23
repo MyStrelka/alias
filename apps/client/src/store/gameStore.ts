@@ -1,18 +1,20 @@
-import { create } from 'zustand';
-import { socketService } from '../services/socketService';
-// import { type UserData } from '../types';
 import toast from 'react-hot-toast';
+import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { create } from 'zustand';
 
-import { auth, googleProvider } from '../services/firebase';
-import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
-import { addDocument, createIncognitoUser, incrementValue } from './db';
 import type {
-  Settings,
   GameState,
-  Player,
-  GameStateClient,
   GameStateActions,
+  GameStateClient,
+  Player,
+  Settings,
 } from '@alias/shared';
+
+import authService from '../services/auth';
+import { auth, googleProvider } from '../services/firebase';
+import gameService from '../services/game';
+import { socketService } from '../services/socketService';
+import { addDocument, createIncognitoUser, incrementValue } from './db';
 
 export interface TeamTheme {
   border: string;
@@ -153,10 +155,15 @@ export const useGameStore = create<
               });
               await incrementValue(docRef, 'loginCount');
             } catch (e) {
-              console.error('signInWithPopup', e);
+              console.error('signInWithPopup google', e);
             }
           } else {
-            toast.error('Discord пока не настроен в Firebase');
+            toast.error(
+              'Discord пока не настроен в Firebase, уже настроен йопта!',
+            );
+            const result = await authService.discordAuth();
+            const user = await gameService.getUser();
+            console.log('Discord login result:', result, 'user:', user);
           }
         } catch (e) {
           console.error(e);

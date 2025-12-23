@@ -48,6 +48,8 @@ ENV FIREBASE_measurementId=$FIREBASE_measurementId
 # pass env variables Base
 ARG SERVER_URL
 ENV ENTRYPOINT_URL=$SERVER_URL
+ARG CLIENT_URL
+ENV CLIENT_URL=$CLIENT_URL
 
 # pass env variables Discord OAuth
 ARG OAUTH_DISCORD_URL

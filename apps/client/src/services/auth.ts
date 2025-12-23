@@ -30,7 +30,7 @@ const popupCenter = (url: string, title: string, w: number, h: number) => {
       `,
   );
 
-  if (window.focus) newWindow?.focus();
+  newWindow?.focus();
   return newWindow;
 };
 
@@ -42,7 +42,7 @@ const discordAuth = async () => {
     600,
   );
 
-  return new Promise<void>((resolve, reject) => {
+  return new Promise<void>((resolve) => {
     const interval = setInterval(() => {
       if (authpopup?.closed) {
         clearInterval(interval);

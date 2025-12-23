@@ -43,7 +43,7 @@ jobs:
         IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:latest
       run: |
         gcloud run deploy game-server \
-          --image=IMAGE_TAG \
+          --image=$IMAGE_TAG \
           --region=$GOOGLE_REGION \
           --port=3000 \
           --cpu=1 \

@@ -52,6 +52,7 @@ jobs:
         docker build \
           --build-arg FIREBASE_projectId="$FIREBASE_projectId" \
           --build-arg SERVER_URL="$SERVER_URL" \
+          --build-arg CLIENT_URL="$CLIENT_URL" \
           --build-arg OAUTH_DISCORD_CLIENT_ID="$OAUTH_DISCORD_CLIENT_ID" \
           --build-arg FIREBASE_authDomain="$VITE_FIREBASE_AUTHDOMAIN" \
           --build-arg FIREBASE_storageBucket="$VITE_FIREBASE_STORAGEBUCKET" \

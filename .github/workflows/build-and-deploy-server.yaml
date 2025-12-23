@@ -40,7 +40,21 @@ jobs:
         docker push $IMAGE_TAG
 
     - name: deploy to Cloud Run
+      uses: 'google-github-actions/deploy-cloudrun@v3'
       env:
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
         IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:latest
-      run: gcloud run deploy game-server --allow-unauthenticated --region $GOOGLE_REGION --image $IMAGE_TAG
+      with:
+        service: 'game-server'
+        region: $GOOGLE_REGION
+        image: $IMAGE_TAG
+        flags: |
+          --port=3000
+          --cpu=1
+          --memory=256Mi
+          --min-instances=1
+          --max-instances=1
+          --concurrency=80
+          --timeout=300
+          --ingress=all
+          --allow-unauthenticated

@@ -29,7 +29,6 @@ class DisicordApi {
     this.creds =
       'Basic ' +
       btoa(`${DiscordAuthConfig.clientID}:${DiscordAuthConfig.clientSecret}`);
-    console.log('Discord API initialized with creds:', this.creds);
   }
 
   public authorize = (request: Request, response: Response) => {

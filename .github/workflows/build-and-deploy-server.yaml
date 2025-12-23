@@ -33,17 +33,17 @@ jobs:
     - name: build and push the docker image
       env:
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
-        IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:latest
+        IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server
       run: |
         gcloud auth configure-docker $GOOGLE_REGION-docker.pkg.dev
-        docker build -f ./Dockerfile.server -t $IMAGE_TAG .
+        docker build -f ./Dockerfile.server -t $IMAGE_TAG:${{ env.GITHUB_SHA }} -t $IMAGE_TAG:latest .
         docker push $IMAGE_TAG
 
     - name: deploy to Cloud Run
       uses: 'google-github-actions/deploy-cloudrun@v3'
       env:
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
-        IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:latest
+        IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:${{ env.GITHUB_SHA }}
       with:
         service: 'game-server'
         region: $GOOGLE_REGION

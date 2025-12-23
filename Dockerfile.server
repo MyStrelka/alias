@@ -2,6 +2,24 @@ FROM node:24-alpine as build
 
 WORKDIR /app
 
+# Копируем package.json из папки server
+COPY ./package.json .
+
+RUN npm install -g corepack
+RUN yarn set version stable
+
+COPY ./packages/shared/. ./packages/shared
+COPY ./apps/server/. ./apps/server/
+RUN yarn workspace @alias/shared install
+RUN yarn workspace @alias/shared build
+
+RUN yarn install
+RUN yarn server:build
+
+########
+FROM node:24-alpine
+WORKDIR /app
+
 # pass env variables Firebase
 ARG FIREBASE_SERVICE_ACCOUNT_KEY
 ENV FIREBASE_SERVICE_ACCOUNT_KEY=$FIREBASE_SERVICE_ACCOUNT_KEY
@@ -53,23 +71,6 @@ ENV OAUTH_DISCORD_CLIENT_ID=$OAUTH_DISCORD_CLIENT_ID
 ARG OAUTH_DISCORD_APPLLICATION_ID
 ENV OAUTH_DISCORD_APPLLICATION_ID=$OAUTH_DISCORD_APPLLICATION_ID
 
-# Копируем package.json из папки server
-COPY ./package.json .
-
-RUN npm install -g corepack
-RUN yarn set version stable
-
-COPY ./packages/shared/. ./packages/shared
-COPY ./apps/server/. ./apps/server/
-RUN yarn workspace @alias/shared install
-RUN yarn workspace @alias/shared build
-
-RUN yarn install
-RUN yarn server:build
-
-########
-FROM node:24-alpine
-WORKDIR /app
 # Копируем весь код сервера
 COPY --from=build /app/apps/server/dist .
 

@@ -36,6 +36,19 @@ jobs:
         docker build \
           --build-arg FIREBASE_projectId='${{ secrets.VITE_FIREBASE_PROJECTID }}' \
           --build-arg SERVER_URL='${{ secrets.SERVER_URL }}' \
+          --build-arg OAUTH_DISCORD_CLIENT_SECRET=${{ secrets.OAUTH_DISCORD_CLIENT_SECRET }} \
+          --build-arg OAUTH_DISCORD_CLIENT_ID=${{ secrets.OAUTH_DISCORD_CLIENT_ID }} \
+          --build-arg FIREBASE_apiKey=${{ secrets.VITE_FIREBASE_APIKEY }} \
+          --build-arg FIREBASE_authDomain=${{ secrets.VITE_FIREBASE_AUTHDOMAIN }} \
+          --build-arg FIREBASE_storageBucket=${{ secrets.VITE_FIREBASE_STORAGEBUCKET }} \
+          --build-arg FIREBASE_messagingSenderId=${{ secrets.VITE_FIREBASE_MESSAGINGSENDERID }} \
+          --build-arg FIREBASE_appId=${{ secrets.VITE_FIREBASE_APPID }} \
+          --build-arg FIREBASE_measurementId=${{ secrets.VITE_FIREBASE_MEASUREMENTID }} \
+          --build-arg OAUTH_DISCORD_URL=${{ secrets.OAUTH_DISCORD_URL }} \
+          --build-arg OAUTH_DISCORD_SCOPE=${{ secrets.OAUTH_DISCORD_SCOPE }} \
+          --build-arg OAUTH_DISCORD_REDIRECT_URI=${{ secrets.OAUTH_DISCORD_REDIRECT_URI }} \
+          --build-arg OAUTH_DISCORD_PUBLIC_KEY=${{ secrets.OAUTH_DISCORD_PUBLIC_KEY }} \
+          --build-arg OAUTH_DISCORD_APPLLICATION_ID=${{ secrets.OAUTH_DISCORD_APPLLICATION_ID }} \
           -f ./Dockerfile.server -t $IMAGE_TAG .
         docker push $IMAGE_TAG
 
@@ -44,26 +57,6 @@ jobs:
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
         IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:latest
       run: |
-        # Create a temporary env file to handle special characters in secrets
-        cat <<EOF > .env.production
-        FIREBASE_SERVICE_ACCOUNT_KEY=${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-        OAUTH_DISCORD_CLIENT_SECRET=${{ secrets.OAUTH_DISCORD_CLIENT_SECRET }}
-        OAUTH_DISCORD_CLIENT_ID=${{ secrets.OAUTH_DISCORD_CLIENT_ID }}
-        FIREBASE_apiKey=${{ secrets.VITE_FIREBASE_APIKEY }}
-        FIREBASE_authDomain=${{ secrets.VITE_FIREBASE_AUTHDOMAIN }}
-        FIREBASE_storageBucket=${{ secrets.VITE_FIREBASE_STORAGEBUCKET }}
-        FIREBASE_messagingSenderId=${{ secrets.VITE_FIREBASE_MESSAGINGSENDERID }}
-        FIREBASE_appId=${{ secrets.VITE_FIREBASE_APPID }}
-        FIREBASE_measurementId=${{ secrets.VITE_FIREBASE_MEASUREMENTID }}
-        OAUTH_DISCORD_URL=${{ secrets.OAUTH_DISCORD_URL }}
-        OAUTH_DISCORD_SCOPE=${{ secrets.OAUTH_DISCORD_SCOPE }}
-        OAUTH_DISCORD_REDIRECT_URI=${{ secrets.OAUTH_DISCORD_REDIRECT_URI }}
-        OAUTH_DISCORD_PUBLIC_KEY=${{ secrets.OAUTH_DISCORD_PUBLIC_KEY }}
-        OAUTH_DISCORD_APPLLICATION_ID=${{ secrets.OAUTH_DISCORD_APPLLICATION_ID }}
-        EOF
-
-        cat .env.production
-
         gcloud run deploy game-server \
           --image=$IMAGE_TAG \
           --region=$GOOGLE_REGION \
@@ -76,4 +69,5 @@ jobs:
           --timeout=300 \
           --ingress=all \
           --allow-unauthenticated \
-          --quiet
+          --quiet \
+          --set-secrets="FIREBASE_SERVICE_ACCOUNT_KEY=FIREBASE_SERVICE_ACCOUNT_KEY:latest"

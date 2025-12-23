@@ -42,13 +42,10 @@ jobs:
 
     - name: deploy to Cloud Run
       uses: 'google-github-actions/deploy-cloudrun@v3'
-      env:
-        GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
-        IMAGE_TAG: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:${{ github.sha }}
       with:
         service: 'game-server'
-        region: $GOOGLE_REGION
-        image: $IMAGE_TAG
+        region: ${{ secrets.GOOGLE_REGION }}
+        image: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT }}/alias/game-server:${{ github.sha }}
         flags: |
           --port=3000
           --cpu=1

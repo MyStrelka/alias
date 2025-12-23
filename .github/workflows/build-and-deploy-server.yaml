@@ -27,9 +27,6 @@ jobs:
       with:
         credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
-    - name: 'Use gcloud CLI'
-      run: 'gcloud info'
-
     - name: build and push the docker image
       env:
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
@@ -39,6 +36,10 @@ jobs:
         gcloud auth configure-docker $GOOGLE_REGION-docker.pkg.dev
         docker build -f ./Dockerfile.server -t $IMAGE_TAG:$GITHUB_SHA -t $IMAGE_TAG:latest .
         docker push $IMAGE_TAG
+
+    - uses: 'google-github-actions/auth@v3'
+      with:
+        credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
     - name: deploy to Cloud Run
       uses: 'google-github-actions/deploy-cloudrun@v3'

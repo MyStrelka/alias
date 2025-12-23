@@ -62,6 +62,8 @@ jobs:
         OAUTH_DISCORD_APPLLICATION_ID=${{ secrets.OAUTH_DISCORD_APPLLICATION_ID }}
         EOF
 
+        echo .env.production
+
         gcloud run deploy game-server \
           --image=$IMAGE_TAG \
           --region=$GOOGLE_REGION \

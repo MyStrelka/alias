@@ -1,8 +1,18 @@
 import 'dotenv/config';
 
 export const FirebaseServiceAccountKey = JSON.parse(
-  process.env.FIREBASE_SERVICE_ACCOUNT_KEY || '{}',
+  process.env.FIREBASE_SERVICE_ACCOUNT_KEY ||
+    '{"project_id": "", "client_email": "", "private_key": ""}',
 );
+if (
+  FirebaseServiceAccountKey.project_id === '' ||
+  FirebaseServiceAccountKey.client_email === '' ||
+  FirebaseServiceAccountKey.private_key === ''
+) {
+  console.warn(
+    '⚠️ Firebase service account key is not properly set in environment variables.',
+  );
+}
 
 export const FirebaseConfig = {
   apiKey: process.env.FIREBASE_apiKey,

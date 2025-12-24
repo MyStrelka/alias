@@ -171,8 +171,7 @@ export const useGameStore = create<
           createRoom: async (name) => {
             try {
               const { user } = get();
-              // TODO: убрать userId
-              const userId = getDeviceId();
+              const deviceId = getDeviceId();
 
               if (!user?.id) {
                 await createIncognitoUser(name);
@@ -182,7 +181,7 @@ export const useGameStore = create<
                 playerName: name,
                 dbId: user?.id || null,
                 avatar: user?.avatar || null,
-                userId,
+                deviceId,
               });
               set({
                 stage: 'lobby',
@@ -199,7 +198,7 @@ export const useGameStore = create<
           joinRoom: async (name, roomId) => {
             try {
               const { user } = get();
-              const userId = getDeviceId();
+              const deviceId = getDeviceId();
               if (!user?.id) {
                 await createIncognitoUser(name);
               }
@@ -208,7 +207,7 @@ export const useGameStore = create<
                 playerName: name,
                 dbId: user?.id || null,
                 avatar: user?.avatar || null,
-                userId,
+                deviceId,
               });
               set({
                 stage: 'lobby',

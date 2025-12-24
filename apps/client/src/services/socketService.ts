@@ -3,19 +3,18 @@ import { io, Socket } from 'socket.io-client';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'localhost:3000';
 
-// --- ДОБАВИЛИ userId в интерфейсы ---
 interface PlayerData {
   playerName: string;
   dbId: string | null;
   avatar: string | null;
-  userId: string; // <-- Новое поле
+  deviceId: string;
 }
 interface JoinData {
   roomId: string;
   playerName: string;
   dbId: string | null;
   avatar: string | null;
-  userId: string; // <-- Новое поле
+  deviceId: string;
 }
 
 class SocketService {

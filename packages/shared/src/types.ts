@@ -23,7 +23,7 @@ export interface Settings {
 
 export interface Player {
   id: string;
-  userId: string;
+  deviceId: string;
   name: string;
   score: number;
   isHost: boolean;

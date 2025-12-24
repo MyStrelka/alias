@@ -56,7 +56,7 @@ export const initGameService = (io: Server) => {
 
       const host = {
         id: socket.id,
-        userId: data.userId,
+        deviceId: data.deviceId,
         name: data.playerName,
         score: 0,
         isHost: true,
@@ -81,13 +81,13 @@ export const initGameService = (io: Server) => {
     // 2. Вход (С ПОЛНОЙ МИГРАЦИЕЙ ID)
     socket.on(
       EVENTS.JOIN_ROOM,
-      ({ roomId, playerName, dbId, avatar, userId }, callback) => {
+      ({ roomId, playerName, dbId, avatar, deviceId }, callback) => {
         const roomData = rooms.get(roomId);
         if (!roomData)
           return callback({ success: false, message: 'Комната не найдена' });
 
         const { gameState, players } = roomData;
-        const existingPlayer = players.find((p) => p.userId === userId);
+        const existingPlayer = players.find((p) => p.deviceId === deviceId);
 
         if (existingPlayer) {
           console.log(
@@ -121,7 +121,7 @@ export const initGameService = (io: Server) => {
         } else {
           const newPlayer = {
             id: socket.id,
-            userId: userId,
+            deviceId: deviceId,
             name: playerName,
             score: 0,
             isHost: false,

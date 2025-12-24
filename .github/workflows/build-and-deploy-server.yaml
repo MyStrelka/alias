@@ -47,6 +47,8 @@ jobs:
         OAUTH_DISCORD_REDIRECT_URI: ${{ secrets.OAUTH_DISCORD_REDIRECT_URI }}
         OAUTH_DISCORD_PUBLIC_KEY: ${{ secrets.OAUTH_DISCORD_PUBLIC_KEY }}
         OAUTH_DISCORD_APPLLICATION_ID: ${{ secrets.OAUTH_DISCORD_APPLLICATION_ID }}
+        OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
+        OAUTH_GOOGLE_REDIRECT_URI: ${{ vars.OAUTH_GOOGLE_REDIRECT_URI }}
       run: |
         gcloud auth configure-docker ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev --quiet
         docker build \
@@ -64,6 +66,8 @@ jobs:
           --build-arg OAUTH_DISCORD_REDIRECT_URI="$OAUTH_DISCORD_REDIRECT_URI" \
           --build-arg OAUTH_DISCORD_PUBLIC_KEY="$OAUTH_DISCORD_PUBLIC_KEY" \
           --build-arg OAUTH_DISCORD_APPLLICATION_ID="$OAUTH_DISCORD_APPLLICATION_ID" \
+          --build-arg OAUTH_GOOGLE_CLIENT_ID="$OAUTH_GOOGLE_CLIENT_ID" \
+          --build-arg OAUTH_GOOGLE_REDIRECT_URI="$OAUTH_GOOGLE_REDIRECT_URI" \
           -f ./Dockerfile.server -t $IMAGE_TAG .
         docker push $IMAGE_TAG
 
@@ -85,4 +89,4 @@ jobs:
           --ingress=all \
           --allow-unauthenticated \
           --quiet \
-          --set-secrets="FIREBASE_SERVICE_ACCOUNT_KEY=FIREBASE_SERVICE_ACCOUNT_KEY:latest, FIREBASE_apiKey=FIREBASE_APIKEY:latest, OAUTH_DISCORD_CLIENT_SECRET=OAUTH_DISCORD_CLIENT_SECRET:latest"
+          --set-secrets="FIREBASE_SERVICE_ACCOUNT_KEY=FIREBASE_SERVICE_ACCOUNT_KEY:latest, FIREBASE_apiKey=FIREBASE_APIKEY:latest, OAUTH_DISCORD_CLIENT_SECRET=OAUTH_DISCORD_CLIENT_SECRET:latest, OAUTH_GOOGLE_CLIENT_SECRET=OAUTH_GOOGLE_CLIENT_SECRET:latest"

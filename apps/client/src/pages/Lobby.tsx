@@ -1,28 +1,29 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import {
-  Settings,
   Play,
-  XCircle,
-  Shuffle,
+  Settings,
   Share2,
+  Shuffle,
   Sparkles,
   Trash2,
+  XCircle,
 } from 'lucide-react';
 
 import type {
+  Settings as AliasSettings,
+  GameStateActions,
+  GameStateClient,
+  Mode,
   Player,
   Team,
-  Mode,
-  GameStateClient,
-  GameStateActions,
-  Settings as AliasSettings,
 } from '@alias/shared';
-import { soundManager } from '../utils/soundManager';
-import Tile from '../components/Tile';
+
+import AccentButton from '../components/AccentButton';
 import PlayerTable from '../components/PlayerTable';
 import TeamsSection from '../components/TeamsSection';
-import AccentButton from '../components/AccentButton';
+import Tile from '../components/Tile';
+import { soundManager } from '../utils/soundManager';
 
 const Lobby = ({
   settings,

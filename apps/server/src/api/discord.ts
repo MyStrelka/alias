@@ -38,7 +38,6 @@ class DisicordApi {
   public requestToken = async (
     request: Request,
   ): Promise<OAuthTokenResponse | null> => {
-    console.log('this.creds', this.creds);
     const code = request.query['code'];
     const updatedParams = new URLSearchParams();
     updatedParams.set('grant_type', 'authorization_code');

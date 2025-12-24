@@ -31,14 +31,13 @@ class DisicordApi {
   }
 
   public authorize = (request: Request, response: Response) => {
-    const redirect_url = DiscordAuthConfig.authorizationURL;
-    response.redirect(redirect_url);
+    response.redirect(DiscordAuthConfig.authorizationURL);
   };
 
   public requestToken = async (
     request: Request,
   ): Promise<OAuthTokenResponse | null> => {
-    const code = request.query['code'];
+    const code = request.query?.['code'];
     const updatedParams = new URLSearchParams();
     updatedParams.set('grant_type', 'authorization_code');
     updatedParams.set('redirect_uri', DiscordAuthConfig.redirectUrl);

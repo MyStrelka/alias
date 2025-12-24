@@ -20,7 +20,6 @@ function App() {
   const { actions } = game;
 
   useEffect(() => {
-    actions.checkAuth();
     const session = actions.restoreSession();
     if (session) {
       actions.joinRoom(session.selfName, session.roomId);

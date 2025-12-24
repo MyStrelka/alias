@@ -1,14 +1,7 @@
 export type Mode = 'team' | 'solo_standard' | 'solo_all_vs_all';
 export type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
 export type Difficulty = 'easy' | 'medium' | 'hard';
-
-// export interface UserData {
-//   id: string;
-//   username: string;
-//   email: string;
-//   avatar: string; // URL картинки
-//   name?: string; // Поле может быть опциональным (?)
-// }
+export type AuthProvider = 'google' | 'discord';
 
 export interface User {
   id: string;
@@ -92,9 +85,8 @@ export type GameStateClient = {
 
 export type GameStateActions = {
   actions: {
-    loginWithProvider: (provider: 'google' | 'discord') => Promise<void>;
+    loginWithProvider: (provider: AuthProvider) => Promise<void>;
     logout: () => void;
-    checkAuth: () => void;
     createRoom: (name: string) => Promise<void>;
     joinRoom: (name: string, roomId: string) => Promise<void>;
     toggleReady: () => void;

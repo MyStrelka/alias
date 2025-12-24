@@ -10,6 +10,7 @@ export {
   GameState,
   GameStateClient,
   GameStateActions,
+  AuthProvider,
 } from './types';
 
 export { EVENTS } from './constants';

@@ -1,3 +1,5 @@
+import type { AuthProvider } from '@alias/shared';
+
 const popupCenter = (url: string, title: string, w: number, h: number) => {
   const dualScreenLeft =
     window.screenLeft !== undefined ? window.screenLeft : window.screenX;
@@ -34,10 +36,10 @@ const popupCenter = (url: string, title: string, w: number, h: number) => {
   return newWindow;
 };
 
-const discordAuth = async () => {
+const providerAuth = async (provider: AuthProvider) => {
   const authpopup = popupCenter(
-    `${import.meta.env.VITE_SERVER_URL}/oauth/discord/login`,
-    'Discord Login',
+    `${import.meta.env.VITE_SERVER_URL}/oauth/${provider}/login`,
+    `${provider} Login`,
     500,
     600,
   );
@@ -52,4 +54,4 @@ const discordAuth = async () => {
   });
 };
 
-export default { discordAuth };
+export default { providerAuth };

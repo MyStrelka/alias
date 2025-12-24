@@ -31,3 +31,9 @@ export const DiscordAuthConfig = {
   redirectUrl: process.env.OAUTH_DISCORD_REDIRECT_URI || '',
   scopes: (process.env.OAUTH_DISCORD_SCOPE || '').split(','),
 };
+
+export const GoogleAuthConfig = {
+  clientID: process.env.OAUTH_GOOGLE_CLIENT_ID || '',
+  clientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET || '',
+  redirectUrl: process.env.OAUTH_GOOGLE_REDIRECT_URI || '',
+};

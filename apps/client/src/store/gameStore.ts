@@ -1,5 +1,4 @@
 import toast from 'react-hot-toast';
-import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -12,9 +11,8 @@ import type {
 } from '@alias/shared';
 
 import authService from '../services/auth';
-import { auth, googleProvider } from '../services/firebase';
 import { socketService } from '../services/socketService';
-import { addDocument, createIncognitoUser, incrementValue } from './db';
+import { createIncognitoUser } from './db';
 
 export interface TeamTheme {
   border: string;
@@ -136,60 +134,15 @@ export const useGameStore = create<
         actions: {
           loginWithProvider: async (provider) => {
             try {
-              // Firebase Google Login
-              if (provider === 'google') {
-                try {
-                  const result = await signInWithPopup(auth, googleProvider);
-                  // UserData берем из result.user
-                  const user = {
-                    id: result.user.uid,
-                    name: result.user.displayName,
-                    avatar: result.user.photoURL,
-                    email: result.user.email,
-                    providerId: result.user.providerData[0].providerId,
-                    // Остальное нам не важно
-                  };
-                  set({ user: user as any });
-                  toast.success(`Привет, ${user.name}!`);
-                  const docRef = await addDocument('users', user.id, {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    providerId: user.providerId,
-                  });
-                  await incrementValue(docRef, 'loginCount');
-                } catch (e) {
-                  console.error('signInWithPopup google', e);
-                }
-              } else {
-                await authService.discordAuth();
-              }
+              await authService.providerAuth(provider);
             } catch (e) {
               console.error(e);
               toast.error('Ошибка входа');
             }
           },
           logout: async () => {
-            signOut(auth);
             set({ user: null });
             toast.success('Вышли');
-          },
-          // TODO: migrate to backend auth
-          checkAuth: () => {
-            // Firebase вешает слушатель сам
-            onAuthStateChanged(auth, (user) => {
-              if (user) {
-                set({
-                  user: {
-                    id: user.uid,
-                    name: user.displayName,
-                    avatar: user.photoURL,
-                  } as any,
-                });
-              } else {
-                //set({ user: null });
-              }
-            });
           },
           saveSession: () => {
             const { roomId, selfName, isHost } = get();

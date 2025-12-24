@@ -11,8 +11,8 @@ import type {
 } from '@alias/shared';
 
 import authService from '../services/auth';
+import gameService from '../services/game';
 import { socketService } from '../services/socketService';
-import { createIncognitoUser } from './db';
 
 export interface TeamTheme {
   border: string;
@@ -174,7 +174,7 @@ export const useGameStore = create<
               const deviceId = getDeviceId();
 
               if (!user?.id) {
-                await createIncognitoUser(name);
+                await gameService.createIncognitoUser(deviceId, name);
               }
 
               const roomId = await socketService.createRoom({
@@ -200,7 +200,7 @@ export const useGameStore = create<
               const { user } = get();
               const deviceId = getDeviceId();
               if (!user?.id) {
-                await createIncognitoUser(name);
+                await gameService.createIncognitoUser(deviceId, name);
               }
               await socketService.joinRoom({
                 roomId,

@@ -11,6 +11,7 @@ export interface User {
   avatar?: string;
   token?: string;
   refreshToken?: string;
+  loginCount?: number;
 }
 
 export interface Settings {

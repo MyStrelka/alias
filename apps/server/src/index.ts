@@ -37,6 +37,8 @@ app.use(
   }),
 );
 
+app.use(express.json());
+
 app.use('/', appRoutes);
 
 const httpServer = createServer(app);

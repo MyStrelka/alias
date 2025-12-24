@@ -18,9 +18,18 @@ const insertOrUpdateUser = async (user: User): Promise<string | null> => {
   try {
     const existing = await findUser(user.id);
     if (existing) {
-      await db.collection('users').doc(user.id).set(user, { merge: true });
+      await db
+        .collection('users')
+        .doc(user.id)
+        .set(
+          { ...user, loginCount: (existing.loginCount || 0) + 1 },
+          { merge: true },
+        );
     } else {
-      await db.collection('users').doc(user.id).set(user);
+      await db
+        .collection('users')
+        .doc(user.id)
+        .set({ ...user, loginCount: 1 });
     }
     return user.id;
   } catch (error) {

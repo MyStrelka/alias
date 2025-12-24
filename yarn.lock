@@ -50,6 +50,7 @@ __metadata:
     "@types/btoa": "npm:^1.2.5"
     "@types/cors": "npm:^2"
     "@types/express": "npm:^5.0.6"
+    "@types/express-rate-limit": "npm:^6.0.2"
     "@types/express-session": "npm:^1"
     "@types/node": "npm:^25.0.3"
     axios: "npm:^1.13.2"
@@ -58,6 +59,7 @@ __metadata:
     dotenv: "npm:^17.2.3"
     esbuild: "npm:^0.27.2"
     express: "npm:^5.2.1"
+    express-rate-limit: "npm:^8.2.1"
     express-session: "npm:^1.18.2"
     firebase-admin: "npm:^13.6.0"
     nodemon: "npm:^3.1.11"
@@ -1811,6 +1813,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/express-rate-limit@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "@types/express-rate-limit@npm:6.0.2"
+  dependencies:
+    express-rate-limit: "npm:*"
+  checksum: 10c0/079dcea4a65242e7777ffd36e336dc86762988eb91534d8c691e0d2856bb12e5c28d5b8812641f51e2f86bdd2994da23b7cff683453cf20d78501bd0b13a70ba
+  languageName: node
+  linkType: hard
+
 "@types/express-serve-static-core@npm:^4.17.33":
   version: 4.19.7
   resolution: "@types/express-serve-static-core@npm:4.19.7"
@@ -3297,6 +3308,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"express-rate-limit@npm:*, express-rate-limit@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "express-rate-limit@npm:8.2.1"
+  dependencies:
+    ip-address: "npm:10.0.1"
+  peerDependencies:
+    express: ">= 4.11"
+  checksum: 10c0/54185f211c25655382436b8ad1a2136df0d5dc88f4d9d4438ca7cbc87cef0cd34cb01b8fc62d290445326aa6581470d2ff44502c3f1a34a5ed2c2ce56809fa01
+  languageName: node
+  linkType: hard
+
 "express-session@npm:^1.18.2":
   version: 1.18.2
   resolution: "express-session@npm:1.18.2"
@@ -4049,6 +4071,13 @@ __metadata:
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 10c0/4e531f648b29039fb7426fb94075e6545faa1eb9fe83c29f0b6d9e7263aceb4289d2d4557db0d428188eeb449cc7c5e77b0a0b2c4e248ff2a65933a0dee49ef2
+  languageName: node
+  linkType: hard
+
+"ip-address@npm:10.0.1":
+  version: 10.0.1
+  resolution: "ip-address@npm:10.0.1"
+  checksum: 10c0/1634d79dae18394004775cb6d699dc46b7c23df6d2083164025a2b15240c1164fccde53d0e08bd5ee4fc53913d033ab6b5e395a809ad4b956a940c446e948843
   languageName: node
   linkType: hard
 

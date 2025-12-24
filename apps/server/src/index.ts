@@ -1,6 +1,7 @@
 import { createServer } from 'http';
 import cors from 'cors';
 import express from 'express';
+import { rateLimit } from 'express-rate-limit';
 import session from 'express-session';
 import { Server } from 'socket.io';
 
@@ -18,6 +19,15 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 50,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  ipv6Subnet: 48,
+});
+app.use(limiter);
 
 app.use(
   session({

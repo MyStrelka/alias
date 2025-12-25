@@ -1,8 +1,11 @@
-import { CheckCircle2, Megaphone, Ear } from 'lucide-react';
-import { soundManager } from '../utils/soundManager';
+import { CheckCircle2, Ear, Megaphone } from 'lucide-react';
+
 import type { Player, Team } from '@alias/shared';
-import { useGameStore, TEAM_THEMES } from '../store/gameStore';
+
+import Avatar from '../components/Avatar';
 import Tile from '../components/Tile';
+import { TEAM_THEMES, useGameStore } from '../store/gameStore';
+import { soundManager } from '../utils/soundManager';
 
 const PreRound = ({
   speaker,
@@ -62,7 +65,14 @@ const PreRound = ({
           <div className='flex items-center justify-center gap-8'>
             <div className='flex flex-col items-center gap-2'>
               <div className='h-20 w-20 rounded-full bg-accent-main/20 border-2 border-accent-main flex items-center justify-center relative'>
-                <Megaphone className='h-8 w-8 text-accent-main' />
+                <Avatar
+                  avatar={speaker.avatar}
+                  size={80}
+                  placeholder={
+                    <Megaphone className='h-8 w-8 text-accent-main' />
+                  }
+                />
+
                 {isSpeakerReady && (
                   <div className='absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1'>
                     <CheckCircle2 className='h-4 w-4 text-white' />
@@ -79,7 +89,12 @@ const PreRound = ({
             <div className='h-px w-16 bg-white/20' />
             <div className='flex flex-col items-center gap-2'>
               <div className='h-20 w-20 rounded-full bg-indigo-500/20 border-2 border-indigo-500 flex items-center justify-center relative'>
-                <Ear className='h-8 w-8 text-indigo-400' />
+                <Avatar
+                  avatar={listener.avatar}
+                  size={80}
+                  placeholder={<Ear className='h-8 w-8 text-indigo-400' />}
+                />
+
                 {isListenerReady && (
                   <div className='absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1'>
                     <CheckCircle2 className='h-4 w-4 text-white' />

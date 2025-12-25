@@ -21,19 +21,11 @@ router.get('/callback', async (request, response) => {
           name: userResponse.username,
           email: userResponse.email,
           providerId: 'discord',
-          avatar: userResponse.avatar || '',
+          avatar: `https://cdn.discordapp.com/avatars/${userResponse.id}/${userResponse.avatar}.png?size=128`,
         };
-        const userId = await fireabsese.insertOrUpdateUser(user);
-        console.log('User inserted/updated with ID:', userId);
-        const avatarBase64 = await discord.getAvatarBase64(
-          userResponse.id,
-          userResponse.avatar,
-        );
-        response
-          .status(200)
-          .send(
-            getCallbackHtml({ ...user, avatar: avatarBase64 || user.avatar }),
-          );
+        await fireabsese.insertOrUpdateUser(user);
+
+        response.status(200).send(getCallbackHtml(user));
       } else {
         console.log('No user data received.');
         response.status(500).send('Failed to fetch user data from Discord.');

@@ -105,7 +105,6 @@ const Login = () => {
               onChange={(e) => setName(e.target.value)}
               placeholder='Как вас зовут?'
               className='input-glass w-full text-lg'
-              maxLength={12}
             />
           </div>
 

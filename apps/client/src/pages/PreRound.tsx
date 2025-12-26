@@ -3,6 +3,7 @@ import { CheckCircle2, Ear, Megaphone } from 'lucide-react';
 import type { Player, Team } from '@alias/shared';
 
 import Avatar from '../components/Avatar';
+import EllipsisText from '../components/EllipsisText';
 import Tile from '../components/Tile';
 import { TEAM_THEMES, useGameStore } from '../store/gameStore';
 import { soundManager } from '../utils/soundManager';
@@ -63,7 +64,7 @@ const PreRound = ({
           )}
 
           <div className='flex items-center justify-center gap-8'>
-            <div className='flex flex-col items-center gap-2'>
+            <div className='flex flex-1 basis-0 min-w-0 flex-col items-center gap-2'>
               <div className='h-20 w-20 rounded-full bg-accent-main/20 border-2 border-accent-main flex items-center justify-center relative'>
                 <Avatar
                   avatar={speaker.avatar}
@@ -79,15 +80,17 @@ const PreRound = ({
                   </div>
                 )}
               </div>
-              <div>
-                <p className='text-sm text-gray-400 uppercase font-bold'>
-                  Объясняет
-                </p>
-                <p className='text-lg font-bold text-white'>{speaker?.name}</p>
-              </div>
+
+              <p className='text-sm text-gray-400 uppercase font-bold'>
+                Объясняет
+              </p>
+              <EllipsisText
+                classNames='text-lg font-bold text-white max-w-48'
+                text={speaker?.name}
+              />
             </div>
             <div className='h-px w-16 bg-white/20' />
-            <div className='flex flex-col items-center gap-2'>
+            <div className='flex flex-1 basis-0 min-w-0 flex-col items-center gap-2'>
               <div className='h-20 w-20 rounded-full bg-indigo-500/20 border-2 border-indigo-500 flex items-center justify-center relative'>
                 <Avatar
                   avatar={listener.avatar}
@@ -101,12 +104,14 @@ const PreRound = ({
                   </div>
                 )}
               </div>
-              <div>
-                <p className='text-sm text-gray-400 uppercase font-bold'>
-                  Отгадывает
-                </p>
-                <p className='text-lg font-bold text-white'>{listener?.name}</p>
-              </div>
+
+              <p className='text-sm text-gray-400 uppercase font-bold'>
+                Отгадывает
+              </p>
+              <EllipsisText
+                classNames='text-lg font-bold text-white max-w-48'
+                text={listener?.name}
+              />
             </div>
           </div>
 
@@ -165,7 +170,7 @@ const PreRound = ({
                       key={t.id}
                       className={`flex justify-between p-2 rounded border ${theme.border} ${theme.bg}`}
                     >
-                      <span className={theme.text}>{t.name}</span>
+                      <EllipsisText classNames={theme.text} text={t.name} />
                       <span className='font-bold text-white'>{score}</span>
                     </div>
                   );
@@ -177,7 +182,10 @@ const PreRound = ({
                       key={p.id}
                       className='flex justify-between items-center p-2 border-b border-white/5 last:border-0'
                     >
-                      <span className='text-gray-300'>{p.name}</span>
+                      <EllipsisText
+                        classNames='text-gray-300 pr-2'
+                        text={p.name}
+                      />
                       <span className='font-bold text-white'>{p.score}</span>
                     </div>
                   ))}

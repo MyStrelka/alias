@@ -2,6 +2,7 @@ import { CheckCircle2, Crown, UserMinus, XCircle } from 'lucide-react';
 
 import type { Player } from '@alias/shared';
 
+import EllipsisText from './EllipsisText';
 import Table from './Table/Table';
 import Td from './Table/Td';
 import Thead from './Table/Thead';
@@ -20,7 +21,7 @@ const PlayerTable = ({
       <Thead text='Имя' />
       <Thead text='Очки' />
       <Thead text='Статус' />
-      {isHost && <Thead text='' />}
+      {isHost && <Thead text='' align='right' />}
     </>
   );
 
@@ -30,7 +31,7 @@ const PlayerTable = ({
         <Td classNames={['font-semibold', 'text-white']}>
           <div className='flex items-center gap-2'>
             {p.isHost && <Crown className='h-4 w-4 text-amber-400' />}
-            <span>{p.name}</span>
+            <EllipsisText text={p.name} classNames='max-w-48' />
             {p.id === selfId && (
               <span className='badge bg-white/20 border-white/30 text-xs'>
                 Вы
@@ -82,18 +83,7 @@ const PlayerTable = ({
       </Trow>
     ));
 
-  return (
-    <Table
-      header={header}
-      rows={rows}
-      players={players}
-      selfId={selfId}
-      isHost={isHost}
-      onToggleReady={onToggleReady}
-      onKick={onKick}
-      gameStage={gameStage}
-    />
-  );
+  return <Table header={header} rows={rows} />;
 };
 
 export default PlayerTable;

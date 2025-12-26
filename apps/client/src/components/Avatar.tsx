@@ -3,7 +3,7 @@ const Avatar = ({
   size,
   placeholder,
 }: {
-  avatar: string;
+  avatar: string | null;
   size: number;
   placeholder: React.ReactNode;
 }) => {
@@ -15,7 +15,7 @@ const Avatar = ({
       style={{ borderRadius: '50%' }}
     />
   ) : (
-    placeholder
+    (placeholder ?? null)
   );
 };
 

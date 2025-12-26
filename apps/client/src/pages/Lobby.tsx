@@ -58,7 +58,7 @@ const Lobby = ({
   const gameModes: { value: Mode; label: string }[] = [
     { value: 'team', label: 'Команды' },
     { value: 'solo_standard', label: 'Соло (Std)' },
-    { value: 'solo_all_vs_all', label: 'Соло (All)' },
+    // { value: 'solo_all_vs_all', label: 'Соло (All)' },
   ];
 
   return (
@@ -140,7 +140,7 @@ const Lobby = ({
             <label className='text-sm text-gray-400 mb-1 block'>
               Режим игры
             </label>
-            <div className='mt-2 grid grid-cols-3 gap-2'>
+            <div className='mt-2 grid grid-cols-2 gap-2'>
               {gameModes.map((mode) => (
                 <button
                   key={mode.value}

@@ -19,7 +19,6 @@ const PlayerTable = ({
   const header = () => (
     <>
       <Thead text='Имя' />
-      <Thead text='Очки' />
       <Thead text='Статус' />
       {isHost && <Thead text='' align='right' />}
     </>
@@ -42,7 +41,6 @@ const PlayerTable = ({
             )}
           </div>
         </Td>
-        <Td classNames={['font-mono']}>{p.score}</Td>
         <Td classNames={['font-mono']}>
           {gameStage === 'lobby' ? (
             <button

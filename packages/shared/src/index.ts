@@ -11,6 +11,7 @@ export {
   GameStateClient,
   GameStateActions,
   AuthProvider,
+  WordLog,
 } from './types';
 
 export { EVENTS } from './constants';

@@ -1,5 +1,11 @@
 export type Mode = 'team' | 'solo_standard' | 'solo_all_vs_all';
-export type GameStage = 'login' | 'lobby' | 'preround' | 'play' | 'victory';
+export type GameStage =
+  | 'login'
+  | 'lobby'
+  | 'preround'
+  | 'play'
+  | 'play-adjustment'
+  | 'victory';
 export type Difficulty = 'easy' | 'medium' | 'hard';
 export type AuthProvider = 'google' | 'discord';
 
@@ -22,11 +28,14 @@ export interface Settings {
   enableChallenges: boolean;
 }
 
+export type PlayerRole = 'listener' | 'speaker' | 'spectator';
+
 export interface Player {
   id: string;
   deviceId: string;
   name: string;
   score: number;
+  role: PlayerRole;
   isHost: boolean;
   ready: boolean;
   dbId: string | null;
@@ -52,6 +61,11 @@ export interface Room {
   timerInterval?: ReturnType<typeof setInterval>;
 }
 
+export type WordLog = {
+  word: string;
+  score: -1 | 0 | 1;
+};
+
 export type GameState = {
   stage: GameStage;
   settings: Settings;
@@ -68,6 +82,7 @@ export type GameState = {
     currentTeamId: string | null;
     speakerId: string | null;
     listenerId: string | null;
+    wordLog: WordLog[];
   };
   victory?: { winnerId: string };
 };
@@ -114,5 +129,10 @@ export type GameStateActions = {
     startGameRound: () => void;
     saveSession: () => void;
     restoreSession: () => { roomId: string; selfName: string } | null;
+    wordAdjustment: (
+      wordLlogIndex: number,
+      score: Pick<WordLog, 'score'>,
+    ) => void;
+    finishRound: () => void;
   };
 };

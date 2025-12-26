@@ -158,20 +158,13 @@ const PreRound = ({
             {settings.mode === 'team'
               ? teams.map((t: Team) => {
                   const theme = TEAM_THEMES[t.themeIndex % TEAM_THEMES.length];
-                  const playersInTeam = players.filter(
-                    (p: Player) => p.teamId === t.id,
-                  );
-                  const score = playersInTeam.reduce(
-                    (acc: number, p: Player) => acc + p.score,
-                    0,
-                  );
                   return (
                     <div
                       key={t.id}
                       className={`flex justify-between p-2 rounded border ${theme.border} ${theme.bg}`}
                     >
                       <EllipsisText classNames={theme.text} text={t.name} />
-                      <span className='font-bold text-white'>{score}</span>
+                      <span className='font-bold text-white'>{t.score}</span>
                     </div>
                   );
                 })

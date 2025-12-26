@@ -94,8 +94,9 @@ function App() {
             activeChallenge={game.round.activeChallenge}
           />
         )}
-        {game.stage === 'play' && (
+        {['play', 'play-adjustment'].includes(game.stage) && (
           <Game
+            stage={game.stage}
             speaker={speaker}
             listener={listener}
             timeLeft={game.round.timeLeft}
@@ -104,6 +105,7 @@ function App() {
             selfId={game.selfId}
             isPaused={!game.round.running}
             currentTeamId={game.round.currentTeamId}
+            wordLog={game.round.wordLog}
             actions={actions}
           />
         )}

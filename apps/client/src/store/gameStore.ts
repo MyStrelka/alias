@@ -81,6 +81,7 @@ const initialState: GameState & GameStateClient = {
     currentTeamId: null,
     speakerId: null,
     listenerId: null,
+    wordLog: [],
   },
   // victory: null,
   isMuted: false,
@@ -264,6 +265,12 @@ export const useGameStore = create<
           toggleMute: () => set((s) => ({ isMuted: !s.isMuted })),
           generateWordsAI: async () => {},
           clearCustomWords: () => {},
+          wordAdjustment: (wordLogIndex, score) =>
+            socketService.reliableEmit('word_adjustment', {
+              wordLogIndex,
+              score,
+            }),
+          finishRound: () => socketService.reliableEmit('finish_round'),
         },
       };
     },

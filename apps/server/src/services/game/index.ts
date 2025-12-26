@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 
-import type { GameState, Room } from '@alias/shared';
+import type { GameState, Player, Room, WordLog } from '@alias/shared';
 import { EVENTS } from '@alias/shared';
 
 import {
@@ -38,6 +38,7 @@ const createInitialState = (): GameState => ({
     currentTeamId: null,
     speakerId: null,
     listenerId: null,
+    wordLog: [],
   },
 });
 
@@ -54,7 +55,7 @@ export const initGameService = (io: Server) => {
       const roomId = generateRoomId();
       const initialState = createInitialState();
 
-      const host = {
+      const host: Player = {
         id: socket.id,
         deviceId: data.deviceId,
         name: data.playerName,
@@ -66,6 +67,7 @@ export const initGameService = (io: Server) => {
         explained: 0,
         guessed: 0,
         online: true,
+        role: 'spectator',
       };
       initialState.players.push(host);
       rooms.set(roomId, {
@@ -119,7 +121,7 @@ export const initGameService = (io: Server) => {
           socket.join(roomId);
           callback({ success: true });
         } else {
-          const newPlayer = {
+          const newPlayer: Player = {
             id: socket.id,
             deviceId: deviceId,
             name: playerName,
@@ -131,6 +133,7 @@ export const initGameService = (io: Server) => {
             explained: 0,
             guessed: 0,
             online: true,
+            role: 'spectator',
           };
           gameState.players.push(newPlayer);
           players.push(newPlayer);
@@ -288,30 +291,7 @@ export const initGameService = (io: Server) => {
         room.gameState.round.timeLeft -= 1;
         if (room.gameState.round.timeLeft <= 0) {
           clearInterval(room.timerInterval);
-          const nextNum = room.gameState.round.roundNumber + 1;
-          const turn = nextTeamTurn(
-            room.gameState.teams,
-            room.gameState.players,
-            room.gameState.round.currentTeamId,
-            room.gameState.round.teamSpeakerIndex,
-            room.gameState.settings.mode,
-            false,
-          );
-          const ch = selectChallenge(
-            nextNum,
-            room.gameState.settings.enableChallenges,
-          );
-          room.gameState.stage = 'preround';
-          room.gameState.round = {
-            ...room.gameState.round,
-            ...turn,
-            roundNumber: nextNum,
-            running: false,
-            readyMap: {},
-            timeLeft: room.gameState.settings.roundTime,
-            currentWord: pickWord(room.gameState.settings.difficulty),
-            activeChallenge: ch,
-          };
+          room.gameState.stage = 'play-adjustment';
         }
         updateState(roomId, room);
       }, 1000);
@@ -329,24 +309,66 @@ export const initGameService = (io: Server) => {
       const data = findRoom(rooms, socket.id);
       if (!data) return;
       const { roomId, room } = data;
+
+      const nextWordLog: WordLog = {
+        word: `${room.gameState.round.currentWord}`,
+        score: action === 'correct' ? 1 : -1,
+      };
+      room.gameState.round.wordLog.push(nextWordLog);
+
+      room.gameState.round.currentWord = pickWord(
+        room.gameState.settings.difficulty,
+      );
+      updateState(roomId, room);
+    });
+
+    socket.on('word_adjustment', ({ wordLogIndex, score }) => {
+      const data = findRoom(rooms, socket.id);
+      if (!data) return;
+      const { roomId, room } = data;
+
+      if (
+        !!room.gameState.round.wordLog[wordLogIndex] &&
+        [-1, 0, 1].indexOf(score) > -1
+      ) {
+        room.gameState.round.wordLog[wordLogIndex].score = score;
+      }
+
+      updateState(roomId, room);
+    });
+
+    socket.on('finish_round', () => {
+      const data = findRoom(rooms, socket.id);
+      if (!data) return;
+      const { roomId, room } = data;
+
       const sp = room.gameState.players.find(
         (p) => p.id === room.gameState.round.speakerId,
       );
       const ls = room.gameState.players.find(
         (p) => p.id === room.gameState.round.listenerId,
       );
-      if (action === 'correct') {
-        if (sp) {
-          sp.score++;
-          sp.explained++;
+
+      room.gameState.round.wordLog.forEach((word) => {
+        if (word.score === +1) {
+          if (sp) {
+            sp.score++;
+            sp.explained++;
+          }
+          if (ls) {
+            ls.score++;
+            ls.guessed++;
+          }
+        } else if (word.score === -1) {
+          if (sp) sp.score--;
         }
-        if (ls) {
-          ls.score++;
-          ls.guessed++;
+        if (room.gameState.settings.mode === 'team') {
+          const currentTeam = room.gameState.teams.find(
+            (t) => t.id === sp?.teamId,
+          );
+          if (currentTeam) currentTeam.score += word.score;
         }
-      } else if (action === 'skip') {
-        if (sp) sp.score--;
-      }
+      });
 
       const winner = room.gameState.players.find(
         (p) => p.score >= room.gameState.settings.winScore,
@@ -356,10 +378,33 @@ export const initGameService = (io: Server) => {
         room.gameState.stage = 'victory';
         room.gameState.victory = { winnerId: winner.id };
       } else {
-        room.gameState.round.currentWord = pickWord(
-          room.gameState.settings.difficulty,
+        const nextNum = room.gameState.round.roundNumber + 1;
+        const turn = nextTeamTurn(
+          room.gameState.teams,
+          room.gameState.players,
+          room.gameState.round.currentTeamId,
+          room.gameState.round.teamSpeakerIndex,
+          room.gameState.settings.mode,
+          false,
         );
+        const ch = selectChallenge(
+          nextNum,
+          room.gameState.settings.enableChallenges,
+        );
+        room.gameState.stage = 'preround';
+        room.gameState.round = {
+          ...room.gameState.round,
+          ...turn,
+          roundNumber: nextNum,
+          running: false,
+          readyMap: {},
+          timeLeft: room.gameState.settings.roundTime,
+          currentWord: pickWord(room.gameState.settings.difficulty),
+          activeChallenge: ch,
+          wordLog: [],
+        };
       }
+
       updateState(roomId, room);
     });
 

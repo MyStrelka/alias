@@ -57,7 +57,6 @@ const Game = ({
       setLastWord(true);
     }
   }, [stage]);
-  console.log('lastWord', lastWord);
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-[1fr,350px] gap-6 animate-fade-in h-full'>

@@ -27,7 +27,8 @@ const limiter = rateLimit({
   legacyHeaders: false,
   ipv6Subnet: 48,
 });
-app.use(limiter);
+
+// app.use(limiter);
 
 app.use(
   session({

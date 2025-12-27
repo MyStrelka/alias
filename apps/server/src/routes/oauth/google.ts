@@ -20,6 +20,7 @@ router.get('/callback', async (request, response) => {
       const user: User = {
         id: id || 'empty_callbac_kuser_response',
         name: name || '',
+        nickName: name || '',
         email: email || '',
         providerId: 'google',
         avatar: picture || '',

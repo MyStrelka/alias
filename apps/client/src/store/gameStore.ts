@@ -156,7 +156,7 @@ export const useGameStore = create<
               }
 
               const roomId = await socketService.createRoom({
-                playerName: user.name,
+                playerName: user.nickName,
                 dbId: user?.id || null,
                 avatar: user?.avatar || null,
                 deviceId,
@@ -182,7 +182,7 @@ export const useGameStore = create<
               }
               await socketService.joinRoom({
                 roomId,
-                playerName: user.name,
+                playerName: user.nickName,
                 dbId: user.id || null,
                 avatar: user.avatar || null,
                 deviceId,
@@ -252,15 +252,15 @@ export const useGameStore = create<
               score,
             }),
           finishRound: () => socketService.reliableEmit('finish_round'),
-          setUserName: (name: string) => {
+          setUserNickName: (nickName: string) => {
             const { user } = get();
-            if (!name) return;
             set({
               user: user
-                ? { ...user, name }
+                ? { ...user, nickName }
                 : {
                     id: getDeviceId(),
-                    name,
+                    name: nickName,
+                    nickName,
                     email: '',
                     providerId: 'anonim',
                   },

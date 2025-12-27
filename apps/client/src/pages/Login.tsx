@@ -94,8 +94,8 @@ const Login = () => {
               Ваше имя в игре
             </label>
             <input
-              value={user?.name || ''}
-              onChange={(e) => actions.setUserName(e.target.value.trim())}
+              value={user?.nickName || ''}
+              onChange={(e) => actions.setUserNickName(e.target.value)}
               placeholder='Как вас зовут?'
               className='input-glass w-full text-lg'
             />
@@ -111,7 +111,7 @@ const Login = () => {
               </h3>
               <AccentButton
                 onClick={() => actions.createRoom()}
-                disabled={!user?.name}
+                disabled={!user?.nickName}
                 className='h-12 w-full'
               >
                 <PlugZap className='h-5 w-5' /> Создать

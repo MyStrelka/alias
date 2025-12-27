@@ -12,6 +12,7 @@ export type AuthProvider = 'google' | 'discord' | 'anonim';
 export interface User {
   id: string;
   name: string;
+  nickName: string;
   email: string;
   providerId: AuthProvider;
   avatar?: string;
@@ -33,6 +34,7 @@ export interface Player {
   id: string;
   deviceId: string;
   name: string;
+  nickName: string;
   score: number;
   role: PlayerRole;
   isHost: boolean;
@@ -130,6 +132,6 @@ export type GameStateActions = {
       score: Pick<WordLog, 'score'>,
     ) => void;
     finishRound: () => void;
-    setUserName: (name: string) => void;
+    setUserNickName: (nickName: string) => void;
   };
 };

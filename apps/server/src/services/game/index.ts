@@ -79,10 +79,10 @@ export const initGameService = (io: Server) => {
       socket.join(roomId);
       callback({ success: true, roomId });
       io.to(roomId).emit(EVENTS.STATE_UPDATE, initialState);
-      await firebaseAdmin.logActivities(
-        'createRoom',
-        `${data.userProviderId}_${data.dbId || data.deviceId}`,
-      );
+
+      const dbUserId = `${data.userProviderId}_${data.dbId || data.deviceId}`;
+      await firebaseAdmin.logActivities('createRoom', dbUserId);
+      await firebaseAdmin.updatePlayerName(dbUserId, data.playerName);
     });
 
     // 2. Вход (С ПОЛНОЙ МИГРАЦИЕЙ ID)
@@ -150,10 +150,10 @@ export const initGameService = (io: Server) => {
         }
 
         io.to(roomId).emit('state_update', gameState);
-        await firebaseAdmin.logActivities(
-          'joinRoom',
-          `${userProviderId}_${dbId || deviceId}`,
-        );
+
+        const dbUserId = `${userProviderId}_${dbId || deviceId}`;
+        await firebaseAdmin.logActivities('joinRoom', dbUserId);
+        await firebaseAdmin.updatePlayerName(dbUserId, playerName);
       },
     );
 

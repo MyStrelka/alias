@@ -152,11 +152,14 @@ export const useGameStore = create<
               const deviceId = getDeviceId();
               if (!user?.name) return;
               if (user?.providerId === 'anonim') {
-                await gameService.createIncognitoUser(deviceId, user.name);
+                await gameService.createIncognitoUser(
+                  deviceId,
+                  user.playerName,
+                );
               }
 
               const roomId = await socketService.createRoom({
-                playerName: user.nickName,
+                playerName: user.playerName,
                 dbId: user?.id || null,
                 avatar: user?.avatar || null,
                 deviceId,
@@ -178,11 +181,14 @@ export const useGameStore = create<
               const deviceId = getDeviceId();
               if (!user?.name) return;
               if (user?.providerId === 'anonim') {
-                await gameService.createIncognitoUser(deviceId, user.name);
+                await gameService.createIncognitoUser(
+                  deviceId,
+                  user.playerName,
+                );
               }
               await socketService.joinRoom({
                 roomId,
-                playerName: user.nickName,
+                playerName: user.playerName,
                 dbId: user.id || null,
                 avatar: user.avatar || null,
                 deviceId,
@@ -252,15 +258,15 @@ export const useGameStore = create<
               score,
             }),
           finishRound: () => socketService.reliableEmit('finish_round'),
-          setUserNickName: (nickName: string) => {
+          setPlayerName: (playerName: string) => {
             const { user } = get();
             set({
               user: user
-                ? { ...user, nickName }
+                ? { ...user, playerName }
                 : {
                     id: getDeviceId(),
-                    name: nickName,
-                    nickName,
+                    name: playerName,
+                    playerName,
                     email: '',
                     providerId: 'anonim',
                   },

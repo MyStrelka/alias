@@ -18,7 +18,7 @@ const getUser = async () => {
   }
 };
 
-const createIncognitoUser = async (deviceId: string, name: string) => {
+const createIncognitoUser = async (deviceId: string, playerName: string) => {
   let recordId = null;
   try {
     const response = await fetch(
@@ -28,7 +28,7 @@ const createIncognitoUser = async (deviceId: string, name: string) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ deviceId, name }),
+        body: JSON.stringify({ deviceId, playerName }),
         credentials: 'include',
       },
     );

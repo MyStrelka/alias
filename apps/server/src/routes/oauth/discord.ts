@@ -19,7 +19,7 @@ router.get('/callback', async (request, response) => {
         const user: User = {
           id: userResponse.id,
           name: userResponse.username,
-          nickName: userResponse.username,
+          playerName: userResponse.username,
           email: userResponse.email,
           providerId: 'discord',
           avatar: `https://cdn.discordapp.com/avatars/${userResponse.id}/${userResponse.avatar}.png?size=128`,

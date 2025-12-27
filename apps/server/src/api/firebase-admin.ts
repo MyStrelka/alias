@@ -75,10 +75,11 @@ export const getUsers = async () => {
     const users: User[] = [];
     const data = await db.collection(TABLE.USERS).get();
     data.forEach((user) => {
-      const { id, name, email, providerId, avatar } = user.data();
+      const { id, name, playerName, email, providerId, avatar } = user.data();
       users.push({
         id,
         name,
+        playerName,
         email,
         providerId,
         avatar,
@@ -136,4 +137,28 @@ export const logActivities = async (
   }
 };
 
-export default { findUser, getUsers, insertOrUpdateUser, logActivities };
+export const updatePlayerName = async (
+  dbUserId: string,
+  playerName: string,
+) => {
+  try {
+    const userRef = await db.collection(TABLE.USERS).doc(dbUserId).get();
+    const user = userRef.data() as User;
+    await db
+      .collection(TABLE.USERS)
+      .doc(dbUserId)
+      .set({ ...user, playerName }, { merge: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`Error updating playerName: ${message}`);
+    return null;
+  }
+};
+
+export default {
+  findUser,
+  getUsers,
+  insertOrUpdateUser,
+  logActivities,
+  updatePlayerName,
+};

@@ -18,7 +18,7 @@ router.get('/callback', async (request, response) => {
     if (userResponse) {
       const { id, name, email, picture } = userResponse;
       const user: User = {
-        id: `google_${id}`,
+        id: id || 'empty_callbac_kuser_response',
         name: name || '',
         email: email || '',
         providerId: 'google',

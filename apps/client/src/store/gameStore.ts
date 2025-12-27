@@ -151,7 +151,7 @@ export const useGameStore = create<
               const { user } = get();
               const deviceId = getDeviceId();
               if (!user?.name) return;
-              if (!user?.id) {
+              if (user?.providerId === 'incognito') {
                 await gameService.createIncognitoUser(deviceId, user.name);
               }
 
@@ -176,7 +176,7 @@ export const useGameStore = create<
               const { user } = get();
               const deviceId = getDeviceId();
               if (!user?.name) return;
-              if (!user?.id) {
+              if (user?.providerId === 'incognito') {
                 await gameService.createIncognitoUser(deviceId, user.name);
               }
               await socketService.joinRoom({

@@ -16,11 +16,12 @@ const db = getFirestore();
 
 const insertOrUpdateUser = async (user: User): Promise<string | null> => {
   try {
-    const existing = await findUser(user.id);
+    const dbUserId = `${user.providerId}_${user.id}`;
+    const existing = await findUser(dbUserId);
     if (existing) {
       await db
         .collection('users')
-        .doc(user.id)
+        .doc(dbUserId)
         .set(
           { ...user, loginCount: (existing.loginCount || 0) + 1 },
           { merge: true },
@@ -28,10 +29,10 @@ const insertOrUpdateUser = async (user: User): Promise<string | null> => {
     } else {
       await db
         .collection('users')
-        .doc(user.id)
+        .doc(dbUserId)
         .set({ ...user, loginCount: 1 });
     }
-    return user.id;
+    return dbUserId;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`Error inserting/updating user: ${message}`);
@@ -39,9 +40,9 @@ const insertOrUpdateUser = async (user: User): Promise<string | null> => {
   }
 };
 
-export const findUser = async (id: string): Promise<User | null> => {
+export const findUser = async (dbUserId: string): Promise<User | null> => {
   try {
-    const doc = await db.collection('users').doc(id).get();
+    const doc = await db.collection('users').doc(dbUserId).get();
     if (!doc.exists) return null;
     const data = doc.data() as User;
     return data;

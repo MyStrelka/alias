@@ -17,7 +17,7 @@ router.get('/callback', async (request, response) => {
       const userResponse = await discord.getUser(request);
       if (userResponse) {
         const user: User = {
-          id: `discord_${userResponse.id}`,
+          id: userResponse.id,
           name: userResponse.username,
           email: userResponse.email,
           providerId: 'discord',

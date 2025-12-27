@@ -9,7 +9,7 @@ router.post('/user', async (request, response) => {
 
   const recordId = await firebaseAdmin.insertOrUpdateUser({
     ...user,
-    id: user.id || `anonim_${user.deviceId}`,
+    id: user.id || user.deviceId,
     providerId: user.providerId || 'anonim',
   });
   response.status(200).send({ recordId });

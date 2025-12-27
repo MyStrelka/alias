@@ -94,7 +94,7 @@ const Login = () => {
               Ваше имя в игре
             </label>
             <input
-              value={user?.name}
+              value={user?.name || ''}
               onChange={(e) => actions.setUserName(e.target.value.trim())}
               placeholder='Как вас зовут?'
               className='input-glass w-full text-lg'

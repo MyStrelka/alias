@@ -1,9 +1,10 @@
-import { CheckCircle2, Ear, Megaphone } from 'lucide-react';
+import { CheckCircle2, Crown, Ear, Megaphone } from 'lucide-react';
 
 import type { Player, Team } from '@alias/shared';
 
 import Avatar from '../components/Avatar';
 import EllipsisText from '../components/EllipsisText';
+import KickUser from '../components/KickUser';
 import Tile from '../components/Tile';
 import { TEAM_THEMES, useGameStore } from '../store/gameStore';
 import { soundManager } from '../utils/soundManager';
@@ -16,7 +17,7 @@ const PreRound = ({
   players,
   settings,
   selfId,
-  // isHost,
+  isHost,
   actions,
   readyMap,
   activeChallenge,
@@ -175,8 +176,17 @@ const PreRound = ({
                       key={p.id}
                       className='flex justify-between items-center p-2 border-b border-white/5 last:border-0'
                     >
+                      {isHost &&
+                        (!p.isHost ? (
+                          <KickUser
+                            playerName={p.name}
+                            onClick={() => actions.kickPlayer(p.id)}
+                          />
+                        ) : (
+                          <Crown className='h-4 w-4 text-amber-400 ml-[8px] mr-[8px]' />
+                        ))}
                       <EllipsisText
-                        classNames='text-gray-300 pr-2'
+                        classNames='text-gray-300 pr-2 pl-2'
                         text={p.name}
                       />
                       <span className='font-bold text-white'>{p.score}</span>

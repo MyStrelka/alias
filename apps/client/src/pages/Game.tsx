@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   CheckCircle2,
   Clock3,
+  Crown,
   PauseCircle,
   Play,
   Trophy,
@@ -12,6 +13,7 @@ import type { Player, Team, WordLog } from '@alias/shared';
 
 import AccentButton from '../components/AccentButton';
 import EllipsisText from '../components/EllipsisText';
+import KickUser from '../components/KickUser';
 import Table from '../components/Table/Table';
 import Td from '../components/Table/Td';
 import Thead from '../components/Table/Thead';
@@ -25,7 +27,7 @@ const Game = ({
   listener,
   timeLeft,
   word,
-  // isHost,
+  isHost,
   selfId,
   isPaused,
   currentTeamId,
@@ -256,21 +258,23 @@ const Game = ({
                             {t.score}
                           </span>
                         </div>
-                        <div className='flex flex-wrap gap-1'>
+                        <div className='flex flex-col gap-1'>
                           {teamPlayers.map((p: Player) => (
-                            <>
+                            <div className='flex items-center'>
+                              {isHost &&
+                                (p.isHost ? (
+                                  <Crown className='h-4 w-4 text-amber-400 ml-[8px] mr-[8px]' />
+                                ) : (
+                                  <KickUser
+                                    playerName={p.name}
+                                    onClick={() => actions.kickPlayer(p.id)}
+                                  />
+                                ))}
                               <EllipsisText
-                                classNames='text-[10px] bg-black/20 px-1.5 py-0.5 rounded text-gray-300 flex gap-1'
-                                text={`${p.name}:`}
+                                classNames='bg-black/20 px-1.5 py-0.5 rounded text-gray-300 flex gap-1 ml-2'
+                                text={`${p.name}`}
                               />
-                              <span
-                                className={
-                                  p.score < 0 ? 'text-red-400' : 'text-gray-300'
-                                }
-                              >
-                                {p.score}
-                              </span>
-                            </>
+                            </div>
                           ))}
                         </div>
                       </div>

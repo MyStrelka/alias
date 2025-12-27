@@ -1,8 +1,9 @@
-import { CheckCircle2, Crown, UserMinus, XCircle } from 'lucide-react';
+import { CheckCircle2, Crown, XCircle } from 'lucide-react';
 
 import type { Player } from '@alias/shared';
 
 import EllipsisText from './EllipsisText';
+import KickUser from './KickUser';
 import Table from './Table/Table';
 import Td from './Table/Td';
 import Thead from './Table/Thead';
@@ -66,15 +67,7 @@ const PlayerTable = ({
         {isHost && (
           <Td classNames={['text-right']}>
             {!p.isHost && (
-              <button
-                onClick={() => {
-                  if (confirm(`Исключить игрока ${p.name}?`)) onKick?.(p.id);
-                }}
-                className='p-2 rounded-lg hover:bg-red-500/20 text-gray-500 hover:text-red-400 transition-colors'
-                title='Исключить'
-              >
-                <UserMinus className='h-4 w-4' />
-              </button>
+              <KickUser playerName={p.name} onClick={() => onKick?.(p.id)} />
             )}
           </Td>
         )}

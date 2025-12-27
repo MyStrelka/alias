@@ -17,12 +17,11 @@ import MessageListener from './components/MessageListener';
 
 function App() {
   const game = useGameStore();
-  const { actions } = game;
+  const { actions, roomId } = game;
 
   useEffect(() => {
-    const session = actions.restoreSession();
-    if (session) {
-      actions.joinRoom(session.roomId);
+    if (roomId) {
+      actions.joinRoom(roomId);
     }
   }, []);
 

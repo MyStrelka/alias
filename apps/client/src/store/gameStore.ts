@@ -87,6 +87,7 @@ const initialState: GameState & GameStateClient = {
   isMuted: false,
   networkReady: false,
   user: null,
+  roomId: null,
 };
 
 const getDeviceId = () => {
@@ -145,29 +146,6 @@ export const useGameStore = create<
             set({ user: null });
             toast.success('Вышли');
           },
-          saveSession: () => {
-            const { roomId, isHost } = get();
-            if (roomId) {
-              localStorage.setItem(
-                'alias_session',
-                JSON.stringify({ roomId, isHost }),
-              );
-            } else {
-              localStorage.removeItem('alias_session');
-            }
-          },
-          restoreSession: () => {
-            const session = localStorage.getItem('alias_session');
-            if (session) {
-              const data = JSON.parse(session);
-              set({
-                roomId: data.roomId,
-                isHost: data.isHost,
-              });
-              return { roomId: data.roomId };
-            }
-            return null;
-          },
           createRoom: async () => {
             try {
               const { user } = get();
@@ -189,7 +167,6 @@ export const useGameStore = create<
                 roomId,
                 isHost: true,
               });
-              get().actions.saveSession();
             } catch (e) {
               console.error(e);
             }
@@ -214,7 +191,6 @@ export const useGameStore = create<
                 selfId: socketService.socket?.id,
                 roomId,
               });
-              get().actions.saveSession();
             } catch (error) {
               toast.error(`${error}`);
               console.error(error);
@@ -226,14 +202,19 @@ export const useGameStore = create<
               get().actions.restart();
             } else {
               set({ stage: 'lobby' });
-              get().actions.saveSession();
             }
           },
           leaveGame: () => {
             socketService.close();
-            localStorage.removeItem('alias_session');
             const { isMuted, user } = get();
-            set({ ...initialState, isMuted, user, actions: get().actions });
+            set({
+              ...initialState,
+              roomId: null,
+              isHost: false,
+              isMuted,
+              user,
+              actions: get().actions,
+            });
           },
 
           // 🔥 Kick
@@ -289,6 +270,8 @@ export const useGameStore = create<
     {
       name: 'gameStore',
       partialize: (state) => ({
+        roomId: state.roomId,
+        isHost: state.isHost,
         user: state.user,
       }),
     },

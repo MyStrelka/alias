@@ -89,7 +89,7 @@ export type GameState = {
 
 export type GameStateClient = {
   selfId?: string;
-  roomId?: string;
+  roomId: string | null;
   isHost: boolean;
   customWords: string[] | null;
   customTopic: string | null;
@@ -126,8 +126,6 @@ export type GameStateActions = {
     broadcastState: () => void;
     injectState: (incoming: Partial<GameState>) => void;
     startGameRound: () => void;
-    saveSession: () => void;
-    restoreSession: () => { roomId: string } | null;
     wordAdjustment: (
       wordLlogIndex: number,
       score: Pick<WordLog, 'score'>,

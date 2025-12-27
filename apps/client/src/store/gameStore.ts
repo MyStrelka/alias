@@ -151,7 +151,7 @@ export const useGameStore = create<
               const { user } = get();
               const deviceId = getDeviceId();
               if (!user?.name) return;
-              if (user?.providerId === 'incognito') {
+              if (user?.providerId === 'anonim') {
                 await gameService.createIncognitoUser(deviceId, user.name);
               }
 
@@ -160,6 +160,7 @@ export const useGameStore = create<
                 dbId: user?.id || null,
                 avatar: user?.avatar || null,
                 deviceId,
+                userProviderId: user.providerId,
               });
               set({
                 stage: 'lobby',
@@ -176,7 +177,7 @@ export const useGameStore = create<
               const { user } = get();
               const deviceId = getDeviceId();
               if (!user?.name) return;
-              if (user?.providerId === 'incognito') {
+              if (user?.providerId === 'anonim') {
                 await gameService.createIncognitoUser(deviceId, user.name);
               }
               await socketService.joinRoom({
@@ -185,6 +186,7 @@ export const useGameStore = create<
                 dbId: user.id || null,
                 avatar: user.avatar || null,
                 deviceId,
+                userProviderId: user.providerId,
               });
               set({
                 stage: 'lobby',
@@ -260,7 +262,7 @@ export const useGameStore = create<
                     id: getDeviceId(),
                     name,
                     email: '',
-                    providerId: 'incognito',
+                    providerId: 'anonim',
                   },
             });
           },

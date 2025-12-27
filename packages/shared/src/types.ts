@@ -7,13 +7,13 @@ export type GameStage =
   | 'play-adjustment'
   | 'victory';
 export type Difficulty = 'easy' | 'medium' | 'hard';
-export type AuthProvider = 'google' | 'discord';
+export type AuthProvider = 'google' | 'discord' | 'anonim';
 
 export interface User {
   id: string;
   name: string;
   email: string;
-  providerId: string;
+  providerId: AuthProvider;
   avatar?: string;
   token?: string;
   refreshToken?: string;

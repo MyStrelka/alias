@@ -8,6 +8,7 @@ interface PlayerData {
   dbId: string | null;
   avatar: string | null;
   deviceId: string;
+  userProviderId: string;
 }
 interface JoinData {
   roomId: string;
@@ -15,6 +16,7 @@ interface JoinData {
   dbId: string | null;
   avatar: string | null;
   deviceId: string;
+  userProviderId: string;
 }
 
 class SocketService {

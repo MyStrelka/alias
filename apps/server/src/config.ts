@@ -4,6 +4,10 @@ export const FirebaseServiceAccountKey = JSON.parse(
   process.env.FIREBASE_SERVICE_ACCOUNT_KEY ||
     '{"project_id": "", "client_email": "", "private_key": ""}',
 );
+
+export const firebaseDatabaseId =
+  process.env.FIREBASE_DATABASE_ID || '(default)';
+
 if (
   FirebaseServiceAccountKey.project_id === '' ||
   FirebaseServiceAccountKey.client_email === '' ||

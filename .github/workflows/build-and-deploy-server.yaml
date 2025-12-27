@@ -42,6 +42,7 @@ jobs:
         OAUTH_DISCORD_APPLLICATION_ID: ${{ secrets.OAUTH_DISCORD_APPLLICATION_ID }}
         OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
         OAUTH_GOOGLE_REDIRECT_URI: ${{ vars.OAUTH_GOOGLE_REDIRECT_URI }}
+        FIREBASE_DATABASE_ID: ${{ vars.FIREBASE_DATABASE_ID }}        
       run: |
         gcloud auth configure-docker ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev --quiet
         docker build \
@@ -56,6 +57,7 @@ jobs:
           --build-arg OAUTH_DISCORD_APPLLICATION_ID="$OAUTH_DISCORD_APPLLICATION_ID" \
           --build-arg OAUTH_GOOGLE_CLIENT_ID="$OAUTH_GOOGLE_CLIENT_ID" \
           --build-arg OAUTH_GOOGLE_REDIRECT_URI="$OAUTH_GOOGLE_REDIRECT_URI" \
+          --build-arg FIREBASE_DATABASE_ID="$FIREBASE_DATABASE_ID" \
           -f ./Dockerfile.server -t $IMAGE_TAG .
         docker push $IMAGE_TAG
 

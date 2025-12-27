@@ -3,7 +3,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 
 import type { User } from '@alias/shared';
 
-import { FirebaseServiceAccountKey } from '../config';
+import { firebaseDatabaseId, FirebaseServiceAccountKey } from '../config';
 
 initializeApp({
   credential: cert({
@@ -13,6 +13,7 @@ initializeApp({
   }),
 });
 const db = getFirestore();
+db.settings({ databaseId: firebaseDatabaseId });
 
 const insertOrUpdateUser = async (user: User): Promise<string | null> => {
   try {

@@ -6,15 +6,8 @@ import AccentButton from '../components/AccentButton';
 import { useGameStore } from '../store/gameStore';
 
 const Login = () => {
-  const [name, setName] = useState('');
   const [roomId, setRoomId] = useState('');
   const { actions, user } = useGameStore();
-
-  useEffect(() => {
-    if (user?.name) {
-      setName(user.name || '');
-    }
-  }, [user]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -101,8 +94,8 @@ const Login = () => {
               Ваше имя в игре
             </label>
             <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={user?.name}
+              onChange={(e) => actions.setUserName(e.target.value.trim())}
               placeholder='Как вас зовут?'
               className='input-glass w-full text-lg'
             />
@@ -117,8 +110,8 @@ const Login = () => {
                 Новая игра
               </h3>
               <AccentButton
-                onClick={() => actions.createRoom(name)}
-                disabled={!name}
+                onClick={() => actions.createRoom()}
+                disabled={!user?.name}
                 className='h-12 w-full'
               >
                 <PlugZap className='h-5 w-5' /> Создать
@@ -139,8 +132,8 @@ const Login = () => {
                   maxLength={4}
                 />
                 <button
-                  onClick={() => actions.joinRoom(name, roomId)}
-                  disabled={!name || !roomId}
+                  onClick={() => actions.joinRoom(roomId)}
+                  disabled={!user?.name || !roomId}
                   className='btn-glass px-4 bg-white/10 hover:bg-white/20 disabled:opacity-50'
                 >
                   <LogIn className='h-5 w-5' />

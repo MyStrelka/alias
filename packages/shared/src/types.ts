@@ -89,7 +89,6 @@ export type GameState = {
 
 export type GameStateClient = {
   selfId?: string;
-  selfName?: string;
   roomId?: string;
   isHost: boolean;
   customWords: string[] | null;
@@ -103,8 +102,8 @@ export type GameStateActions = {
   actions: {
     loginWithProvider: (provider: AuthProvider) => Promise<void>;
     logout: () => void;
-    createRoom: (name: string) => Promise<void>;
-    joinRoom: (name: string, roomId: string) => Promise<void>;
+    createRoom: () => Promise<void>;
+    joinRoom: (roomId: string) => Promise<void>;
     toggleReady: () => void;
     updateSettings: (s: Partial<Settings>) => void;
     shuffleTeams: () => void;
@@ -128,11 +127,12 @@ export type GameStateActions = {
     injectState: (incoming: Partial<GameState>) => void;
     startGameRound: () => void;
     saveSession: () => void;
-    restoreSession: () => { roomId: string; selfName: string } | null;
+    restoreSession: () => { roomId: string } | null;
     wordAdjustment: (
       wordLlogIndex: number,
       score: Pick<WordLog, 'score'>,
     ) => void;
     finishRound: () => void;
+    setUserName: (name: string) => void;
   };
 };

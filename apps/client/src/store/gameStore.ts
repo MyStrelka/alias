@@ -146,11 +146,11 @@ export const useGameStore = create<
             toast.success('Вышли');
           },
           saveSession: () => {
-            const { roomId, selfName, isHost } = get();
+            const { roomId, isHost } = get();
             if (roomId) {
               localStorage.setItem(
                 'alias_session',
-                JSON.stringify({ roomId, selfName, isHost }),
+                JSON.stringify({ roomId, isHost }),
               );
             } else {
               localStorage.removeItem('alias_session');
@@ -161,25 +161,24 @@ export const useGameStore = create<
             if (session) {
               const data = JSON.parse(session);
               set({
-                selfName: data.selfName,
                 roomId: data.roomId,
                 isHost: data.isHost,
               });
-              return { roomId: data.roomId, selfName: data.selfName };
+              return { roomId: data.roomId };
             }
             return null;
           },
-          createRoom: async (name) => {
+          createRoom: async () => {
             try {
               const { user } = get();
               const deviceId = getDeviceId();
-
+              if (!user?.name) return;
               if (!user?.id) {
-                await gameService.createIncognitoUser(deviceId, name);
+                await gameService.createIncognitoUser(deviceId, user.name);
               }
 
               const roomId = await socketService.createRoom({
-                playerName: name,
+                playerName: user.name,
                 dbId: user?.id || null,
                 avatar: user?.avatar || null,
                 deviceId,
@@ -187,7 +186,6 @@ export const useGameStore = create<
               set({
                 stage: 'lobby',
                 selfId: socketService.socket?.id,
-                selfName: name,
                 roomId,
                 isHost: true,
               });
@@ -196,24 +194,24 @@ export const useGameStore = create<
               console.error(e);
             }
           },
-          joinRoom: async (name, roomId) => {
+          joinRoom: async (roomId) => {
             try {
               const { user } = get();
               const deviceId = getDeviceId();
+              if (!user?.name) return;
               if (!user?.id) {
-                await gameService.createIncognitoUser(deviceId, name);
+                await gameService.createIncognitoUser(deviceId, user.name);
               }
               await socketService.joinRoom({
                 roomId,
-                playerName: name,
-                dbId: user?.id || null,
-                avatar: user?.avatar || null,
+                playerName: user.name,
+                dbId: user.id || null,
+                avatar: user.avatar || null,
                 deviceId,
               });
               set({
                 stage: 'lobby',
                 selfId: socketService.socket?.id,
-                selfName: name,
                 roomId,
               });
               get().actions.saveSession();
@@ -271,6 +269,20 @@ export const useGameStore = create<
               score,
             }),
           finishRound: () => socketService.reliableEmit('finish_round'),
+          setUserName: (name: string) => {
+            const { user } = get();
+            if (!name) return;
+            set({
+              user: user
+                ? { ...user, name }
+                : {
+                    id: getDeviceId(),
+                    name,
+                    email: '',
+                    providerId: 'incognito',
+                  },
+            });
+          },
         },
       };
     },

@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     const session = actions.restoreSession();
     if (session) {
-      actions.joinRoom(session.selfName, session.roomId);
+      actions.joinRoom(session.roomId);
     }
   }, []);
 

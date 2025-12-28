@@ -18,12 +18,12 @@ import MessageListener from './components/MessageListener';
 import Main from './layout/Main';
 import Page from './layout/Page';
 import Sidebar from './layout/Sidebar';
-import CurrentPlayers from './layout/Sidebar/CurrentPlayers';
 import LeaderBoard from './layout/Sidebar/LeaderBoard';
+import CurrentPlayers from './layout/Sidebar/Players';
 
 function App() {
   const game = useGameStore();
-  const { actions, roomId } = game;
+  const { actions, roomId, round } = game;
 
   useEffect(() => {
     if (roomId) {
@@ -32,13 +32,17 @@ function App() {
   }, []);
 
   const speaker = useMemo(
-    () => game.players.find((p: Player) => p.id === game.round.speakerId),
+    () => game.players.find((p: Player) => p.id === round.speakerId),
     [game.players, game.round.speakerId],
   );
   const listener = useMemo(
-    () => game.players.find((p: Player) => p.id === game.round.listenerId),
-    [game.players, game.round.listenerId],
+    () => game.players.find((p: Player) => p.id === round.listenerId),
+    [game.players, round.listenerId],
   );
+
+  const isSpeakerReady = !!round.readyMap[speaker?.id || ''];
+  const isListenerReady = !!round.readyMap[listener?.id || ''];
+
   const winner = useMemo(() => {
     if (game.settings.mode === 'team')
       return game.teams.find((t) => t.id === game.victory?.winnerId);
@@ -87,6 +91,8 @@ function App() {
               actions={actions}
               readyMap={game.round.readyMap}
               activeChallenge={game.round.activeChallenge}
+              isSpeakerReady={isSpeakerReady}
+              isListenerReady={isListenerReady}
             />
           )}
           {['play', 'play-adjustment'].includes(game.stage) && (
@@ -112,7 +118,14 @@ function App() {
         </Page>
         {['preround', 'play', 'play-adjustment'].includes(game.stage) && (
           <Sidebar>
-            <CurrentPlayers speaker={speaker} listener={listener} />
+            {['play', 'play-adjustment'].includes(game.stage) && (
+              <CurrentPlayers
+                speaker={speaker}
+                listener={listener}
+                isSpeakerReady={isSpeakerReady}
+                isListenerReady={isListenerReady}
+              />
+            )}
             <LeaderBoard speaker={speaker} />
           </Sidebar>
         )}

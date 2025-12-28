@@ -1,9 +1,6 @@
-import { CheckCircle2, Ear, Megaphone } from 'lucide-react';
-
 import type { Team } from '@alias/shared';
 
-import Avatar from '../../components/Avatar';
-import EllipsisText from '../../components/EllipsisText';
+import ActivePlayers from '../../components/ActivePlayers';
 import { TEAM_THEMES, useGameStore } from '../../store/gameStore';
 import { soundManager } from '../../utils/soundManager';
 
@@ -17,6 +14,8 @@ const PreRound = ({
   actions,
   readyMap,
   activeChallenge,
+  isSpeakerReady,
+  isListenerReady,
 }: any) => {
   const currentTeam = teams.find((t: Team) => t.id === currentTeamId);
   const teamTheme = currentTeam
@@ -25,8 +24,7 @@ const PreRound = ({
   const isSpeaker = selfId === speaker?.id;
   const isListener = selfId === listener?.id;
   const amIInvolved = isSpeaker || isListener;
-  const isSpeakerReady = !!readyMap[speaker?.id || ''];
-  const isListenerReady = !!readyMap[listener?.id || ''];
+
   const requiredReady = isSpeakerReady && isListenerReady;
   const showStartButton = isSpeaker && requiredReady;
 
@@ -58,57 +56,12 @@ const PreRound = ({
             </p>
           </div>
         )}
-
-        <div className='flex items-center justify-center gap-8'>
-          <div className='flex flex-1 basis-0 min-w-0 flex-col items-center gap-2'>
-            <div className='h-20 w-20 rounded-full bg-accent-main/20 border-2 border-accent-main flex items-center justify-center relative'>
-              <Avatar
-                avatar={speaker?.avatar}
-                size={80}
-                placeholder={<Megaphone className='h-8 w-8 text-accent-main' />}
-              />
-
-              {isSpeakerReady && (
-                <div className='absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1'>
-                  <CheckCircle2 className='h-4 w-4 text-white' />
-                </div>
-              )}
-            </div>
-
-            <p className='text-sm text-gray-400 uppercase font-bold'>
-              Объясняет
-            </p>
-            <EllipsisText
-              classNames='text-lg font-bold text-white max-w-48'
-              text={speaker?.name || '...'}
-            />
-          </div>
-          <div className='h-px w-16 bg-white/20' />
-          <div className='flex flex-1 basis-0 min-w-0 flex-col items-center gap-2'>
-            <div className='h-20 w-20 rounded-full bg-indigo-500/20 border-2 border-indigo-500 flex items-center justify-center relative'>
-              <Avatar
-                avatar={listener?.avatar}
-                size={80}
-                placeholder={<Ear className='h-8 w-8 text-indigo-400' />}
-              />
-
-              {isListenerReady && (
-                <div className='absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1'>
-                  <CheckCircle2 className='h-4 w-4 text-white' />
-                </div>
-              )}
-            </div>
-
-            <p className='text-sm text-gray-400 uppercase font-bold'>
-              Отгадывает
-            </p>
-            <EllipsisText
-              classNames='text-lg font-bold text-white max-w-48'
-              text={listener?.name || '...'}
-            />
-          </div>
-        </div>
-
+        <ActivePlayers
+          speaker={speaker}
+          listener={listener}
+          isSpeakerReady={!!isSpeakerReady}
+          isListenerReady={!!isListenerReady}
+        />
         <div className='pt-6'>
           {amIInvolved ? (
             !requiredReady ? (

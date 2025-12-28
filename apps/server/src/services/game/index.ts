@@ -23,6 +23,7 @@ const createInitialState = (): GameState => ({
     mode: 'team',
     enableChallenges: true,
   },
+  ui: { sideBar: { showSettings: false } },
   players: [],
   teams: [
     { id: 'team-1', name: 'Команда 1', playerIds: [], score: 0, themeIndex: 0 },

@@ -20,7 +20,6 @@ import Page from './layout/Page';
 import Sidebar from './layout/Sidebar';
 import CurrentPlayers from './layout/Sidebar/CurrentPlayers';
 import LeaderBoard from './layout/Sidebar/LeaderBoard';
-import Score from './layout/Sidebar/Score';
 
 function App() {
   const game = useGameStore();
@@ -111,9 +110,8 @@ function App() {
             />
           )}
         </Page>
-        {['play', 'preround', 'play-adjustment'].includes(game.stage) && (
+        {['preround', 'play', 'play-adjustment'].includes(game.stage) && (
           <Sidebar>
-            <Score />
             <CurrentPlayers speaker={speaker} listener={listener} />
             <LeaderBoard speaker={speaker} />
           </Sidebar>

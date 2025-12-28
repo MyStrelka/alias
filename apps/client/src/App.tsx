@@ -4,11 +4,11 @@ import { Toaster } from 'react-hot-toast';
 import type { Player } from '@alias/shared';
 
 import Header from './layout/Header';
-import Game from './pages/Game';
-import Lobby from './pages/Lobby';
-import Login from './pages/Login';
-import PreRound from './pages/PreRound';
-import Victory from './pages/Victory';
+import Game from './layout/Pages/Game';
+import Lobby from './layout/Pages/Lobby';
+import Login from './layout/Pages/Login';
+import PreRound from './layout/Pages/PreRound';
+import Victory from './layout/Pages/Victory';
 import { useGameStore } from './store/gameStore';
 
 import './index.css';
@@ -60,12 +60,7 @@ function App() {
       />
       <Bubbles />
       <MessageListener />
-      <Header
-        stage={game.stage}
-        roomId={game.roomId}
-        actions={game.actions}
-        isMuted={game.isMuted}
-      />
+      <Header />
       <Main>
         <Page>
           {game.stage === 'login' && <Login />}

@@ -11,12 +11,12 @@ import type {
   Team,
 } from '@alias/shared';
 
-import AccentButton from '../components/AccentButton';
-import CommonSettings from '../components/CommonSettings';
-import PlayerTable from '../components/PlayerTable';
-import TeamsSection from '../components/TeamsSection';
-import Tile from '../components/Tile';
-import { soundManager } from '../utils/soundManager';
+import AccentButton from '../../components/AccentButton';
+import CommonSettings from '../../components/CommonSettings';
+import PlayerTable from '../../components/PlayerTable';
+import TeamsSection from '../../components/TeamsSection';
+import Tile from '../../components/Tile';
+import { soundManager } from '../../utils/soundManager';
 
 const Lobby = ({
   settings,
@@ -83,7 +83,7 @@ const Lobby = ({
         </div>
 
         {isHost && (
-          <div className='glass-panel bg-gradient-to-br from-indigo-900/40 to-purple-900/40 border-accent-main/30 p-4 -mx-5 -mt-2'>
+          <div className='glass-panel bg-gradient-to-br from-indigo-900/40 to-purple-900/40 border-accent-main/30 p-4 border-white/10 border-b'>
             <div className='flex items-center gap-2 mb-2 text-accent-main font-bold text-sm uppercase'>
               <Sparkles className='h-4 w-4' /> AI Генератор слов
             </div>
@@ -126,12 +126,7 @@ const Lobby = ({
             )}
           </div>
         )}
-        <CommonSettings
-          isHost={isHost}
-          actions={actions}
-          gameModes={gameModes}
-          settings={settings}
-        />
+        <CommonSettings gameModes={gameModes} />
       </div>
 
       <div className='space-y-4'>

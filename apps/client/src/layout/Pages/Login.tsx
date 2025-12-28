@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { LogIn, PlugZap } from 'lucide-react';
 
-import AccentButton from '../components/AccentButton';
-import { useGameStore } from '../store/gameStore';
+import AccentButton from '../../components/AccentButton';
+import { useGameStore } from '../../store/gameStore';
 
 const Login = () => {
   const [roomId, setRoomId] = useState('');

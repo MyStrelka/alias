@@ -8,6 +8,7 @@ import type {
   GameStateClient,
   Player,
   Settings,
+  UI,
 } from '@alias/shared';
 
 import authService from '../services/auth';
@@ -67,6 +68,7 @@ const initialState: GameState & GameStateClient = {
   players: [],
   teams: [],
   settings: initialSettings,
+  ui: { sideBar: { showSettings: false } },
   customWords: null,
   customTopic: null,
   round: {
@@ -271,6 +273,9 @@ export const useGameStore = create<
                     providerId: 'anonim',
                   },
             });
+          },
+          setupUI: (uiSettings: UI) => {
+            set({ ui: uiSettings });
           },
         },
       };

@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
-import { Rocket, Crown } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { Crown, Rocket } from 'lucide-react';
+
 import type { Player } from '@alias/shared';
-import { soundManager } from '../utils/soundManager';
-import AccentButton from '../components/AccentButton';
+
+import AccentButton from '../../components/AccentButton';
+import { soundManager } from '../../utils/soundManager';
 
 const Victory = ({ winner, players, backToLobby }: any) => {
   useEffect(() => {

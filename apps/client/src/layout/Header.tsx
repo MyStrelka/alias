@@ -1,20 +1,9 @@
-import { LogOut, Volume2, VolumeX } from 'lucide-react';
+import { LogOut, Settings, Volume2, VolumeX } from 'lucide-react';
 
-import type {
-  GameState,
-  GameStateActions,
-  GameStateClient,
-} from '@alias/shared';
+import { useGameStore } from '../store/gameStore';
 
-const Header = ({
-  stage,
-  roomId,
-  actions,
-  isMuted,
-}: Pick<
-  GameState & GameStateClient & GameStateActions,
-  'stage' | 'roomId' | 'actions' | 'isMuted'
->) => {
+const Header = () => {
+  const { ui, actions, stage, roomId, isMuted, isHost } = useGameStore();
   return (
     stage !== 'login' && (
       <header className='mx-auto min-w-[480px] max-w-[1440px] px-8 py-4 flex items-center justify-between'>
@@ -29,6 +18,25 @@ const Header = ({
           </span>
         </div>
         <div className='flex items-center gap-4'>
+          {isHost && (
+            <button
+              onClick={() =>
+                actions.setupUI({
+                  ...ui,
+                  sideBar: {
+                    ...ui.sideBar,
+                    showSettings: !ui.sideBar.showSettings,
+                  },
+                })
+              }
+              className='p-2 rounded-full hover:bg-white/10 transition-colors'
+              title='Настройки'
+            >
+              <Settings
+                className={`h-6 w-6 text-${ui.sideBar.showSettings ? 'white' : 'gray-400'}`}
+              />
+            </button>
+          )}
           {roomId && (
             <div className='md:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-400'>
               <span>ID:</span>

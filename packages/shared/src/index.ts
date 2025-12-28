@@ -4,6 +4,7 @@ export {
   GameStage,
   Difficulty,
   Settings,
+  UI,
   Player,
   Team,
   Room,

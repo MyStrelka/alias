@@ -2,10 +2,10 @@ import { CheckCircle2, Ear, Megaphone } from 'lucide-react';
 
 import type { Team } from '@alias/shared';
 
-import Avatar from '../components/Avatar';
-import EllipsisText from '../components/EllipsisText';
-import { TEAM_THEMES, useGameStore } from '../store/gameStore';
-import { soundManager } from '../utils/soundManager';
+import Avatar from '../../components/Avatar';
+import EllipsisText from '../../components/EllipsisText';
+import { TEAM_THEMES, useGameStore } from '../../store/gameStore';
+import { soundManager } from '../../utils/soundManager';
 
 const PreRound = ({
   speaker,

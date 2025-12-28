@@ -3,13 +3,13 @@ import { CheckCircle2, Clock3, PauseCircle, Play, XCircle } from 'lucide-react';
 
 import type { WordLog } from '@alias/shared';
 
-import AccentButton from '../components/AccentButton';
-import Table from '../components/Table/Table';
-import Td from '../components/Table/Td';
-import Thead from '../components/Table/Thead';
-import Trow from '../components/Table/Trow';
-import { useGameStore } from '../store/gameStore';
-import { soundManager } from '../utils/soundManager';
+import AccentButton from '../../components/AccentButton';
+import Table from '../../components/Table/Table';
+import Td from '../../components/Table/Td';
+import Thead from '../../components/Table/Thead';
+import Trow from '../../components/Table/Trow';
+import { useGameStore } from '../../store/gameStore';
+import { soundManager } from '../../utils/soundManager';
 
 const Game = ({
   stage,

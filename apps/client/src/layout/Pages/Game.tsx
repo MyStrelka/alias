@@ -182,7 +182,7 @@ const Game = ({
           footer={() =>
             stage === 'play-adjustment' && (
               <Trow>
-                <Td colspan={2} classNames={['text-center']}>
+                <Td colSpan={2} classNames={['text-center']}>
                   <AccentButton
                     className='flex-0'
                     onClick={actions.finishRound}

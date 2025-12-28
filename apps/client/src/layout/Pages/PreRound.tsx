@@ -63,7 +63,7 @@ const PreRound = ({
           <div className='flex flex-1 basis-0 min-w-0 flex-col items-center gap-2'>
             <div className='h-20 w-20 rounded-full bg-accent-main/20 border-2 border-accent-main flex items-center justify-center relative'>
               <Avatar
-                avatar={speaker.avatar}
+                avatar={speaker?.avatar}
                 size={80}
                 placeholder={<Megaphone className='h-8 w-8 text-accent-main' />}
               />
@@ -80,14 +80,14 @@ const PreRound = ({
             </p>
             <EllipsisText
               classNames='text-lg font-bold text-white max-w-48'
-              text={speaker?.name}
+              text={speaker?.name || '...'}
             />
           </div>
           <div className='h-px w-16 bg-white/20' />
           <div className='flex flex-1 basis-0 min-w-0 flex-col items-center gap-2'>
             <div className='h-20 w-20 rounded-full bg-indigo-500/20 border-2 border-indigo-500 flex items-center justify-center relative'>
               <Avatar
-                avatar={listener.avatar}
+                avatar={listener?.avatar}
                 size={80}
                 placeholder={<Ear className='h-8 w-8 text-indigo-400' />}
               />
@@ -104,7 +104,7 @@ const PreRound = ({
             </p>
             <EllipsisText
               classNames='text-lg font-bold text-white max-w-48'
-              text={listener?.name}
+              text={listener?.name || '...'}
             />
           </div>
         </div>

@@ -1,9 +1,10 @@
+import { LogOut, Volume2, VolumeX } from 'lucide-react';
+
 import type {
   GameState,
-  GameStateClient,
   GameStateActions,
+  GameStateClient,
 } from '@alias/shared';
-import { Volume2, VolumeX, LogOut } from 'lucide-react';
 
 const Header = ({
   stage,
@@ -16,7 +17,7 @@ const Header = ({
 >) => {
   return (
     stage !== 'login' && (
-      <header className='max-w-7xl mx-auto px-4 py-4 flex items-center justify-between'>
+      <header className='mx-auto min-w-[480px] max-w-[1440px] px-8 py-4 flex items-center justify-between'>
         <div className='flex items-center gap-3'>
           <img
             src='/logo.jpg'
@@ -29,7 +30,7 @@ const Header = ({
         </div>
         <div className='flex items-center gap-4'>
           {roomId && (
-            <div className='hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-400'>
+            <div className='md:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-400'>
               <span>ID:</span>
               <span className='text-white select-all'>
                 {roomId.replace('alias-', '')}

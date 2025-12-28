@@ -3,7 +3,7 @@ import { Toaster } from 'react-hot-toast';
 
 import type { Player } from '@alias/shared';
 
-import Header from './components/Header';
+import Header from './layout/Header';
 import Game from './pages/Game';
 import Lobby from './pages/Lobby';
 import Login from './pages/Login';
@@ -13,7 +13,14 @@ import { useGameStore } from './store/gameStore';
 
 import './index.css';
 
+import Bubbles from './components/Bubbles';
 import MessageListener from './components/MessageListener';
+import Main from './layout/Main';
+import Page from './layout/Page';
+import Sidebar from './layout/Sidebar';
+import CurrentPlayers from './layout/Sidebar/CurrentPlayers';
+import LeaderBoard from './layout/Sidebar/LeaderBoard';
+import Score from './layout/Sidebar/Score';
 
 function App() {
   const game = useGameStore();
@@ -51,10 +58,7 @@ function App() {
           },
         }}
       />
-      <div className='fixed inset-0 z-[-1] overflow-hidden pointer-events-none'>
-        <div className='absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px] animate-blob' />
-        <div className='absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-accent-main/20 rounded-full blur-[100px] animate-blob animation-delay-2000' />
-      </div>
+      <Bubbles />
       <MessageListener />
       <Header
         stage={game.stage}
@@ -62,60 +66,64 @@ function App() {
         actions={game.actions}
         isMuted={game.isMuted}
       />
-
-      <main className='max-w-7xl mx-auto px-4 py-4 md:py-8 pb-20'>
-        {game.stage === 'login' && <Login />}
-        {game.stage === 'lobby' && (
-          <Lobby
-            roomId={game.roomId}
-            settings={game.settings}
-            players={game.players}
-            teams={game.teams}
-            isHost={game.isHost}
-            selfId={game.selfId}
-            actions={actions}
-            customWords={game.customWords}
-            customTopic={game.customTopic}
-          />
+      <Main>
+        <Page>
+          {game.stage === 'login' && <Login />}
+          {game.stage === 'lobby' && (
+            <Lobby
+              roomId={game.roomId}
+              settings={game.settings}
+              players={game.players}
+              teams={game.teams}
+              isHost={game.isHost}
+              selfId={game.selfId}
+              actions={actions}
+              customWords={game.customWords}
+              customTopic={game.customTopic}
+            />
+          )}
+          {game.stage === 'preround' && (
+            <PreRound
+              speaker={speaker}
+              listener={listener}
+              teams={game.teams}
+              settings={game.settings}
+              selfId={game.selfId}
+              currentTeamId={game.round.currentTeamId}
+              actions={actions}
+              readyMap={game.round.readyMap}
+              activeChallenge={game.round.activeChallenge}
+            />
+          )}
+          {['play', 'play-adjustment'].includes(game.stage) && (
+            <Game
+              stage={game.stage}
+              speaker={speaker}
+              listener={listener}
+              timeLeft={game.round.timeLeft}
+              word={game.round.currentWord}
+              selfId={game.selfId}
+              isPaused={!game.round.running}
+              wordLog={game.round.wordLog}
+              actions={actions}
+            />
+          )}
+          {game.stage === 'victory' && (
+            <Victory
+              winner={winner}
+              players={game.players}
+              backToLobby={actions.backToLobby}
+            />
+          )}
+        </Page>
+        {['play', 'preround', 'play-adjustment'].includes(game.stage) && (
+          <Sidebar>
+            <Score />
+            <CurrentPlayers speaker={speaker} listener={listener} />
+            <LeaderBoard speaker={speaker} />
+          </Sidebar>
         )}
-        {game.stage === 'preround' && (
-          <PreRound
-            speaker={speaker}
-            listener={listener}
-            teams={game.teams}
-            players={game.players}
-            settings={game.settings}
-            selfId={game.selfId}
-            currentTeamId={game.round.currentTeamId}
-            isHost={game.isHost}
-            actions={actions}
-            readyMap={game.round.readyMap}
-            activeChallenge={game.round.activeChallenge}
-          />
-        )}
-        {['play', 'play-adjustment'].includes(game.stage) && (
-          <Game
-            stage={game.stage}
-            speaker={speaker}
-            listener={listener}
-            timeLeft={game.round.timeLeft}
-            word={game.round.currentWord}
-            isHost={game.isHost}
-            selfId={game.selfId}
-            isPaused={!game.round.running}
-            currentTeamId={game.round.currentTeamId}
-            wordLog={game.round.wordLog}
-            actions={actions}
-          />
-        )}
-        {game.stage === 'victory' && (
-          <Victory
-            winner={winner}
-            players={game.players}
-            backToLobby={actions.backToLobby}
-          />
-        )}
-      </main>
+      </Main>
     </div>
   );
 }

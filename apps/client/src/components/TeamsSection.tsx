@@ -1,7 +1,9 @@
 import { Plus } from 'lucide-react';
 
 import type { Player, Team } from '@alias/shared';
+
 import { TEAM_THEMES } from '../store/gameStore';
+import JoinTeam from './JoinTeam';
 
 const TeamsSection = ({
   teams,
@@ -44,17 +46,12 @@ const TeamsSection = ({
                   {teamScore} очк.
                 </p>
               </div>
-              <button
-                onClick={() => onJoinTeam(team.id)}
+              <JoinTeam
                 disabled={isCurrentTeam}
-                className={`rounded-lg px-3 py-1 text-xs font-semibold transition btn-glass ${
-                  isCurrentTeam
-                    ? `${theme.bg} border ${theme.border} ${theme.text} opacity-100`
-                    : 'opacity-70 hover:opacity-100'
-                }`}
-              >
-                {isCurrentTeam ? 'Ваша команда' : 'Вступить'}
-              </button>
+                teamId={team.id}
+                onJoinTeam={onJoinTeam}
+                classNames={[theme.bg, theme.border, theme.text]}
+              />
             </div>
             <div className='flex flex-wrap gap-2'>
               {teamPlayers.map((p: Player) => (

@@ -3,12 +3,20 @@ import { Crown, Trophy } from 'lucide-react';
 import type { Player, Team } from '@alias/shared';
 
 import EllipsisText from '../../components/EllipsisText';
+import JoinTeam from '../../components/JoinTeam';
 import KickUser from '../../components/KickUser';
 import { TEAM_THEMES, useGameStore } from '../../store/gameStore';
 
-const LeaderBoard = ({ speaker }: { speaker?: Player }) => {
+const LeaderBoard = ({
+  speaker,
+  listener,
+}: {
+  speaker?: Player;
+  listener?: Player;
+}) => {
   const { players, settings, teams, isHost, actions, selfId, round } =
     useGameStore();
+  const isNotActiveUser = speaker?.id !== selfId && listener?.id !== selfId;
   return (
     <div className='glass-panel p-4 flex-1'>
       <h3 className='text-white font-bold mb-4 flex items-center gap-2'>
@@ -24,6 +32,9 @@ const LeaderBoard = ({ speaker }: { speaker?: Player }) => {
                 );
                 const theme = TEAM_THEMES[t.themeIndex % TEAM_THEMES.length];
                 const isActive = t.id === round.currentTeamId;
+                const isMyTeam =
+                  selfId !== null &&
+                  teamPlayers.map((p) => p.id).includes(selfId);
                 return (
                   <div
                     key={t.id}
@@ -31,6 +42,14 @@ const LeaderBoard = ({ speaker }: { speaker?: Player }) => {
                   >
                     <div className='flex justify-between items-center mb-1'>
                       <EllipsisText classNames={theme.text} text={t.name} />
+                      {!isMyTeam && isNotActiveUser && (
+                        <JoinTeam
+                          disabled={isMyTeam}
+                          onJoinTeam={actions.joinTeam}
+                          teamId={t.id}
+                          classNames={['mr-2']}
+                        />
+                      )}
                       <span className='font-bold text-white text-lg'>
                         {t.score}
                       </span>

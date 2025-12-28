@@ -90,6 +90,7 @@ const initialState: GameState & GameStateClient = {
   networkReady: false,
   user: null,
   roomId: null,
+  selfId: null,
 };
 
 const getDeviceId = () => {

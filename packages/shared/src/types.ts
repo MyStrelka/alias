@@ -93,7 +93,7 @@ export type GameState = {
 };
 
 export type GameStateClient = {
-  selfId?: string;
+  selfId: string | null;
   roomId: string | null;
   isHost: boolean;
   customWords: string[] | null;

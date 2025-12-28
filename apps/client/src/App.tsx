@@ -126,7 +126,7 @@ function App() {
                 isListenerReady={isListenerReady}
               />
             )}
-            <LeaderBoard speaker={speaker} />
+            <LeaderBoard speaker={speaker} listener={listener} />
           </Sidebar>
         )}
       </Main>

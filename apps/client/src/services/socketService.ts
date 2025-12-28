@@ -22,13 +22,12 @@ interface JoinData {
 class SocketService {
   socket: Socket | null = null;
   private messageHandler: ((type: string, payload: any) => void) | null = null;
-  private isActive = false;
 
   connect() {
     if (!this.socket) {
       this.socket = io(SERVER_URL, {
         transports: ['websocket'],
-        autoConnect: false,
+        autoConnect: true,
       });
     }
 
@@ -45,10 +44,6 @@ class SocketService {
     this.socket.on('disconnect', () => {
       console.log('❌ [Socket] Disconnected');
       toast.error('Связь с сервером потеряна');
-      if (this.isActive) {
-        console.log('пробуем переподключиться');
-        this.socket?.connect();
-      }
     });
 
     this.socket.on('state_update', (gameState) => {
@@ -84,7 +79,6 @@ class SocketService {
     return new Promise((resolve, reject) => {
       this.socket?.emit('create_room', data, (response: any) => {
         if (response.success) {
-          this.isActive = true;
           resolve(response.roomId);
         } else {
           reject(response.message);
@@ -100,7 +94,6 @@ class SocketService {
     return new Promise((resolve, reject) => {
       this.socket?.emit('join_room', data, (response: any) => {
         if (response.success) {
-          this.isActive = true;
           resolve();
         } else {
           reject(response.message);
@@ -116,7 +109,6 @@ class SocketService {
     this.reliableEmit('join_team', teamId);
   }
   close() {
-    this.isActive = false;
     this.socket?.disconnect();
   }
 

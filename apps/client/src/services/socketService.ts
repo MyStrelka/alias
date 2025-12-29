@@ -36,6 +36,9 @@ class SocketService {
     this.socket.removeAllListeners('state_update');
     this.socket.removeAllListeners('connect');
     this.socket.removeAllListeners('disconnect');
+    this.socket.removeAllListeners('connect_error');
+    this.socket.removeAllListeners('reconnect_attempt');
+    this.socket.removeAllListeners('reconnect');
 
     this.socket.on('connect', () => {
       console.log('✅ [Socket] Connected:', this.socket?.id);
@@ -53,12 +56,35 @@ class SocketService {
       }
     });
 
+    this.socket.on('connect_error', (error) => {
+      if (this.socket?.active) {
+        console.info(
+          '[Socket] temporary failure, the socket will automatically try to reconnect',
+        );
+      } else {
+        console.error('[Socket] the connection was denied by the server');
+        console.log(error.message);
+
+        this.socket?.connect();
+      }
+    });
+
+    this.socket.on('reconnect_attempt', () => {
+      console.warn('[Socket] reconnect_attempt');
+    });
+
+    this.socket.on('reconnect', () => {
+      console.warn('[Socket] reconnect');
+    });
+
     this.socket.connect();
   }
 
   waitForConnection(): Promise<void> {
     return new Promise((resolve) => {
+      console.log(this.socket);
       if (this.socket?.connected) return resolve();
+
       this.socket?.once('connect', resolve);
     });
   }
@@ -77,10 +103,13 @@ class SocketService {
     await this.waitForConnection();
 
     return new Promise((resolve, reject) => {
+      console.log('try to create room');
       this.socket?.emit('create_room', data, (response: any) => {
         if (response.success) {
+          console.log('create room SUCCESS');
           resolve(response.roomId);
         } else {
+          console.log('create room FAILED');
           reject(response.message);
         }
       });
@@ -92,10 +121,13 @@ class SocketService {
     await this.waitForConnection();
 
     return new Promise((resolve, reject) => {
+      console.log('try to join room');
       this.socket?.emit('join_room', data, (response: any) => {
         if (response.success) {
+          console.log('join room SUCCESS');
           resolve();
         } else {
+          console.log('join room FAILED');
           reject(response.message);
         }
       });

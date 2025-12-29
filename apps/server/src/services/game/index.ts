@@ -49,7 +49,7 @@ export const initGameService = (io: Server) => {
     const clients = rooms.get(roomId)?.players;
     console.log(
       `📢 Sending update to room ${roomId}. Active clients in room: `,
-      clients?.join(' | '),
+      clients?.map((c) => c.id).join(' | '),
     );
     io.to(roomId).emit('state_update', room.gameState);
   };

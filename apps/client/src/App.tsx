@@ -27,7 +27,9 @@ function App() {
   const { actions, roomId, round } = game;
 
   useEffect(() => {
+    console.log('App init, roomId:', roomId);
     if (roomId) {
+      console.log('App init, rejoin to room');
       actions.joinRoom(roomId);
     }
   }, []);

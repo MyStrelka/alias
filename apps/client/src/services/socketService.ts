@@ -28,17 +28,19 @@ class SocketService {
       this.socket = io(SERVER_URL, {
         transports: ['websocket'],
         autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: Infinity,
       });
     }
 
-    if (this.socket.connected) return;
+    this.setupListeners();
+    if (!this.socket.connected) {
+      this.socket.connect();
+    }
+  }
 
-    this.socket.removeAllListeners('state_update');
-    this.socket.removeAllListeners('connect');
-    this.socket.removeAllListeners('disconnect');
-    this.socket.removeAllListeners('connect_error');
-    this.socket.removeAllListeners('reconnect_attempt');
-    this.socket.removeAllListeners('reconnect');
+  private setupListeners() {
+    if (!this.socket) return;
 
     this.socket.on('connect', () => {
       console.log('✅ [Socket] Connected:', this.socket?.id);
@@ -64,8 +66,6 @@ class SocketService {
       } else {
         console.error('[Socket] the connection was denied by the server');
         console.log(error.message);
-
-        this.socket?.connect();
       }
     });
 
@@ -76,16 +76,24 @@ class SocketService {
     this.socket.on('reconnect', () => {
       console.warn('[Socket] reconnect');
     });
-
-    this.socket.connect();
   }
 
   waitForConnection(): Promise<void> {
     return new Promise((resolve) => {
-      console.log(this.socket);
       if (this.socket?.connected) return resolve();
 
-      this.socket?.once('connect', resolve);
+      const interval = setInterval(() => {
+        if (this.socket?.connected) {
+          console.log('waitForConnection...');
+          clearInterval(interval);
+          resolve();
+        }
+      }, 100);
+
+      this.socket?.once('connect', () => {
+        clearInterval(interval);
+        resolve();
+      });
     });
   }
 

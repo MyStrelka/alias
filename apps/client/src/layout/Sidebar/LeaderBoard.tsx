@@ -47,6 +47,8 @@ const LeaderBoard = ({
                           disabled={isMyTeam}
                           onJoinTeam={actions.joinTeam}
                           teamId={t.id}
+                          joinTeamConfirmation={true}
+                          teamName={t.name}
                           classNames={['mr-2']}
                         />
                       )}

@@ -1,9 +1,12 @@
 import { LogOut, Settings, Volume2, VolumeX } from 'lucide-react';
 
 import { useGameStore } from '../store/gameStore';
+import useModalStore from '../store/modalStore';
 
 const Header = () => {
   const { ui, actions, stage, roomId, isMuted, isHost } = useGameStore();
+  const { openModal } = useModalStore();
+
   return (
     stage !== 'login' && (
       <header className='mx-auto min-w-[480px] max-w-[1440px] px-8 py-4 flex items-center justify-between'>
@@ -58,9 +61,11 @@ const Header = () => {
           </button>
           <button
             onClick={() => {
-              if (confirm('Вы уверены, что хотите покинуть игру?')) {
-                actions.leaveGame();
-              }
+              openModal({
+                type: 'confirmation',
+                confirmation: 'Вы уверены, что хотите покинуть игру?',
+                onConfirm: () => actions.leaveGame(),
+              });
             }}
             className='p-2 rounded-full hover:bg-white/10 transition-colors text-gray-400 hover:text-red-400'
             title='Покинуть игру'

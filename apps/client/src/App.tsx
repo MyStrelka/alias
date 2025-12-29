@@ -16,6 +16,7 @@ import './index.css';
 import Bubbles from './components/Bubbles';
 import MessageListener from './components/MessageListener';
 import Main from './layout/Main';
+import Modal from './layout/Modals/Modal';
 import Page from './layout/Page';
 import Sidebar from './layout/Sidebar';
 import LeaderBoard from './layout/Sidebar/LeaderBoard';
@@ -51,6 +52,7 @@ function App() {
 
   return (
     <div className='min-h-screen w-full relative overflow-x-hidden text-text-main font-sans selection:bg-accent-main/30'>
+      <Modal />
       <Toaster
         position='top-center'
         toastOptions={{

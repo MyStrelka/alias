@@ -45,8 +45,14 @@ const createInitialState = (): GameState => ({
 
 export const initGameService = (io: Server) => {
   // TODO: type for room
-  const updateState = (roomId: string, room: any) =>
+  const updateState = (roomId: string, room: any) => {
+    const clients = rooms.get(roomId)?.players;
+    console.log(
+      `📢 Sending update to room ${roomId}. Active clients in room: `,
+      clients?.join(' | '),
+    );
     io.to(roomId).emit('state_update', room.gameState);
+  };
 
   io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);

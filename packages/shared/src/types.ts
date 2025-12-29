@@ -28,10 +28,6 @@ export interface Settings {
   enableChallenges: boolean;
 }
 
-export interface UI {
-  sideBar: { showSettings: boolean };
-}
-
 export type PlayerRole = 'listener' | 'speaker' | 'spectator';
 
 export interface Player {
@@ -71,7 +67,6 @@ export type WordLog = {
 };
 
 export type GameState = {
-  ui: UI;
   stage: GameStage;
   settings: Settings;
   players: Player[];
@@ -137,6 +132,5 @@ export type GameStateActions = {
     ) => void;
     finishRound: () => void;
     setPlayerName: (playerName: string) => void;
-    setupUI: (uiSettings: UI) => void;
   };
 };

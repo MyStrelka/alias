@@ -2,10 +2,12 @@ import { LogOut, Settings, Volume2, VolumeX } from 'lucide-react';
 
 import { useGameStore } from '../store/gameStore';
 import useModalStore from '../store/modalStore';
+import useUiStore from '../store/uiStore';
 
 const Header = () => {
-  const { ui, actions, stage, roomId, isMuted, isHost } = useGameStore();
+  const { actions, stage, roomId, isMuted, isHost } = useGameStore();
   const { openModal } = useModalStore();
+  const { isSettingsOpen, togglelSettings } = useUiStore();
 
   return (
     stage !== 'login' && (
@@ -23,20 +25,12 @@ const Header = () => {
         <div className='flex items-center gap-4'>
           {isHost && (
             <button
-              onClick={() =>
-                actions.setupUI({
-                  ...ui,
-                  sideBar: {
-                    ...ui.sideBar,
-                    showSettings: !ui.sideBar.showSettings,
-                  },
-                })
-              }
+              onClick={() => togglelSettings()}
               className='p-2 rounded-full hover:bg-white/10 transition-colors'
               title='Настройки'
             >
               <Settings
-                className={`h-6 w-6 text-${ui.sideBar.showSettings ? 'white' : 'gray-400'}`}
+                className={`h-6 w-6 text-${isSettingsOpen ? 'white' : 'gray-400'}`}
               />
             </button>
           )}

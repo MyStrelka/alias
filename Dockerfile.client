@@ -16,8 +16,8 @@ RUN yarn set version stable
 
 COPY ./packages/shared/. ./packages/shared
 COPY ./apps/client/. ./apps/client/
-RUN yarn workspace @alias/shared install
-RUN yarn workspace @alias/shared build
+RUN yarn workspace @seaborn/shared install
+RUN yarn workspace @seaborn/shared build
 
 RUN yarn install
 

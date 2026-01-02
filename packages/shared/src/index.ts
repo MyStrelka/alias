@@ -7,7 +7,6 @@ export {
   Settings,
   Player,
   Team,
-  Room,
   GameState,
   GameStateRound,
   GameStatePlayer,

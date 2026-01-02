@@ -1,4 +1,4 @@
-import type { AuthProvider } from '@alias/shared';
+import type { AuthProvider } from '@seaborn/shared/root';
 
 const popupCenter = (url: string, title: string, w: number, h: number) => {
   const dualScreenLeft =

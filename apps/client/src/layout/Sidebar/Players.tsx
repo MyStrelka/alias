@@ -1,4 +1,4 @@
-import type { Player } from '@alias/shared';
+import type { Player } from '@seaborn/shared/alias';
 
 import ActivePlayers from '../../components/ActivePlayers';
 

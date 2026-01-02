@@ -1,6 +1,6 @@
 import { CheckCircle2, Crown, XCircle } from 'lucide-react';
 
-import type { Player } from '@alias/shared';
+import type { Player } from '@seaborn/shared/alias';
 
 import EllipsisText from './EllipsisText';
 import KickUser from './KickUser';
@@ -16,7 +16,7 @@ const PlayerTable = ({
   onToggleReady,
   onKick,
   gameStage,
-}: any) => {
+}: { players: Player[] } & any) => {
   const header = () => (
     <>
       <Thead text='Имя' />
@@ -27,12 +27,12 @@ const PlayerTable = ({
 
   const rows = () =>
     players.map((p: Player) => (
-      <Trow key={p.id}>
+      <Trow key={p.deviceId}>
         <Td classNames={['font-semibold', 'text-white']}>
           <div className='flex items-center gap-2'>
             {p.isHost && <Crown className='h-4 w-4 text-amber-400' />}
             <EllipsisText text={p.name} classNames='max-w-48' />
-            {p.id === selfId && (
+            {p.deviceId === selfId && (
               <span className='badge bg-white/20 border-white/30 text-xs'>
                 Вы
               </span>
@@ -45,13 +45,13 @@ const PlayerTable = ({
         <Td classNames={['font-mono']}>
           {gameStage === 'lobby' ? (
             <button
-              onClick={() => onToggleReady?.(p.id)}
-              disabled={p.id !== selfId}
+              onClick={() => onToggleReady?.(p.deviceId)}
+              disabled={p.deviceId !== selfId}
               className={`inline-flex items-center gap-2 rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
                 p.ready
                   ? 'bg-green-500/20 text-green-300 border border-green-500/30'
                   : 'bg-white/10 text-gray-400 border border-white/10'
-              } ${p.id !== selfId ? 'cursor-default opacity-80' : 'hover:bg-opacity-80'}`}
+              } ${p.deviceId !== selfId ? 'cursor-default opacity-80' : 'hover:bg-opacity-80'}`}
             >
               {p.ready ? (
                 <CheckCircle2 className='h-3 w-3' />
@@ -67,7 +67,10 @@ const PlayerTable = ({
         {isHost && (
           <Td classNames={['text-right']}>
             {!p.isHost && (
-              <KickUser playerName={p.name} onClick={() => onKick?.(p.id)} />
+              <KickUser
+                playerName={p.name}
+                onClick={() => onKick?.(p.deviceId)}
+              />
             )}
           </Td>
         )}

@@ -2,20 +2,23 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Play, Share2, Sparkles, Trash2, XCircle } from 'lucide-react';
 
-import type {
-  Settings as AliasSettings,
-  GameStateActions,
-  GameStateClient,
-  Mode,
-  Player,
-  Team,
-} from '@alias/shared';
+import {
+  SETTINGS,
+  type Settings as AliasSettings,
+  type GameState,
+  type GameStatePlayer,
+  type Mode,
+  type Player,
+  type Team,
+} from '@seaborn/shared/alias';
 
 import AccentButton from '../../components/AccentButton';
 import CommonSettings from '../../components/CommonSettings';
 import PlayerTable from '../../components/PlayerTable';
 import TeamsSection from '../../components/TeamsSection';
 import Tile from '../../components/Tile';
+import { useGameStore } from '../../store/games/alilasStore';
+import { useRootStore } from '../../store/rootStore';
 import { soundManager } from '../../utils/soundManager';
 
 const Lobby = ({
@@ -23,9 +26,7 @@ const Lobby = ({
   players,
   teams,
   isHost,
-  selfId,
   roomId,
-  actions,
   customWords,
   customTopic,
 }: {
@@ -33,11 +34,13 @@ const Lobby = ({
   players: Player[];
   teams: Team[];
 } & Pick<
-  GameStateClient,
-  'isHost' | 'selfId' | 'roomId' | 'customWords' | 'customTopic'
-> &
-  GameStateActions) => {
+  GameState & GameStatePlayer,
+  'isHost' | 'roomId' | 'customWords' | 'customTopic'
+>) => {
   const [topic, setTopic] = useState('');
+  const { deviceId } = useRootStore();
+  const { actions } = useGameStore();
+
   const isTeamMode = settings.mode === 'team';
   const canStartGame =
     players.length >= 2 &&
@@ -97,7 +100,7 @@ const Lobby = ({
                   </div>
                 </div>
                 <button
-                  onClick={actions.clearCustomWords}
+                  // onClick={actions.clearCustomWords}
                   className='p-2 hover:bg-white/10 rounded-lg text-red-400 transition'
                 >
                   <Trash2 className='h-5 w-5' />
@@ -115,7 +118,7 @@ const Lobby = ({
                 <button
                   onClick={() => {
                     if (!topic) return toast.error('Введите тему');
-                    actions.generateWordsAI(topic);
+                    // actions.generateWordsAI(topic);
                   }}
                   className='btn-glass bg-accent-main/20 hover:bg-accent-main/40 border-accent-main/50'
                   disabled={!topic}
@@ -135,15 +138,19 @@ const Lobby = ({
             <TeamsSection
               teams={teams}
               players={players}
-              selfId={selfId}
               onCreateTeam={() => actions.createTeam()}
-              onJoinTeam={(id: string) => actions.joinTeam(id)}
               isHost={isHost}
             />
             {teamValidationError && (
               <div className='mt-3 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-200 text-sm flex items-center gap-2'>
                 <XCircle className='h-4 w-4' /> В каждой команде должно быть
                 минимум 2 игрока
+              </div>
+            )}{' '}
+            {teams.length >= SETTINGS.MAX_TEAM_COUNT && (
+              <div className='mt-3 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-200 text-sm flex items-center gap-2'>
+                <XCircle className='h-4 w-4' />
+                Максимум {SETTINGS.MAX_TEAM_COUNT} команд
               </div>
             )}
           </Tile>
@@ -159,7 +166,7 @@ const Lobby = ({
         >
           <PlayerTable
             players={players}
-            selfId={selfId}
+            selfId={deviceId}
             isHost={isHost}
             onToggleReady={actions.toggleReady}
             onKick={actions.kickPlayer}

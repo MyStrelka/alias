@@ -1,8 +1,8 @@
 import { Shuffle } from 'lucide-react';
 
-import type { Mode } from '@alias/shared';
+import type { Mode } from '@seaborn/shared/alias';
 
-import { useGameStore } from '../store/gameStore';
+import { useGameStore } from '../store/games/alilasStore';
 
 const CommonSettings = ({
   gameModes,

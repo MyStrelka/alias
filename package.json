@@ -1,17 +1,17 @@
 {
-  "name": "alias",
+  "name": "seaborn",
   "private": true,
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "server:build": "yarn workspace @alias/server run build",
-    "server:dev": "yarn workspace @alias/server run dev",
-    "server:start": "yarn workspace @alias/server run start",
-    "client:build": "yarn workspace @alias/client run build",
-    "client:dev": "yarn workspace @alias/client run dev",
-    "packages:build": "yarn workspace @alias/shared run build"
+    "server:build": "yarn workspace @seaborn/server run build",
+    "server:dev": "yarn workspace @seaborn/server run dev",
+    "server:start": "yarn workspace @seaborn/server run start",
+    "client:build": "yarn workspace @seaborn/client run build",
+    "client:dev": "yarn workspace @seaborn/client run dev",
+    "packages:build": "yarn workspace @seaborn/shared run build"
   },
   "packageManager": "yarn@4.12.0",
   "devDependencies": {

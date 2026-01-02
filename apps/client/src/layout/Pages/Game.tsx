@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle2, Clock3, PauseCircle, Play, XCircle } from 'lucide-react';
 
-import type { WordLog } from '@alias/shared';
+import type { WordLog } from '@seaborn/shared/alias';
 
 import AccentButton from '../../components/AccentButton';
 import Table from '../../components/Table/Table';
 import Td from '../../components/Table/Td';
 import Thead from '../../components/Table/Thead';
 import Trow from '../../components/Table/Trow';
-import { useGameStore } from '../../store/gameStore';
+import { useGameStore } from '../../store/games/alilasStore';
 import { soundManager } from '../../utils/soundManager';
 
 const Game = ({
@@ -24,8 +24,8 @@ const Game = ({
 }: any) => {
   const { round } = useGameStore();
   const { activeChallenge } = round;
-  const isSpeaker = speaker?.id === selfId;
-  const isListener = listener?.id === selfId;
+  const isSpeaker = speaker?.deviceId === selfId;
+  const isListener = listener?.deviceId === selfId;
 
   // 🔥 ПРАВКА: Все actions идут через стор (P2P удален)
   const handleCorrect = () => {

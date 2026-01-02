@@ -1,7 +1,7 @@
-import type { Team } from '@alias/shared';
+import type { Team } from '@seaborn/shared/alias';
 
 import ActivePlayers from '../../components/ActivePlayers';
-import { TEAM_THEMES, useGameStore } from '../../store/gameStore';
+import { TEAM_THEMES, useGameStore } from '../../store/games/alilasStore';
 import { soundManager } from '../../utils/soundManager';
 
 const PreRound = ({
@@ -11,18 +11,18 @@ const PreRound = ({
   teams,
   settings,
   selfId,
-  actions,
   readyMap,
   activeChallenge,
   isSpeakerReady,
   isListenerReady,
 }: any) => {
+  const { round, actions } = useGameStore();
   const currentTeam = teams.find((t: Team) => t.id === currentTeamId);
   const teamTheme = currentTeam
     ? TEAM_THEMES[currentTeam.themeIndex % TEAM_THEMES.length]
     : null;
-  const isSpeaker = selfId === speaker?.id;
-  const isListener = selfId === listener?.id;
+  const isSpeaker = selfId === speaker?.deviceId;
+  const isListener = selfId === listener?.deviceId;
   const amIInvolved = isSpeaker || isListener;
 
   const requiredReady = isSpeakerReady && isListenerReady;
@@ -35,9 +35,7 @@ const PreRound = ({
       )}
       <div className='relative z-10 w-full max-w-lg text-center space-y-8'>
         <div>
-          <div className='badge mb-2'>
-            Раунд #{useGameStore.getState().round.roundNumber}
-          </div>
+          <div className='badge mb-2'>Раунд #{round.roundNumber}</div>
           <h2 className='text-3xl font-bold text-white'>Приготовьтесь!</h2>
           {settings.mode === 'team' && currentTeam && (
             <p className={`text-xl font-bold mt-2 ${teamTheme?.text}`}>

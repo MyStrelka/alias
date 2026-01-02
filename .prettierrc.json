@@ -9,7 +9,7 @@
     "^react(.*)$",
     "<THIRD_PARTY_MODULES>",
     "",
-    "^@alias/shared(.*)$",
+    "^@seaborn/shared(.*)$",
     "",
     "^(../)(.*)$",
     "^(./)(.*)$"

@@ -1,11 +1,12 @@
 import { Crown, Trophy } from 'lucide-react';
 
-import type { Player, Team } from '@alias/shared';
+import type { Player, Team } from '@seaborn/shared/alias';
 
 import EllipsisText from '../../components/EllipsisText';
-import JoinTeam from '../../components/JoinTeam';
 import KickUser from '../../components/KickUser';
-import { TEAM_THEMES, useGameStore } from '../../store/gameStore';
+import TeamActions from '../../components/TeamActions';
+import { TEAM_THEMES, useGameStore } from '../../store/games/alilasStore';
+import { useRootStore } from '../../store/rootStore';
 
 const LeaderBoard = ({
   speaker,
@@ -14,9 +15,11 @@ const LeaderBoard = ({
   speaker?: Player;
   listener?: Player;
 }) => {
-  const { players, settings, teams, isHost, actions, selfId, round } =
-    useGameStore();
-  const isNotActiveUser = speaker?.id !== selfId && listener?.id !== selfId;
+  const { players, settings, teams, isHost, actions, round } = useGameStore();
+  const { deviceId } = useRootStore();
+  const isNotActiveUser =
+    speaker?.deviceId !== deviceId && listener?.deviceId !== deviceId;
+
   return (
     <div className='glass-panel p-4 flex-1'>
       <h3 className='text-white font-bold mb-4 flex items-center gap-2'>
@@ -33,8 +36,8 @@ const LeaderBoard = ({
                 const theme = TEAM_THEMES[t.themeIndex % TEAM_THEMES.length];
                 const isActive = t.id === round.currentTeamId;
                 const isMyTeam =
-                  selfId !== null &&
-                  teamPlayers.map((p) => p.id).includes(selfId);
+                  deviceId !== null &&
+                  teamPlayers.map((p) => p.deviceId).includes(deviceId);
                 return (
                   <div
                     key={t.id}
@@ -43,12 +46,11 @@ const LeaderBoard = ({
                     <div className='flex justify-between items-center mb-1'>
                       <EllipsisText classNames={theme.text} text={t.name} />
                       {!isMyTeam && isNotActiveUser && (
-                        <JoinTeam
+                        <TeamActions
+                          text={isMyTeam ? 'Ваша команда' : 'Вступить'}
                           disabled={isMyTeam}
-                          onJoinTeam={actions.joinTeam}
-                          teamId={t.id}
-                          joinTeamConfirmation={true}
-                          teamName={t.name}
+                          onClilck={() => actions.joinTeam(deviceId, t.id)}
+                          confirmationText={`Вы хотите перейти в команду ${t.name || t.id}`}
                           classNames={['mr-2']}
                         />
                       )}
@@ -65,7 +67,7 @@ const LeaderBoard = ({
                             ) : (
                               <KickUser
                                 playerName={p.name}
-                                onClick={() => actions.kickPlayer(p.id)}
+                                onClick={() => actions.kickPlayer(p.deviceId)}
                               />
                             ))}
                           <EllipsisText
@@ -83,12 +85,12 @@ const LeaderBoard = ({
               .sort((a: Player, b: Player) => b.score - a.score)
               .map((p: Player) => (
                 <div
-                  key={p.id}
-                  className={`flex justify-between items-center p-2 border-b border-white/5 last:border-0 ${p.id === speaker?.id ? 'bg-white/5 rounded' : ''}`}
+                  key={p.deviceId}
+                  className={`flex justify-between items-center p-2 border-b border-white/5 last:border-0 ${p.deviceId === speaker?.deviceId ? 'bg-white/5 rounded' : ''}`}
                 >
                   <EllipsisText
-                    classNames={`text-sm pr-2 ${p.id === speaker?.id ? 'text-accent-main font-bold' : 'text-gray-300'}`}
-                    text={`${p.name}${p.id === selfId ? ' (Вы)' : ''}`}
+                    classNames={`text-sm pr-2 ${p.deviceId === speaker?.deviceId ? 'text-accent-main font-bold' : 'text-gray-300'}`}
+                    text={`${p.name}${p.deviceId === deviceId ? ' (Вы)' : ''}`}
                   />
 
                   <span

@@ -1,32 +1,30 @@
 import useModalStore from '../store/modalStore';
 
-const JoinTeam = ({
+const TeamActions = ({
   disabled,
-  teamId,
-  onJoinTeam,
   classNames,
-  joinTeamConfirmation,
-  teamName,
+  confirmationText,
+  text,
+  onClilck,
 }: {
   disabled: boolean;
-  teamId: string;
-  onJoinTeam: (teamId: string) => void;
+  text: string;
+  onClilck: () => void;
   classNames?: string[];
-  joinTeamConfirmation?: boolean;
-  teamName?: string;
+  confirmationText?: string;
 }) => {
   const { openModal } = useModalStore();
   return (
     <button
       onClick={() => {
-        if (joinTeamConfirmation) {
+        if (confirmationText) {
           openModal({
             type: 'confirmation',
-            confirmation: `Вы хотите перейти в команду ${teamName || teamId}`,
-            onConfirm: () => onJoinTeam(teamId),
+            confirmation: confirmationText,
+            onConfirm: onClilck,
           });
         } else {
-          onJoinTeam(teamId);
+          onClilck();
         }
       }}
       disabled={disabled}
@@ -36,9 +34,9 @@ const JoinTeam = ({
           : 'opacity-70 hover:opacity-100'
       }`}
     >
-      {disabled ? 'Ваша команда' : 'Вступить'}
+      {text}
     </button>
   );
 };
 
-export default JoinTeam;
+export default TeamActions;

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Crown, Rocket } from 'lucide-react';
 
-import type { Player } from '@alias/shared';
+import type { Player } from '@seaborn/shared/alias';
 
 import AccentButton from '../../components/AccentButton';
 import { soundManager } from '../../utils/soundManager';

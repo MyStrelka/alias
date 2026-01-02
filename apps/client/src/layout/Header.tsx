@@ -1,6 +1,6 @@
 import { LogOut, Settings, Volume2, VolumeX } from 'lucide-react';
 
-import { useGameStore } from '../store/gameStore';
+import { useGameStore } from '../store/games/alilasStore';
 import useModalStore from '../store/modalStore';
 import useUiStore from '../store/uiStore';
 

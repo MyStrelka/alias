@@ -3,11 +3,13 @@ import { toast } from 'react-hot-toast';
 import { LogIn, PlugZap } from 'lucide-react';
 
 import AccentButton from '../../components/AccentButton';
-import { useGameStore } from '../../store/gameStore';
+import { useGameStore } from '../../store/games/alilasStore';
+import { useRootStore } from '../../store/rootStore';
 
 const Login = () => {
   const [roomId, setRoomId] = useState('');
-  const { actions, user } = useGameStore();
+  const { actions: rootActions, user } = useRootStore();
+  const { actions } = useGameStore();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -60,7 +62,7 @@ const Login = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => actions.logout()}
+                  onClick={() => rootActions.logout()}
                   className='text-xs text-gray-400 hover:text-white underline'
                 >
                   Выйти
@@ -73,13 +75,13 @@ const Login = () => {
                 </p>
                 <div className='grid grid-cols-2 gap-2'>
                   <button
-                    onClick={() => actions.loginWithProvider('google')}
+                    onClick={() => rootActions.loginWithProvider('google')}
                     className='flex items-center justify-center gap-2 p-2 rounded-lg bg-white text-black font-bold text-sm hover:bg-gray-100 transition'
                   >
                     Google
                   </button>
                   <button
-                    onClick={() => actions.loginWithProvider('discord')}
+                    onClick={() => rootActions.loginWithProvider('discord')}
                     className='flex items-center justify-center gap-2 p-2 rounded-lg bg-[#5865F2] text-white font-bold text-sm hover:bg-[#4752C4] transition'
                   >
                     Discord
@@ -95,7 +97,7 @@ const Login = () => {
             </label>
             <input
               value={user?.playerName || ''}
-              onChange={(e) => actions.setPlayerName(e.target.value)}
+              onChange={(e) => rootActions.setPlayerName(e.target.value)}
               placeholder='Как вас зовут?'
               className='input-glass w-full text-lg'
             />
@@ -133,7 +135,7 @@ const Login = () => {
                 />
                 <button
                   onClick={() => actions.joinRoom(roomId)}
-                  disabled={!user?.name || !roomId}
+                  disabled={!user?.playerName || !roomId}
                   className='btn-glass px-4 bg-white/10 hover:bg-white/20 disabled:opacity-50'
                 >
                   <LogIn className='h-5 w-5' />

@@ -1,5 +1,6 @@
+export { RootStore, RootStoreActions, User, AuthProvider } from './root';
+
 export {
-  User,
   Mode,
   GameStage,
   Difficulty,
@@ -8,10 +9,12 @@ export {
   Team,
   Room,
   GameState,
-  GameStateClient,
+  GameStateRound,
+  GameStatePlayer,
   GameStateActions,
-  AuthProvider,
   WordLog,
-} from './types';
+  ClientToServerEvents,
+  ServerToClientEvents,
+} from './alias';
 
 export { EVENTS } from './constants';

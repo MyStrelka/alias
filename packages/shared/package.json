@@ -1,15 +1,18 @@
 {
-  "name": "@alias/shared",
+  "name": "@seaborn/shared",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build"
   },
   "keywords": [],
   "author": "",
+  "exports": {
+    "./root": "./src/root/index.js",
+    "./alias": "./src/alias/index.js"
+  },
   "devDependencies": {
     "typescript": "^5.9.3"
   }

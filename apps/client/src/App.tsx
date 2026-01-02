@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { Toaster } from 'react-hot-toast';
 
-import type { Player } from '@alias/shared';
+import type { Player } from '@seaborn/shared/alias';
 
 import Header from './layout/Header';
 import Game from './layout/Pages/Game';
@@ -9,7 +9,8 @@ import Lobby from './layout/Pages/Lobby';
 import Login from './layout/Pages/Login';
 import PreRound from './layout/Pages/PreRound';
 import Victory from './layout/Pages/Victory';
-import { useGameStore } from './store/gameStore';
+import { useGameStore } from './store/games/alilasStore';
+import { useRootStore } from './store/rootStore';
 
 import './index.css';
 
@@ -21,35 +22,40 @@ import Page from './layout/Page';
 import Sidebar from './layout/Sidebar';
 import LeaderBoard from './layout/Sidebar/LeaderBoard';
 import CurrentPlayers from './layout/Sidebar/Players';
+import { socketService } from './services/socketService';
 
 function App() {
+  const root = useRootStore();
   const game = useGameStore();
   const { actions, roomId, round } = game;
 
   useEffect(() => {
     console.log('App init, roomId:', roomId);
     if (roomId) {
-      console.log('App init, rejoin to room');
       actions.joinRoom(roomId);
     }
+
+    return () => {
+      socketService.disconnect();
+    };
   }, []);
 
   const speaker = useMemo(
-    () => game.players.find((p: Player) => p.id === round.speakerId),
+    () => game.players.find((p: Player) => p.deviceId === round.speakerId),
     [game.players, game.round.speakerId],
   );
   const listener = useMemo(
-    () => game.players.find((p: Player) => p.id === round.listenerId),
+    () => game.players.find((p: Player) => p.deviceId === round.listenerId),
     [game.players, round.listenerId],
   );
 
-  const isSpeakerReady = !!round.readyMap[speaker?.id || ''];
-  const isListenerReady = !!round.readyMap[listener?.id || ''];
+  const isSpeakerReady = !!round.readyMap[speaker?.deviceId || ''];
+  const isListenerReady = !!round.readyMap[listener?.deviceId || ''];
 
   const winner = useMemo(() => {
     if (game.settings.mode === 'team')
       return game.teams.find((t) => t.id === game.victory?.winnerId);
-    return game.players.find((p) => p.id === game.victory?.winnerId);
+    return game.players.find((p) => p.deviceId === game.victory?.winnerId);
   }, [game.victory?.winnerId, game.settings.mode, game.teams, game.players]);
 
   return (
@@ -78,8 +84,6 @@ function App() {
               players={game.players}
               teams={game.teams}
               isHost={game.isHost}
-              selfId={game.selfId}
-              actions={actions}
               customWords={game.customWords}
               customTopic={game.customTopic}
             />
@@ -90,9 +94,8 @@ function App() {
               listener={listener}
               teams={game.teams}
               settings={game.settings}
-              selfId={game.selfId}
+              selfId={root.deviceId}
               currentTeamId={game.round.currentTeamId}
-              actions={actions}
               readyMap={game.round.readyMap}
               activeChallenge={game.round.activeChallenge}
               isSpeakerReady={isSpeakerReady}
@@ -106,7 +109,7 @@ function App() {
               listener={listener}
               timeLeft={game.round.timeLeft}
               word={game.round.currentWord}
-              selfId={game.selfId}
+              selfId={root.deviceId}
               isPaused={!game.round.running}
               wordLog={game.round.wordLog}
               actions={actions}
@@ -116,7 +119,10 @@ function App() {
             <Victory
               winner={winner}
               players={game.players}
-              backToLobby={actions.backToLobby}
+              // backToLobby={actions.backToLobby}
+              backToLobby={() => {
+                console.log('TODO: backToLobby');
+              }}
             />
           )}
         </Page>

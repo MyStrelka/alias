@@ -1,6 +1,6 @@
 import { CheckCircle2, Ear, Megaphone } from 'lucide-react';
 
-import type { Player } from '@alias/shared';
+import type { Player } from '@seaborn/shared/alias';
 
 import Avatar from './Avatar';
 import EllipsisText from './EllipsisText';

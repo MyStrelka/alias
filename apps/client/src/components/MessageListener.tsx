@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
-import type { User } from '@alias/shared';
+import type { User } from '@seaborn/shared/root';
 
-import { useGameStore } from '../store/gameStore';
+import { useRootStore } from '../store/rootStore';
 
 export default function AuthCallbackMessageListener() {
   const parentOrigin = import.meta.env.VITE_SERVER_URL || 'localhost:3000';
@@ -14,7 +14,7 @@ export default function AuthCallbackMessageListener() {
 
     const { user } = event.data;
 
-    useGameStore.setState({ user });
+    useRootStore.setState({ user });
   }
 
   useEffect(function () {

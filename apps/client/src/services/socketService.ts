@@ -6,6 +6,8 @@ import type {
 } from '@seaborn/shared/alias';
 import type { User } from '@seaborn/shared/root';
 
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'localhost:3000';
+
 class SocketService {
   public socket: Socket<ServerToClientEvents, ClientToServerEvents> | null =
     null;
@@ -34,8 +36,9 @@ class SocketService {
     console.log('CALL connect');
     this.onUpdateHandler = onUpdate;
 
-    this.socket = io('http://localhost:3000', {
+    this.socket = io(SERVER_URL, {
       reconnection: true,
+      autoConnect: true,
       reconnectionDelay: 1000,
       transports: ['websocket'],
     });

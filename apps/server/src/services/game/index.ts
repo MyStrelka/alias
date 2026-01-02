@@ -30,13 +30,11 @@ const rooms = new Map<string, AliasRoom>();
 
 export const initGameService = (io: Server) => {
   io.on('connection', (socket) => {
-    console.log(`User connected: ${socket.id}`);
-
     socket.on('create_room', (data: { deviceId: string; user: User }) => {
       const { deviceId, user } = data;
 
       const newRoomId = generateRoomId([...rooms.keys()]);
-      console.log(`Creating room: ${newRoomId}`);
+
       rooms.set(
         newRoomId,
         new AliasRoom(newRoomId, user, socket.id, deviceId, io),

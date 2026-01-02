@@ -96,7 +96,6 @@ export class AliasRoom {
   }
 
   private broadcast() {
-    console.log(`broadcast to room ${this.id}`);
     this.io.to(this.id).emit('room_updated', this.state);
   }
 

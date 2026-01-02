@@ -134,7 +134,6 @@ export const roomReducer = (
     case 'SHUFFLE_TEAMS': {
       if (state.hostId !== deviceId) return state;
 
-      console.log('SHUFFLE_TEAMS reducer');
       const teams = [...state.teams];
       const players = [...state.players].sort(() => Math.random() - 0.5);
       teams.forEach((t) => (t.playerIds = []));

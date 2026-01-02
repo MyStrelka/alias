@@ -28,7 +28,7 @@ const limiter = rateLimit({
   ipv6Subnet: 48,
 });
 
-// app.use(limiter);
+app.use(limiter);
 
 app.use(
   session({

@@ -41,7 +41,7 @@ const Login = () => {
 
         <div className='glass-panel w-full p-8 space-y-8'>
           <div className='flex flex-col gap-3 p-4 bg-white/5 rounded-xl border border-white/10'>
-            {user ? (
+            {user.id || user.playerName ? (
               <div className='flex items-center justify-between'>
                 <div className='flex items-center gap-3'>
                   {user.avatar ? (

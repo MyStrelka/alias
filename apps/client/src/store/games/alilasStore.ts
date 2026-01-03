@@ -88,6 +88,9 @@ const initialState: GameState & GameStatePlayer = {
   isHost: false,
   isMuted: false,
   hostId: null,
+  customTopic: null,
+  customWords: null,
+  wordLog: [],
 };
 
 const deviceId = useRootStore.getState().deviceId;

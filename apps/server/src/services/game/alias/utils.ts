@@ -160,8 +160,21 @@ export const selectChallenge = (
   return CHALLENGES[Math.floor(Math.random() * CHALLENGES.length)] || null;
 };
 
-export const pickWord = (difficulty: Difficulty): string => {
-  const pool = words[difficulty] || words['medium'] || words['easy'];
+export const pickWord = (
+  difficulty: Difficulty,
+  wordLog: string[],
+  customWords: string[] | null,
+): string => {
+  const pool =
+    customWords || words[difficulty] || words['medium'] || words['easy'];
   if (!pool || pool.length === 0) return 'Слова не загружены';
-  return pool[Math.floor(Math.random() * pool.length)]!;
+  const word = pool[Math.floor(Math.random() * pool.length)]!;
+  if (wordLog.includes(word)) {
+    if (wordLog.length >= pool.length) {
+      return 'Слова закончились :(';
+    }
+
+    return pickWord(difficulty, wordLog, customWords);
+  }
+  return word;
 };

@@ -38,6 +38,11 @@ const Lobby = ({
   'isHost' | 'roomId' | 'customWords' | 'customTopic'
 >) => {
   const [topic, setTopic] = useState('');
+
+  const [generationState, setGenerationState] = useState<
+    'ready' | 'inprogress'
+  >('ready');
+
   const { deviceId } = useRootStore();
   const { actions } = useGameStore();
 
@@ -100,7 +105,7 @@ const Lobby = ({
                   </div>
                 </div>
                 <button
-                  // onClick={actions.clearCustomWords}
+                  onClick={actions.clearCustomWords}
                   className='p-2 hover:bg-white/10 rounded-lg text-red-400 transition'
                 >
                   <Trash2 className='h-5 w-5' />
@@ -113,17 +118,33 @@ const Lobby = ({
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder='Напр: Гарри Поттер'
                   className='input-glass text-sm w-full'
+                  disabled={generationState === 'inprogress'}
                 />
                 {/* 🔥 AI пока заглушка - не скрываю, но будет работать потом */}
                 <button
                   onClick={() => {
                     if (!topic) return toast.error('Введите тему');
-                    // actions.generateWordsAI(topic);
+                    if (roomId) {
+                      setGenerationState('inprogress');
+                      actions
+                        .generateWordsAI(roomId, topic)
+                        .catch((e) => {
+                          toast.error('Ошибка генерации слов');
+                          console.error(e);
+                        })
+                        .finally(() => {
+                          setGenerationState('ready');
+                        });
+                    }
                   }}
                   className='btn-glass bg-accent-main/20 hover:bg-accent-main/40 border-accent-main/50'
-                  disabled={!topic}
+                  disabled={
+                    !roomId || !topic || generationState === 'inprogress'
+                  }
                 >
-                  <Sparkles className='h-5 w-5 text-white' />
+                  <Sparkles
+                    className={`h-5 w-5 text-white ${generationState === 'inprogress' ? 'animate-pulse' : ''}`}
+                  />
                 </button>
               </div>
             )}

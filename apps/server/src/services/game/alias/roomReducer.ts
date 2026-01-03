@@ -56,8 +56,16 @@ export type GameAction =
     }
   | { type: 'NEXT_ROUND' }
   | {
+      type: 'CUSTOM_WORDS_MODIFY';
+      payload: { topic: string; words: string[] };
+    }
+  | { type: 'CUSTOM_WORDS_CLEAR' }
+  | {
       type: 'WORD_ADJUSTMENT';
-      payload: { wordLogIndex: number; score: WordLog['score'] };
+      payload: {
+        wordLogIndex: number;
+        score: WordLog['score'];
+      };
     };
 
 export const initialState: GameState = {
@@ -89,6 +97,18 @@ export const initialState: GameState = {
   },
   roomId: null,
   hostId: null,
+  customTopic: 'жаба',
+  customWords: [
+    'зеленое',
+    'вода',
+    'пруд',
+    'прыжок',
+    'язык',
+    'комар',
+    'болото',
+    'стрела',
+  ],
+  wordLog: [],
 };
 
 export const roomReducer = (
@@ -259,7 +279,11 @@ export const roomReducer = (
         true,
       );
 
-      const currentWord = pickWord(state.settings.difficulty);
+      const currentWord = pickWord(
+        state.settings.difficulty,
+        state.wordLog,
+        state.customWords,
+      );
 
       const challenge = selectChallenge(1, state.settings.enableChallenges);
 
@@ -276,6 +300,7 @@ export const roomReducer = (
           currentWord,
           activeChallenge: challenge,
         },
+        wordLog: [],
       };
     }
     case 'START_ROUND': {
@@ -324,8 +349,13 @@ export const roomReducer = (
         round: {
           ...state.round,
           wordLog: [...state.round.wordLog, nextWordLog],
-          currentWord: pickWord(state.settings.difficulty),
+          currentWord: pickWord(
+            state.settings.difficulty,
+            state.wordLog,
+            state.customWords,
+          ),
         },
+        wordLog: [...state.wordLog, nextWordLog.word],
       };
     }
     case 'FINISH_ROUND': {
@@ -386,7 +416,11 @@ export const roomReducer = (
         false,
       );
 
-      const currentWord = pickWord(state.settings.difficulty);
+      const currentWord = pickWord(
+        state.settings.difficulty,
+        state.wordLog,
+        state.customWords,
+      );
 
       const challenge = selectChallenge(1, state.settings.enableChallenges);
 
@@ -419,6 +453,24 @@ export const roomReducer = (
             } else return word;
           }),
         },
+      };
+    }
+    case 'CUSTOM_WORDS_MODIFY': {
+      const { payload } = action;
+      const { topic, words } = payload;
+      if (words.length === 0) return state;
+
+      return {
+        ...state,
+        customTopic: topic,
+        customWords: words,
+      };
+    }
+    case 'CUSTOM_WORDS_CLEAR': {
+      return {
+        ...state,
+        customTopic: null,
+        customWords: null,
       };
     }
 

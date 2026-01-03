@@ -1,4 +1,4 @@
-import type { User } from '@alias/shared';
+import type { User } from '@seaborn/shared/root';
 
 export const getCallbackHtml = (user: User) => `
     <!DOCTYPE html>

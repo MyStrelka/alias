@@ -1,7 +1,7 @@
 import { cert, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
-import type { User } from '@alias/shared';
+import type { User } from '@seaborn/shared/root';
 
 import { firebaseDatabaseId, FirebaseServiceAccountKey } from '../config';
 

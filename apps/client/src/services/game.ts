@@ -44,4 +44,27 @@ const createIncognitoUser = async (deviceId: string, playerName: string) => {
   return recordId;
 };
 
-export default { getUser, createIncognitoUser };
+export const generateWords = async (
+  roomId: string,
+  topic: string,
+): Promise<void> => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/api/ai-generate?roomId=${roomId}&topic=${topic}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`Error generate words: ${message}`);
+  }
+};
+
+export default { getUser, createIncognitoUser, generateWords };

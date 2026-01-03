@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import type { User } from '@alias/shared';
+import type { User } from '@seaborn/shared/root';
 
 import discord from '../../api/discord';
 import fireabsese from '../../api/firebase-admin';

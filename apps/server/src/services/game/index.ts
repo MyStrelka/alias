@@ -28,6 +28,17 @@ export const findRoom = (
 
 const rooms = new Map<string, AliasRoom>();
 
+export const modifyCustomWords = (
+  roomId: string,
+  topic: string,
+  words: string[],
+) => {
+  const room = rooms.get(roomId);
+  if (room) {
+    room.modifyCustomWords(topic, words);
+  }
+};
+
 export const initGameService = (io: Server) => {
   io.on('connection', (socket) => {
     socket.on('create_room', (data: { deviceId: string; user: User }) => {

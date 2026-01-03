@@ -75,8 +75,6 @@ export type GameStateRound = {
 
 export type GameStatePlayer = {
   isHost: boolean;
-  customWords: string[] | null;
-  customTopic: string | null;
   isMuted: boolean;
 };
 
@@ -89,6 +87,9 @@ export type GameState = {
   roomId: string | null;
   hostId: string | null;
   victory?: { winnerId: string };
+  customWords: string[] | null;
+  customTopic: string | null;
+  wordLog: string[];
 };
 
 export type GameStateActions = {
@@ -113,13 +114,13 @@ export type GameStateActions = {
     handleSkip: () => void;
     finishRound: () => void;
     wordAdjustment: (wordLlogIndex: number, score: WordLog['score']) => void;
+    generateWordsAI: (roomId: string, topic: string) => Promise<void>;
+    clearCustomWords: () => void;
 
     // TODO:
     // tick: () => void;
     // restart: () => void;
     // backToLobby: () => void;
-    // generateWordsAI: (topic: string) => Promise<void>;
-    // clearCustomWords: () => void;
     //
   };
 };
@@ -160,6 +161,7 @@ export interface ClientToServerEvents {
     wordLogIndex: number;
     score: WordLog['score'];
   }) => void;
+  custom_words_clear: () => void;
 }
 
 export interface ServerToClientEvents {

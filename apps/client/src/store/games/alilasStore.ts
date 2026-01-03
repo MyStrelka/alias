@@ -11,6 +11,7 @@ import type {
   Settings,
 } from '@seaborn/shared/alias';
 
+import { generateWords } from '../../services/game';
 import { socketService } from '../../services/socketService';
 import { useRootStore } from '../rootStore';
 
@@ -85,8 +86,6 @@ const initialState: GameState & GameStatePlayer = {
   round: initialRound,
   roomId: null,
   isHost: false,
-  customWords: null,
-  customTopic: null,
   isMuted: false,
   hostId: null,
 };
@@ -189,6 +188,11 @@ export const useGameStore = create<
               wordLogIndex,
               score,
             }),
+          generateWordsAI: async (roomId: string, topic: string) => {
+            await generateWords(roomId, topic);
+          },
+          clearCustomWords: () =>
+            socketService.socket?.emit('custom_words_clear'),
         },
       };
     },

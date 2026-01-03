@@ -215,7 +215,7 @@ export class AliasRoom {
         (player) => player.score >= this.state.settings.winScore,
       );
       if (winner) {
-        if (this.timerInterval) clearInterval(this.timerInterval);
+        this.stopTimer();
         this.dispatch(socket.id, {
           type: 'VICTORY',
           payload: { winnerId: winner.deviceId },
@@ -241,6 +241,11 @@ export class AliasRoom {
         });
       },
     );
+    socket.on('custom_words_clear', () => {
+      this.dispatch(socket.id, {
+        type: 'CUSTOM_WORDS_CLEAR',
+      });
+    });
 
     socket.on('disconnect', () => {
       console.log('ROOM disconnect');
@@ -253,6 +258,13 @@ export class AliasRoom {
         },
       ]);
       this.connections.delete(socket.id);
+    });
+  }
+
+  public modifyCustomWords(topic: string, words: string[]) {
+    this.dispatchSystem({
+      type: 'CUSTOM_WORDS_MODIFY',
+      payload: { topic, words },
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import type { User } from '@alias/shared';
+import type { User } from '@seaborn/shared/root';
 
 import fireabsese from '../../api/firebase-admin';
 import google from '../../api/google';

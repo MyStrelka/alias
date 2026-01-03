@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle2, Clock3, PauseCircle, Play, XCircle } from 'lucide-react';
 
+import CommonSettings from '../../../components/CommonSettings';
 import { useGameStore } from '../../../store/games/alilasStore';
+import useUiStore from '../../../store/uiStore';
 import { soundManager } from '../../../utils/soundManager';
 import { Layout } from '../../Layout';
 import LeaderBoard from '../../Sidebar/LeaderBoard';
@@ -21,6 +23,7 @@ const Game = ({
   isListenerReady,
 }: any) => {
   const { round } = useGameStore();
+  const { isSettingsOpen } = useUiStore();
   const { activeChallenge } = round;
   const isSpeaker = speaker?.deviceId === selfId;
   const isListener = listener?.deviceId === selfId;
@@ -51,6 +54,11 @@ const Game = ({
       leftSidebar={<GameLeftBar />}
       rightSidebar={
         <>
+          {isSettingsOpen && (
+            <div className='glass-panel p-5 space-y-6 h-fit animate-fade-in'>
+              <CommonSettings />
+            </div>
+          )}
           <CurrentPlayers
             speaker={speaker}
             listener={listener}

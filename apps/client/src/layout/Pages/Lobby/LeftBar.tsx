@@ -57,7 +57,6 @@ const LobbyLeftBar = () => {
           className='input-glass text-sm w-full'
           disabled={generationState === 'inprogress'}
         />
-        {/* 🔥 AI пока заглушка - не скрываю, но будет работать потом */}
         <button
           onClick={() => {
             if (!topic) return toast.error('Введите тему');

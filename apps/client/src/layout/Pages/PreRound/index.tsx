@@ -1,8 +1,10 @@
 import type { Team } from '@seaborn/shared/alias';
 
 import ActivePlayers from '../../../components/ActivePlayers';
+import CommonSettings from '../../../components/CommonSettings';
 import { TEAM_THEMES, useGameStore } from '../../../store/games/alilasStore';
 import { useRootStore } from '../../../store/rootStore';
+import useUiStore from '../../../store/uiStore';
 import { soundManager } from '../../../utils/soundManager';
 import { Layout } from '../../Layout';
 import LeaderBoard from '../../Sidebar/LeaderBoard';
@@ -17,6 +19,7 @@ const PreRound = ({
   isListenerReady,
 }: any) => {
   const { deviceId } = useRootStore();
+  const { isSettingsOpen } = useUiStore();
   const { round, teams, settings, actions } = useGameStore();
   const currentTeam = teams.find((t: Team) => t.id === currentTeamId);
   const teamTheme = currentTeam
@@ -31,7 +34,16 @@ const PreRound = ({
 
   return (
     <Layout
-      rightSidebar={<LeaderBoard speaker={speaker} listener={listener} />}
+      rightSidebar={
+        <>
+          {isSettingsOpen && (
+            <div className='glass-panel p-5 space-y-6 h-fit animate-fade-in'>
+              <CommonSettings />
+            </div>
+          )}
+          <LeaderBoard speaker={speaker} listener={listener} />
+        </>
+      }
     >
       <div className='glass-panel p-6 flex flex-col items-center justify-center min-h-[400px] relative overflow-hidden'>
         {teamTheme && (

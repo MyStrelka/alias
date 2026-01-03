@@ -38,6 +38,7 @@ jobs:
         gcloud auth configure-docker $GOOGLE_REGION-docker.pkg.dev
         docker build \
         --build-arg SERVER_URL=${{ vars.SERVER_URL }} \
+        --build-arg TURNSTILE_SITEKEY=${{ vars.TURNSTILE_SITEKEY }} \
         -f ./Dockerfile.client -t $IMAGE_TAG .
         docker push $IMAGE_TAG
 

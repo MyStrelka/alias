@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { Play, Share2, Sparkles, Trash2, XCircle } from 'lucide-react';
 
 import {
@@ -21,6 +22,8 @@ import { useGameStore } from '../../store/games/alilasStore';
 import { useRootStore } from '../../store/rootStore';
 import { soundManager } from '../../utils/soundManager';
 
+const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITEKEY;
+
 const Lobby = ({
   settings,
   players,
@@ -38,6 +41,9 @@ const Lobby = ({
   'isHost' | 'roomId' | 'customWords' | 'customTopic'
 >) => {
   const [topic, setTopic] = useState('');
+  const [capchaStatus, setCapchaStatus] = useState<
+    'ready' | 'solved' | 'expired' | 'error'
+  >('ready');
 
   const [generationState, setGenerationState] = useState<
     'ready' | 'inprogress'
@@ -61,6 +67,59 @@ const Lobby = ({
     { value: 'solo_standard', label: 'Соло (Std)' },
     // { value: 'solo_all_vs_all', label: 'Соло (All)' },
   ];
+
+  const renderAi = () =>
+    customWords ? (
+      <div className='flex items-center justify-between gap-2'>
+        <div className='text-sm'>
+          <span className='text-gray-400'>Тема: </span>
+          <span className='text-white font-bold'>{customTopic}</span>
+          <div className='text-xs text-green-400 mt-1'>
+            Загружено {customWords.length} слов
+          </div>
+        </div>
+        <button
+          onClick={actions.clearCustomWords}
+          className='p-2 hover:bg-white/10 rounded-lg text-red-400 transition'
+        >
+          <Trash2 className='h-5 w-5' />
+        </button>
+      </div>
+    ) : (
+      <div className='flex gap-2'>
+        <input
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          placeholder='Напр: Гарри Поттер'
+          className='input-glass text-sm w-full'
+          disabled={generationState === 'inprogress'}
+        />
+        {/* 🔥 AI пока заглушка - не скрываю, но будет работать потом */}
+        <button
+          onClick={() => {
+            if (!topic) return toast.error('Введите тему');
+            if (roomId) {
+              setGenerationState('inprogress');
+              actions
+                .generateWordsAI(roomId, topic)
+                .catch((e) => {
+                  toast.error('Ошибка генерации слов');
+                  console.error(e);
+                })
+                .finally(() => {
+                  setGenerationState('ready');
+                });
+            }
+          }}
+          className='btn-glass bg-accent-main/20 hover:bg-accent-main/40 border-accent-main/50'
+          disabled={!roomId || !topic || generationState === 'inprogress'}
+        >
+          <Sparkles
+            className={`h-5 w-5 text-white ${generationState === 'inprogress' ? 'animate-pulse' : ''}`}
+          />
+        </button>
+      </div>
+    );
 
   return (
     <div className='grid grid-cols-1 xl:grid-cols-[360px,1fr] gap-6 animate-fade-in'>
@@ -95,59 +154,16 @@ const Lobby = ({
             <div className='flex items-center gap-2 mb-2 text-accent-main font-bold text-sm uppercase'>
               <Sparkles className='h-4 w-4' /> AI Генератор слов
             </div>
-            {customWords ? (
-              <div className='flex items-center justify-between gap-2'>
-                <div className='text-sm'>
-                  <span className='text-gray-400'>Тема: </span>
-                  <span className='text-white font-bold'>{customTopic}</span>
-                  <div className='text-xs text-green-400 mt-1'>
-                    Загружено {customWords.length} слов
-                  </div>
-                </div>
-                <button
-                  onClick={actions.clearCustomWords}
-                  className='p-2 hover:bg-white/10 rounded-lg text-red-400 transition'
-                >
-                  <Trash2 className='h-5 w-5' />
-                </button>
-              </div>
-            ) : (
-              <div className='flex gap-2'>
-                <input
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder='Напр: Гарри Поттер'
-                  className='input-glass text-sm w-full'
-                  disabled={generationState === 'inprogress'}
-                />
-                {/* 🔥 AI пока заглушка - не скрываю, но будет работать потом */}
-                <button
-                  onClick={() => {
-                    if (!topic) return toast.error('Введите тему');
-                    if (roomId) {
-                      setGenerationState('inprogress');
-                      actions
-                        .generateWordsAI(roomId, topic)
-                        .catch((e) => {
-                          toast.error('Ошибка генерации слов');
-                          console.error(e);
-                        })
-                        .finally(() => {
-                          setGenerationState('ready');
-                        });
-                    }
-                  }}
-                  className='btn-glass bg-accent-main/20 hover:bg-accent-main/40 border-accent-main/50'
-                  disabled={
-                    !roomId || !topic || generationState === 'inprogress'
-                  }
-                >
-                  <Sparkles
-                    className={`h-5 w-5 text-white ${generationState === 'inprogress' ? 'animate-pulse' : ''}`}
-                  />
-                </button>
-              </div>
+            {turnstileSiteKey && capchaStatus !== 'solved' && (
+              <Turnstile
+                id='turnstile-widget'
+                siteKey='0x4AAAAAACKTYLmNzcwAmDwD'
+                onError={() => setCapchaStatus('error')}
+                onExpire={() => setCapchaStatus('expired')}
+                onSuccess={() => setCapchaStatus('solved')}
+              />
             )}
+            {(!turnstileSiteKey || capchaStatus === 'solved') && renderAi()}
           </div>
         )}
         <CommonSettings gameModes={gameModes} />

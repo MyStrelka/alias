@@ -164,6 +164,12 @@ export interface ClientToServerEvents {
   custom_words_clear: () => void;
 }
 
+export interface SocketError {
+  message: string;
+  code: 'JOIN_ROOM_404';
+}
+
 export interface ServerToClientEvents {
   room_updated: (gameState: GameState) => void;
+  error: (error: SocketError) => void;
 }

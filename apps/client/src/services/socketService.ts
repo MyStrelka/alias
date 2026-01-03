@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import type {
   ClientToServerEvents,
   ServerToClientEvents,
+  SocketError,
 } from '@seaborn/shared/alias';
 import type { User } from '@seaborn/shared/root';
 
@@ -12,6 +13,7 @@ class SocketService {
   public socket: Socket<ServerToClientEvents, ClientToServerEvents> | null =
     null;
   private onUpdateHandler: ((data: any) => void) | null = null;
+  private onErrorHandler: ((error: SocketError) => void) | null = null;
 
   constructor() {
     // Гарантируем отключение при перезагрузке страницы/закрытии вкладки
@@ -27,6 +29,7 @@ class SocketService {
     user: User,
     roomId: string | null,
     onUpdate: (data: any) => void,
+    onError: (error: SocketError) => void,
   ) {
     if (this.socket?.connected) return;
     if (this.socket) {
@@ -35,6 +38,7 @@ class SocketService {
 
     console.log('CALL connect');
     this.onUpdateHandler = onUpdate;
+    this.onErrorHandler = onError;
 
     this.socket = io(SERVER_URL, {
       reconnection: true,
@@ -62,6 +66,11 @@ class SocketService {
       if (this.onUpdateHandler) this.onUpdateHandler(room);
     });
 
+    this.socket.on('error', (error: SocketError) => {
+      console.error('Socket error:', error);
+      if (this.onErrorHandler) this.onErrorHandler(error);
+    });
+
     this.socket.on('disconnect', (reason) => {
       console.log('❌ Disconnected:', reason);
     });
@@ -73,6 +82,7 @@ class SocketService {
       this.socket.close();
       this.socket = null;
       this.onUpdateHandler = null;
+      this.onErrorHandler = null;
     }
   }
 }

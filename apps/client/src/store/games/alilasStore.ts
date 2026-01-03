@@ -9,6 +9,7 @@ import type {
   GameStateRound,
   Player,
   Settings,
+  SocketError,
 } from '@seaborn/shared/alias';
 
 import { generateWords } from '../../services/game';
@@ -128,6 +129,13 @@ export const useGameStore = create<
         rootActions.setNetworkState('connected');
       };
 
+      const onErrorHandler = (error: SocketError) => {
+        toast.error(error.message);
+        if (error.code === 'JOIN_ROOM_404') {
+          get().actions.leaveGame();
+        }
+      };
+
       return {
         ...initialState,
 
@@ -136,14 +144,26 @@ export const useGameStore = create<
             const { actions: rootActions, user } = useRootStore.getState();
             console.log('[createRoom]');
             rootActions.setNetworkState('connecting');
-            socketService.connect(deviceId, user, null, roomUpdatedHandler);
+            socketService.connect(
+              deviceId,
+              user,
+              null,
+              roomUpdatedHandler,
+              onErrorHandler,
+            );
           },
 
           joinRoom: (roomId) => {
             const { actions: rootActions, user } = useRootStore.getState();
             console.log('[joinRoom] roomId', roomId);
             rootActions.setNetworkState('connecting');
-            socketService.connect(deviceId, user, roomId, roomUpdatedHandler);
+            socketService.connect(
+              deviceId,
+              user,
+              roomId,
+              roomUpdatedHandler,
+              onErrorHandler,
+            );
           },
 
           leaveRoom: () => {

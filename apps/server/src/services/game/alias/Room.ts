@@ -1,6 +1,12 @@
 import { Server, Socket } from 'socket.io';
 
-import type { GameState, Settings, WordLog } from '@seaborn/shared/alias';
+import type {
+  ClientToServerEvents,
+  GameState,
+  ServerToClientEvents,
+  Settings,
+  WordLog,
+} from '@seaborn/shared/alias';
 import type { User } from '@seaborn/shared/root';
 
 import { initialState, roomReducer } from './roomReducer';
@@ -15,13 +21,14 @@ export class AliasRoom {
   private state: GameState;
   private connections: Map<string, Connection> = new Map();
   private timerInterval: NodeJS.Timeout | undefined;
+  public emptySince: number | null = null;
 
   constructor(
     public id: string,
     public hostUser: User,
     public hostSocketId: string,
     public hostDeviceId: string,
-    private io: Server,
+    private io: Server<ClientToServerEvents, ServerToClientEvents>,
   ) {
     this.state = { ...initialState, roomId: id, hostId: hostDeviceId };
 
@@ -126,6 +133,8 @@ export class AliasRoom {
 
   public bindSocket(socket: Socket) {
     socket.join(this.id);
+
+    this.emptySince = null;
 
     // Отправляем текущее состояние новому игроку
     // socket.emit('room_updated', this.state);
@@ -258,6 +267,10 @@ export class AliasRoom {
         },
       ]);
       this.connections.delete(socket.id);
+
+      if (this.connections.size === 0) {
+        this.emptySince = Date.now();
+      }
     });
   }
 

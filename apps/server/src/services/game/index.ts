@@ -1,5 +1,10 @@
 import { Server } from 'socket.io';
 
+import type {
+  ClientToServerEvents,
+  ServerToClientEvents,
+  SocketError,
+} from '@seaborn/shared/alias';
 import type { User } from '@seaborn/shared/root';
 
 import { AliasRoom } from './alias/Room';
@@ -39,7 +44,20 @@ export const modifyCustomWords = (
   }
 };
 
-export const initGameService = (io: Server) => {
+export const initGameService = (
+  io: Server<ClientToServerEvents, ServerToClientEvents>,
+) => {
+  setInterval(() => {
+    const now = Date.now();
+    rooms.forEach((room, roomId) => {
+      if (room.emptySince && now - room.emptySince > 60000) {
+        room.destroy();
+        rooms.delete(roomId);
+        console.log(`🗑️ Room ${roomId} deleted due to inactivity.`);
+      }
+    });
+  }, 30000);
+
   io.on('connection', (socket) => {
     socket.on('create_room', (data: { deviceId: string; user: User }) => {
       const { deviceId, user } = data;
@@ -70,6 +88,15 @@ export const initGameService = (io: Server) => {
         const { deviceId, roomId, user } = data;
 
         const room = rooms.get(roomId);
+
+        if (!room) {
+          const error: SocketError = {
+            message: 'Комната не найдена',
+            code: 'JOIN_ROOM_404',
+          };
+          socket.emit('error', error);
+          return;
+        }
 
         if (room) {
           room.setConnections(socket.id, { deviceId, lastJoin: Date.now() });

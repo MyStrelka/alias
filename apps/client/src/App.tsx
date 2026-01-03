@@ -16,12 +16,7 @@ import './index.css';
 
 import Bubbles from './components/Bubbles';
 import MessageListener from './components/MessageListener';
-import Main from './layout/Main';
 import Modal from './layout/Modals/Modal';
-import Page from './layout/Page';
-import Sidebar from './layout/Sidebar';
-import LeaderBoard from './layout/Sidebar/LeaderBoard';
-import CurrentPlayers from './layout/Sidebar/Players';
 import { socketService } from './services/socketService';
 
 function App() {
@@ -74,72 +69,43 @@ function App() {
       <Bubbles />
       <MessageListener />
       <Header />
-      <Main>
-        <Page>
-          {game.stage === 'login' && <Login />}
-          {game.stage === 'lobby' && (
-            <Lobby
-              roomId={game.roomId}
-              settings={game.settings}
-              players={game.players}
-              teams={game.teams}
-              isHost={game.isHost}
-              customWords={game.customWords}
-              customTopic={game.customTopic}
-            />
-          )}
-          {game.stage === 'preround' && (
-            <PreRound
-              speaker={speaker}
-              listener={listener}
-              teams={game.teams}
-              settings={game.settings}
-              selfId={root.deviceId}
-              currentTeamId={game.round.currentTeamId}
-              readyMap={game.round.readyMap}
-              activeChallenge={game.round.activeChallenge}
-              isSpeakerReady={isSpeakerReady}
-              isListenerReady={isListenerReady}
-            />
-          )}
-          {['play', 'play-adjustment'].includes(game.stage) && (
-            <Game
-              stage={game.stage}
-              speaker={speaker}
-              listener={listener}
-              timeLeft={game.round.timeLeft}
-              word={game.round.currentWord}
-              selfId={root.deviceId}
-              isPaused={!game.round.timerActive}
-              wordLog={game.round.wordLog}
-              actions={actions}
-            />
-          )}
-          {game.stage === 'victory' && (
-            <Victory
-              winner={winner}
-              players={game.players}
-              // backToLobby={actions.backToLobby}
-              backToLobby={() => {
-                console.log('TODO: backToLobby');
-              }}
-            />
-          )}
-        </Page>
-        {['preround', 'play', 'play-adjustment'].includes(game.stage) && (
-          <Sidebar>
-            {['play', 'play-adjustment'].includes(game.stage) && (
-              <CurrentPlayers
-                speaker={speaker}
-                listener={listener}
-                isSpeakerReady={isSpeakerReady}
-                isListenerReady={isListenerReady}
-              />
-            )}
-            <LeaderBoard speaker={speaker} listener={listener} />
-          </Sidebar>
-        )}
-      </Main>
+      {game.stage === 'login' && <Login />}
+      {game.stage === 'lobby' && <Lobby />}
+      {game.stage === 'preround' && (
+        <PreRound
+          speaker={speaker}
+          listener={listener}
+          currentTeamId={game.round.currentTeamId}
+          readyMap={game.round.readyMap}
+          activeChallenge={game.round.activeChallenge}
+          isSpeakerReady={isSpeakerReady}
+          isListenerReady={isListenerReady}
+        />
+      )}
+      {['play', 'play-adjustment'].includes(game.stage) && (
+        <Game
+          stage={game.stage}
+          speaker={speaker}
+          listener={listener}
+          timeLeft={game.round.timeLeft}
+          word={game.round.currentWord}
+          selfId={root.deviceId}
+          isPaused={!game.round.timerActive}
+          actions={actions}
+          isSpeakerReady={isSpeakerReady}
+          isListenerReady={isListenerReady}
+        />
+      )}
+      {game.stage === 'victory' && (
+        <Victory
+          winner={winner}
+          players={game.players}
+          // backToLobby={actions.backToLobby}
+          backToLobby={() => {
+            console.log('TODO: backToLobby');
+          }}
+        />
+      )}
     </div>
   );
 }

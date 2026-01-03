@@ -48,12 +48,6 @@ export interface Team {
   themeIndex: number;
 }
 
-// export interface Room {
-//   hostId: string;
-//   gameState: GameState;
-//   timerInterval?: ReturnType<typeof setInterval>;
-// }
-
 export type WordLog = {
   word: string;
   score: -1 | 0 | 1;

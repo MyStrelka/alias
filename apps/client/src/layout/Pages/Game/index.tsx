@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle2, Clock3, PauseCircle, Play, XCircle } from 'lucide-react';
 
+import AccentButton from '../../../components/AccentButton';
 import CommonSettings from '../../../components/CommonSettings';
 import { useGameStore } from '../../../store/games/alilasStore';
+import { useRootStore } from '../../../store/rootStore';
 import useUiStore from '../../../store/uiStore';
 import { soundManager } from '../../../utils/soundManager';
 import { Layout } from '../../Layout';
@@ -10,25 +12,14 @@ import LeaderBoard from '../../Sidebar/LeaderBoard';
 import CurrentPlayers from '../../Sidebar/Players';
 import GameLeftBar from './LeftBar';
 
-const Game = ({
-  stage,
-  speaker,
-  listener,
-  timeLeft,
-  word,
-  selfId,
-  isPaused,
-  actions,
-  isSpeakerReady,
-  isListenerReady,
-}: any) => {
-  const { round } = useGameStore();
+const Game = ({ speaker, listener, isSpeakerReady, isListenerReady }: any) => {
+  const { stage, round, actions } = useGameStore();
   const { isSettingsOpen } = useUiStore();
+  const { deviceId } = useRootStore();
   const { activeChallenge } = round;
-  const isSpeaker = speaker?.deviceId === selfId;
-  const isListener = listener?.deviceId === selfId;
+  const isSpeaker = speaker?.deviceId === deviceId;
+  const isListener = listener?.deviceId === deviceId;
 
-  // 🔥 ПРАВКА: Все actions идут через стор (P2P удален)
   const handleCorrect = () => {
     soundManager.play('correct');
     actions.handleCorrect();
@@ -74,13 +65,15 @@ const Game = ({
           <div className='flex justify-between items-start z-10'>
             <div className='badge bg-red-500/20 text-red-200 border-red-500/30 flex items-center gap-2 px-3 py-1'>
               <Clock3 className='h-4 w-4' />
-              <span className='font-mono text-xl font-bold'>{timeLeft}s</span>
+              <span className='font-mono text-xl font-bold'>
+                {round.timeLeft}s
+              </span>
             </div>
             <button
               onClick={handlePause}
               className='btn-glass p-2 rounded-full'
             >
-              {isPaused ? (
+              {!round.timerActive ? (
                 <Play className='h-6 w-6' />
               ) : (
                 <PauseCircle className='h-6 w-6' />
@@ -105,7 +98,7 @@ const Game = ({
                   Ваше слово
                 </div>
                 <div className='text-5xl md:text-7xl font-black text-white text-center break-words leading-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]'>
-                  {word}
+                  {round.currentWord}
                 </div>
               </>
             ) : (
@@ -133,7 +126,7 @@ const Game = ({
                   handleSkip();
                 }}
                 className='h-20 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 font-bold text-xl hover:bg-red-500/20 active:scale-95 transition-all flex flex-col items-center justify-center disabled:opacity-50'
-                disabled={isPaused}
+                disabled={!round.timerActive}
               >
                 <XCircle className='h-6 w-6 mb-1' />
                 Пропустить (-1)
@@ -146,7 +139,7 @@ const Game = ({
                   handleCorrect();
                 }}
                 className='h-20 rounded-2xl bg-green-500/10 border border-green-500/30 text-green-400 font-bold text-xl hover:bg-green-500/20 active:scale-95 transition-all flex flex-col items-center justify-center disabled:opacity-50'
-                disabled={isPaused}
+                disabled={!round.timerActive}
               >
                 <CheckCircle2 className='h-6 w-6 mb-1' />
                 Угадал (+1)
@@ -154,6 +147,16 @@ const Game = ({
             </div>
           )}
         </div>
+        {stage === 'play-adjustment' && (
+          <div className=' p-8 flex flex-col relative justify-center items-center'>
+            <AccentButton
+              className='flex-0 font-bold text-xl'
+              onClick={actions.finishRound}
+            >
+              Завершить раунд
+            </AccentButton>
+          </div>
+        )}
       </div>
     </Layout>
   );

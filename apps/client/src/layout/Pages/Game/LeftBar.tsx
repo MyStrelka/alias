@@ -1,6 +1,5 @@
 import type { WordLog } from '@seaborn/shared/alias';
 
-import AccentButton from '../../../components/AccentButton';
 import Table from '../../../components/Table/Table';
 import Td from '../../../components/Table/Td';
 import Thead from '../../../components/Table/Thead';
@@ -21,7 +20,7 @@ const GameLeftBar = () => {
           </>
         )}
         rows={() =>
-          (round.wordLog as WordLog[]).map((log, i) => (
+          [...round.wordLog].reverse().map((log, i) => (
             <Trow key={`word_${i}`}>
               <Td
                 classNames={[
@@ -57,17 +56,6 @@ const GameLeftBar = () => {
               </Td>
             </Trow>
           ))
-        }
-        footer={() =>
-          stage === 'play-adjustment' && (
-            <Trow>
-              <Td colSpan={2} classNames={['text-center']}>
-                <AccentButton className='flex-0' onClick={actions.finishRound}>
-                  Завершить раунд
-                </AccentButton>
-              </Td>
-            </Trow>
-          )
         }
       />
     </div>

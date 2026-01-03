@@ -10,7 +10,6 @@ import Login from './layout/Pages/Login';
 import PreRound from './layout/Pages/PreRound';
 import Victory from './layout/Pages/Victory';
 import { useGameStore } from './store/games/alilasStore';
-import { useRootStore } from './store/rootStore';
 
 import './index.css';
 
@@ -20,7 +19,6 @@ import Modal from './layout/Modals/Modal';
 import { socketService } from './services/socketService';
 
 function App() {
-  const root = useRootStore();
   const game = useGameStore();
   const { actions, roomId, round } = game;
 
@@ -84,14 +82,8 @@ function App() {
       )}
       {['play', 'play-adjustment'].includes(game.stage) && (
         <Game
-          stage={game.stage}
           speaker={speaker}
           listener={listener}
-          timeLeft={game.round.timeLeft}
-          word={game.round.currentWord}
-          selfId={root.deviceId}
-          isPaused={!game.round.timerActive}
-          actions={actions}
           isSpeakerReady={isSpeakerReady}
           isListenerReady={isListenerReady}
         />

@@ -62,7 +62,7 @@ export type WordLog = {
 export type GameStateRound = {
   roundNumber: number;
   timeLeft: number;
-  running: boolean;
+  timerActive: boolean;
   currentWord: string;
   activeChallenge: string | null;
   readyMap: Record<string, boolean>;

@@ -85,7 +85,7 @@ export const initialState: GameState = {
   round: {
     roundNumber: 0,
     timeLeft: 60,
-    running: false,
+    timerActive: false,
     currentWord: '...',
     activeChallenge: null,
     readyMap: {},
@@ -286,7 +286,7 @@ export const roomReducer = (
           ...nextTurn,
           roundNumber: 1,
           timeLeft: state.settings.roundTime,
-          running: false,
+          timerActive: false,
           readyMap: {},
           currentWord,
           activeChallenge: challenge,
@@ -305,7 +305,7 @@ export const roomReducer = (
         stage: 'play',
         round: {
           ...state.round,
-          running: true,
+          timerActive: true,
           timeLeft: state.settings.roundTime,
         },
       };
@@ -325,7 +325,7 @@ export const roomReducer = (
     case 'TOGGLE_PAUSE': {
       return {
         ...state,
-        round: { ...state.round, running: !state.round.running },
+        round: { ...state.round, timerActive: !state.round.timerActive },
       };
     }
     case 'GAME_ACTION': {
@@ -423,7 +423,7 @@ export const roomReducer = (
           ...nextTurn,
           roundNumber: state.round.roundNumber + 1,
           timeLeft: state.settings.roundTime,
-          running: false,
+          timerActive: false,
           readyMap: {},
           currentWord,
           activeChallenge: challenge,

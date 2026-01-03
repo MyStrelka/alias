@@ -67,7 +67,7 @@ const initialSettings: Settings = {
 const initialRound: GameStateRound = {
   roundNumber: 0,
   timeLeft: 60,
-  running: false,
+  timerActive: false,
   currentWord: '...',
   readyMap: {},
   teamSpeakerIndex: {},

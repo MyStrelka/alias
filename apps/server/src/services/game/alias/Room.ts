@@ -107,6 +107,7 @@ export class AliasRoom {
   }
 
   private stopTimer() {
+    console.log('STOP TIMER', this.state.roomId);
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
       this.timerInterval = undefined;
@@ -114,10 +115,10 @@ export class AliasRoom {
   }
 
   private startTimer() {
+    console.log('START TIMER', this.state.roomId);
     this.timerInterval = setInterval(() => {
-      // Важно проверять актуальный стейт
-      if (!this.state.round.running) {
-        this.stopTimer();
+      if (!this.state.round.timerActive) {
+        // this.stopTimer();
         return;
       }
 
@@ -195,7 +196,7 @@ export class AliasRoom {
       });
     });
     socket.on('start_round', () => {
-      if (this.state.round.running) return;
+      if (this.state.round.timerActive) return;
 
       this.dispatch(socket.id, {
         type: 'START_ROUND',

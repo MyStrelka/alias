@@ -110,7 +110,7 @@ function App() {
               timeLeft={game.round.timeLeft}
               word={game.round.currentWord}
               selfId={root.deviceId}
-              isPaused={!game.round.running}
+              isPaused={!game.round.timerActive}
               wordLog={game.round.wordLog}
               actions={actions}
             />

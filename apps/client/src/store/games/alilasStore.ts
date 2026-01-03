@@ -61,7 +61,7 @@ const initialSettings: Settings = {
   roundTime: 60,
   winScore: 30,
   mode: 'team',
-  enableChallenges: true,
+  enableChallenges: false,
 };
 
 const initialRound: GameStateRound = {

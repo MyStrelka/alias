@@ -75,7 +75,7 @@ export const initialState: GameState = {
     roundTime: 60,
     winScore: 30,
     mode: 'team',
-    enableChallenges: true,
+    enableChallenges: false,
   },
   players: [],
   teams: [

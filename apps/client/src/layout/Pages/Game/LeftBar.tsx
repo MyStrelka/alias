@@ -20,13 +20,14 @@ const GameLeftBar = () => {
           </>
         )}
         rows={() =>
-          [...round.wordLog].reverse().map((log, i) => (
+          round.wordLog.map((log, i) => (
             <Trow key={`word_${i}`}>
               <Td
                 classNames={[
                   'text-right',
                   'font-bold',
-                  'text-xl w-1/2',
+                  'text-sm',
+                  'animate-fade-in',
                   log.score === -1
                     ? 'text-red-400'
                     : log.score === 1

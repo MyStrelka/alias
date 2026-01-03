@@ -97,17 +97,8 @@ export const initialState: GameState = {
   },
   roomId: null,
   hostId: null,
-  customTopic: 'жаба',
-  customWords: [
-    'зеленое',
-    'вода',
-    'пруд',
-    'прыжок',
-    'язык',
-    'комар',
-    'болото',
-    'стрела',
-  ],
+  customTopic: null,
+  customWords: null,
   wordLog: [],
 };
 

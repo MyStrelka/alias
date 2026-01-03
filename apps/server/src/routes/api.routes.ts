@@ -27,7 +27,6 @@ router.get('/ai-generate', async (request, response) => {
     modifyCustomWords(`${roomId}`, `${topic}`, words);
   }
 
-  console.log('/ai-generate: ', topic, words);
   response.status(200).send('OK');
 });
 
